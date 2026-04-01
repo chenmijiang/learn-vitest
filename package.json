@@ -1,0 +1,20 @@
+{
+  "scripts": {
+    "test": "vitest",
+    "test:run": "vitest run",
+    "postinstall": "husky"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/bun": "latest",
+    "husky": "^9.1.7",
+    "vitest": "^4.1.2"
+  },
+  "name": "learn-vitest",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
