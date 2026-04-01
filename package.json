@@ -2,7 +2,8 @@
   "scripts": {
     "test": "vitest",
     "test:run": "vitest run",
-    "postinstall": "husky"
+    "postinstall": "husky",
+    "format": "prettier --write ."
   },
   "dependencies": {},
   "devDependencies": {
