@@ -53,7 +53,7 @@
 - [ ] 学会使用 `.skip`、`.only`、`.todo`
       链接：https://cn.vitest.dev/guide/filtering
 - [ ] 学会给测试和 hooks 配置超时
-      链接：https://cn.vitest.dev/guide/filtering
+      链接：https://cn.vitest.dev/guide/test-context
 - [ ] 在当前项目中给一个已有模块补 5 到 10 个测试
 - [ ] 练习只运行单文件测试
 - [ ] 练习只运行单个测试名
@@ -90,8 +90,9 @@
       链接：https://cn.vitest.dev/guide/mocking/modules
 - [ ] 学会模拟全局对象
       链接：https://cn.vitest.dev/guide/mocking/globals
-- [ ] 学会模拟日期和时间
+- [ ] 学会模拟日期
       链接：https://cn.vitest.dev/guide/mocking/dates
+- [ ] 学会模拟时间和定时器
       链接：https://cn.vitest.dev/guide/mocking/timers
 - [ ] 学会模拟请求
       链接：https://cn.vitest.dev/guide/mocking/requests
