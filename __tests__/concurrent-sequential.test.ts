@@ -1,216 +1,151 @@
-import { describe, test, beforeEach, afterEach, expect } from "vitest";
+import { afterAll, describe, expect, test } from "vitest";
+
+declare function setTimeout(
+  handler: (...args: unknown[]) => void,
+  timeout?: number,
+): unknown;
+
+const sleep = (ms: number) =>
+  new Promise<void>((resolve) => {
+    setTimeout(() => resolve(), ms);
+  });
+
+type TraceItem = {
+  task: string;
+  phase: "start" | "end";
+  at: number;
+};
 
 /**
- * 演示 test.concurrent 和 test.sequential 的使用场景
+ * 目标：让“顺序执行”和“并发执行”的效果在输出和断言上都一眼可见。
  *
- * 默认模式：sequential（顺序执行）
- * - test.concurrent: 并发执行，与其他 concurrent 测试同时运行
- * - test.sequential: 强制顺序执行，用于全局并发模式下
+ * 参考：
+ * - https://cn.vitest.dev/guide/parallelism
+ * - https://cn.vitest.dev/api/test
  */
 
 // ============================================================
-// 场景 1：演示默认顺序执行（Sequential）
+// 场景 1：默认顺序执行（同一文件中的 test 默认顺序执行）
 // ============================================================
 describe("Scenario 1: Default Sequential Execution", () => {
-  const executionOrder: string[] = [];
+  const trace: TraceItem[] = [];
+  let suiteStart = 0;
 
-  beforeEach(() => {
-    executionOrder.length = 0; // 清空执行顺序记录
+  const runTask = async (name: string, ms: number) => {
+    trace.push({ task: name, phase: "start", at: Date.now() });
+    await sleep(ms);
+    trace.push({ task: name, phase: "end", at: Date.now() });
+  };
+
+  test("task A (100ms)", async () => {
+    suiteStart = suiteStart || Date.now();
+    await runTask("A", 100);
   });
 
-  test("sequential test 1", () => {
-    executionOrder.push("test-1");
-    expect(executionOrder).toEqual(["test-1"]);
+  test("task B (100ms)", async () => {
+    suiteStart = suiteStart || Date.now();
+    await runTask("B", 100);
   });
 
-  test("sequential test 2", () => {
-    // 这个测试会在 test-1 完成后执行
-    executionOrder.push("test-2");
-    expect(executionOrder).toEqual(["test-2"]);
+  test("task C (100ms)", async () => {
+    suiteStart = suiteStart || Date.now();
+    await runTask("C", 100);
   });
 
-  test("sequential test 3", () => {
-    // 这个测试会在 test-2 完成后执行
-    executionOrder.push("test-3");
-    expect(executionOrder).toEqual(["test-3"]);
-  });
-});
+  afterAll(() => {
+    const timeline = trace.map((item) => `${item.task}-${item.phase}`);
 
-// ============================================================
-// 场景 2：使用 test.concurrent 并发执行测试
-// ============================================================
-describe("Scenario 2: Concurrent Tests", () => {
-  // 注意：由于测试是异步的且没有共享状态，可以安全地并发执行
-  test.concurrent("concurrent test 1", async () => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    expect(true).toBe(true);
-  });
+    // 顺序执行时，开始/结束应严格串行
+    expect(timeline).toEqual([
+      "A-start",
+      "A-end",
+      "B-start",
+      "B-end",
+      "C-start",
+      "C-end",
+    ]);
 
-  test.concurrent("concurrent test 2", async () => {
-    await new Promise((resolve) => setTimeout(resolve, 80));
-    expect(true).toBe(true);
-  });
-
-  test.concurrent("concurrent test 3", async () => {
-    await new Promise((resolve) => setTimeout(resolve, 120));
-    expect(true).toBe(true);
-  });
-
-  test("regular sequential test", () => {
-    // 这个测试会按顺序执行（不是 concurrent）
-    expect(true).toBe(true);
+    const total = Date.now() - suiteStart;
+    // 3 个 100ms 顺序执行，通常应接近 300ms，给调度留余量
+    expect(total).toBeGreaterThanOrEqual(260);
   });
 });
 
 // ============================================================
-// 场景 3：混合并发和顺序测试
+// 场景 2：使用 test.concurrent 并发执行
 // ============================================================
-describe("Scenario 3: Mixed Concurrent and Sequential", () => {
-  test.concurrent("concurrent task A", async () => {
-    await new Promise((resolve) => setTimeout(resolve, 50));
-    expect(1 + 1).toBe(2);
+describe("Scenario 2: test.concurrent Execution", () => {
+  const trace: TraceItem[] = [];
+  let suiteStart = 0;
+
+  const runTask = async (name: string, ms: number) => {
+    trace.push({ task: name, phase: "start", at: Date.now() });
+    await sleep(ms);
+    trace.push({ task: name, phase: "end", at: Date.now() });
+  };
+
+  test.concurrent("task A (100ms)", async () => {
+    suiteStart = suiteStart || Date.now();
+    await runTask("A", 100);
   });
 
-  test.concurrent("concurrent task B", async () => {
-    await new Promise((resolve) => setTimeout(resolve, 50));
-    expect(2 + 2).toBe(4);
+  test.concurrent("task B (100ms)", async () => {
+    suiteStart = suiteStart || Date.now();
+    await runTask("B", 100);
   });
 
-  test("sequential task 1", () => {
-    // 这个测试不使用 concurrent，会按顺序执行
-    expect(3 + 3).toBe(6);
+  test.concurrent("task C (100ms)", async () => {
+    suiteStart = suiteStart || Date.now();
+    await runTask("C", 100);
   });
 
-  test.concurrent("concurrent task C", async () => {
-    await new Promise((resolve) => setTimeout(resolve, 50));
-    expect(4 + 4).toBe(8);
+  afterAll(() => {
+    const timeline = trace.map((item) => `${item.task}-${item.phase}`);
+    const starts = trace.filter((item) => item.phase === "start");
+    const ends = trace.filter((item) => item.phase === "end");
+
+    // 并发时，通常会先看到多个 start，再陆续出现 end
+    expect(starts).toHaveLength(3);
+    expect(ends).toHaveLength(3);
+
+    const firstEndTime = Math.min(...ends.map((item) => item.at));
+    const startedBeforeFirstEndCount = starts.filter(
+      (item) => item.at <= firstEndTime,
+    ).length;
+
+    // 在第一个任务结束前，至少有 2 个任务已经启动，表示发生了重叠执行
+    expect(startedBeforeFirstEndCount).toBeGreaterThanOrEqual(2);
+
+    const total = Date.now() - suiteStart;
+    // 3 个 100ms 并发时，总耗时应明显小于顺序 300ms
+    expect(total).toBeLessThan(220);
   });
 });
 
 // ============================================================
-// 场景 4：数据库操作场景 - 需要顺序执行
+// 场景 3：在并发 suite 中用 test.sequential 强制顺序
 // ============================================================
-describe("Scenario 4: Database Operations (Sequential)", () => {
-  let userId: number | null = null;
+describe.concurrent("Scenario 3: describe.concurrent + test.sequential", () => {
+  const sequentialTrace: string[] = [];
 
-  test("create user", async () => {
-    // 模拟创建用户
-    userId = 1;
-    expect(userId).toBe(1);
+  test.sequential("sequential step 1", async () => {
+    sequentialTrace.push("step-1-start");
+    await sleep(40);
+    sequentialTrace.push("step-1-end");
   });
 
-  test("update user", async () => {
-    // 这个测试依赖前一个测试的结果
-    // 必须在 create user 之后执行
-    expect(userId).toBe(1);
-    userId = 2;
-    expect(userId).toBe(2);
+  test.sequential("sequential step 2", async () => {
+    sequentialTrace.push("step-2-start");
+    await sleep(40);
+    sequentialTrace.push("step-2-end");
   });
 
-  test("delete user", async () => {
-    // 这个测试依赖前面两个测试的结果
-    expect(userId).toBe(2);
-    userId = null;
-    expect(userId).toBeNull();
-  });
-});
-
-// ============================================================
-// 场景 5：独立的 API 模拟 - 可以并发执行
-// ============================================================
-describe("Scenario 5: Independent API Calls (Concurrent)", () => {
-  // 这些测试互不依赖，可以并发执行
-  test.concurrent("fetch user data", async () => {
-    const response = await Promise.resolve({ id: 1, name: "Alice" });
-    expect(response.id).toBe(1);
-  });
-
-  test.concurrent("fetch product data", async () => {
-    const response = await Promise.resolve({ id: 100, title: "Laptop" });
-    expect(response.id).toBe(100);
-  });
-
-  test.concurrent("fetch order data", async () => {
-    const response = await Promise.resolve({ id: 200, total: 999 });
-    expect(response.id).toBe(200);
-  });
-});
-
-// ============================================================
-// 场景 6：嵌套 describe 中的 concurrent
-// ============================================================
-describe.concurrent("Scenario 6: Concurrent Suite", () => {
-  test("test in concurrent suite 1", async () => {
-    await new Promise((resolve) => setTimeout(resolve, 30));
-    expect(true).toBe(true);
-  });
-
-  test("test in concurrent suite 2", async () => {
-    await new Promise((resolve) => setTimeout(resolve, 30));
-    expect(true).toBe(true);
-  });
-
-  test.sequential("sequential test in concurrent suite", async () => {
-    // 即使在 concurrent suite 中，这个测试也会顺序执行
-    await new Promise((resolve) => setTimeout(resolve, 50));
-    expect(true).toBe(true);
-  });
-});
-
-// ============================================================
-// 场景 7：使用 concurrent 时需要从 context 获取 expect（快照测试）
-// ============================================================
-describe("Scenario 7: Concurrent with Context Expect", () => {
-  test.concurrent("concurrent snapshot test 1", async ({ expect }) => {
-    // 使用 context 中的 expect 来确保快照正确关联到正确的测试
-    const data = { name: "Alice", age: 25 };
-    expect(data).toMatchSnapshot();
-  });
-
-  test.concurrent("concurrent snapshot test 2", async ({ expect }) => {
-    // 每个 concurrent 测试都有独立的 expect 实例
-    const data = { name: "Bob", age: 30 };
-    expect(data).toMatchSnapshot();
-  });
-});
-
-// ============================================================
-// 场景 8：性能对比 - 顺序 vs 并发
-// ============================================================
-describe("Scenario 8: Performance Comparison", () => {
-  describe("Sequential execution (slow)", () => {
-    test("takes 100ms", async () => {
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      expect(true).toBe(true);
-    });
-
-    test("takes 100ms", async () => {
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      expect(true).toBe(true);
-    });
-
-    test("takes 100ms", async () => {
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      expect(true).toBe(true);
-    });
-    // 总耗时: ~300ms
-  });
-
-  describe("Concurrent execution (fast)", () => {
-    test.concurrent("takes 100ms", async () => {
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      expect(true).toBe(true);
-    });
-
-    test.concurrent("takes 100ms", async () => {
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      expect(true).toBe(true);
-    });
-
-    test.concurrent("takes 100ms", async () => {
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      expect(true).toBe(true);
-    });
-    // 总耗时: ~100ms (并发执行)
+  afterAll(() => {
+    expect(sequentialTrace).toEqual([
+      "step-1-start",
+      "step-1-end",
+      "step-2-start",
+      "step-2-end",
+    ]);
   });
 });

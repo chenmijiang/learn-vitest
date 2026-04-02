@@ -27,11 +27,11 @@
 
 - [x] 阅读快速起步，完成安装、运行、首个测试
       链接：https://cn.vitest.dev/guide/
-- [ ] 阅读 API 索引中的 `test`、`expect` 基础用法
+- [x] 阅读 API 索引中的 `test`、`expect` 基础用法
       链接：https://cn.vitest.dev/api/test
-- [ ] 确认测试文件命名规则：`.test.` 或 `.spec.`
+- [x] 确认测试文件命名规则：`.test.` 或 `.spec.`
       链接：https://cn.vitest.dev/guide/
-- [ ] 分清 `vitest`、`vitest watch`、`vitest run` 的差别
+- [x] 分清 `vitest`、`vitest watch`、`vitest run` 的差别
       链接：https://cn.vitest.dev/guide/cli
 - [ ] 在当前项目里亲手写 3 个最小测试
 - [ ] 写 1 个纯函数测试
