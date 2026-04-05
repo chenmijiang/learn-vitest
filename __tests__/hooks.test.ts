@@ -20,6 +20,11 @@ describe("hook order: beforeEach declared first", () => {
 
   afterEach(() => {
     events.push("afterEach");
+
+    // 不会被调用
+    return () => {
+      events.push("cleanup from afterEach");
+    };
   });
 
   test("records order", () => {
@@ -80,6 +85,12 @@ describe("async cleanup order", () => {
 
   afterEach(() => {
     events.push("afterEach");
+
+    return new Promise<void>((resolve) => {
+      events.push("afterEach cleanup start");
+      resolve();
+      events.push("afterEach cleanup end");
+    });
   });
 
   test("cleanup does not run before the test body", () => {
@@ -92,6 +103,8 @@ describe("async cleanup order", () => {
       "beforeEach",
       "test body",
       "afterEach",
+      "afterEach cleanup start",
+      "afterEach cleanup end",
       "cleanup start",
       "cleanup end",
     ]);
