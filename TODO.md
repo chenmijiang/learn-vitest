@@ -33,10 +33,10 @@
       链接：https://cn.vitest.dev/guide/
 - [x] 分清 `vitest`、`vitest watch`、`vitest run` 的差别
       链接：https://cn.vitest.dev/guide/cli
-- [ ] 在当前项目里亲手写 3 个最小测试
-- [ ] 写 1 个纯函数测试
-- [ ] 写 1 个异步 Promise 测试
-- [ ] 写 1 个异常抛出测试
+- [x] 在当前项目里亲手写 3 个最小测试
+- [x] 写 1 个纯函数测试
+- [x] 写 1 个异步 Promise 测试
+- [x] 写 1 个异常抛出测试
 
 效果：能独立在项目里安装、编写、执行最基础的 Vitest 测试。
 
