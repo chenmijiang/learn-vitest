@@ -5,6 +5,8 @@ description: Use when summarizing conversation content into project documentatio
 
 规范对话内容到项目文档的组织流程，确保文档清晰、准确、易懂。
 
+> **注意**：只有当用户明确要求时（例如“请把这个总结成文档”），才使用此技能。否则，继续正常对话。
+
 ## 使用场景
 
 - 总结对话内容为文档
@@ -78,6 +80,8 @@ docs/
 | 来源缺失   | "vitest 支持..."                     | "vitest 支持...（来源：官方文档）" |
 
 ## 工作流程
+
+当用户确认需要保存内容到文档时：
 
 1. **总结对话内容**
 2. **查看现有文档** → `ls -1 docs/*.md` 确定编号
