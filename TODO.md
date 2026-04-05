@@ -46,7 +46,7 @@
       链接：https://cn.vitest.dev/api/describe
 - [x] 学会使用 `beforeEach`、`afterEach` 管理初始化和清理
       链接：https://cn.vitest.dev/api/hooks
-- [ ] 阅读测试运行生命周期，理解测试是如何执行的
+- [x] 阅读测试运行生命周期，理解测试是如何执行的
       链接：https://cn.vitest.dev/guide/lifecycle
 - [ ] 阅读测试筛选，掌握按文件、按名称执行测试
       链接：https://cn.vitest.dev/guide/filtering
