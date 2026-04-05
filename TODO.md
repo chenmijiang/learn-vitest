@@ -42,20 +42,22 @@
 
 ## 阶段 2：掌握日常开发最常用能力
 
-- [ ] 学会使用 `describe` 组织测试
+- [x] 学会使用 `describe` 组织测试
       链接：https://cn.vitest.dev/api/describe
-- [ ] 学会使用 `beforeEach`、`afterEach` 管理初始化和清理
+- [x] 学会使用 `beforeEach`、`afterEach` 管理初始化和清理
       链接：https://cn.vitest.dev/api/hooks
+- [ ] 阅读测试运行生命周期，理解测试是如何执行的
+      链接：https://cn.vitest.dev/guide/lifecycle
 - [ ] 阅读测试筛选，掌握按文件、按名称执行测试
       链接：https://cn.vitest.dev/guide/filtering
-- [ ] 学会使用 `-t` 只运行指定名称的测试
+- [x] 学会使用 `-t` 只运行指定名称的测试
       链接：https://cn.vitest.dev/guide/cli
-- [ ] 学会使用 `.skip`、`.only`、`.todo`
+- [x] 学会使用 `.skip`、`.only`、`.todo`
       链接：https://cn.vitest.dev/guide/filtering
 - [ ] 学会给测试和 hooks 配置超时
       链接：https://cn.vitest.dev/guide/filtering
 - [ ] 在当前项目中给一个已有模块补 5 到 10 个测试
-- [ ] 练习只运行单文件测试
+- [x] 练习只运行单文件测试
 - [ ] 练习只运行单个测试名
 - [ ] 练习在 watch 模式下修改代码并观察增量执行
 
@@ -63,8 +65,6 @@
 
 ## 阶段 3：理解环境与配置
 
-- [ ] 阅读测试运行生命周期，理解测试是如何执行的
-      链接：https://cn.vitest.dev/guide/lifecycle
 - [ ] 阅读测试环境，理解 `node`、`jsdom`、`happy-dom`、`edge-runtime`
       链接：https://cn.vitest.dev/guide/environment
 - [ ] 理解默认环境是 `node`
