@@ -100,7 +100,6 @@ describe("Scenario 2: test.concurrent Execution", () => {
   });
 
   afterAll(() => {
-    const timeline = trace.map((item) => `${item.task}-${item.phase}`);
     const starts = trace.filter((item) => item.phase === "start");
     const ends = trace.filter((item) => item.phase === "end");
 
