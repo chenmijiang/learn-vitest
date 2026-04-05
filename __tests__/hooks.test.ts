@@ -64,3 +64,69 @@ describe("hook order: afterEach declared first", () => {
     ]);
   });
 });
+
+describe("async cleanup order", () => {
+  const events: string[] = [];
+
+  beforeEach(() => {
+    events.push("beforeEach");
+
+    return async () => {
+      events.push("cleanup start");
+      await Promise.resolve();
+      events.push("cleanup end");
+    };
+  });
+
+  afterEach(() => {
+    events.push("afterEach");
+  });
+
+  test("cleanup does not run before the test body", () => {
+    expect(events).toEqual(["beforeEach"]);
+    events.push("test body");
+  });
+
+  afterAll(() => {
+    expect(events).toEqual([
+      "beforeEach",
+      "test body",
+      "afterEach",
+      "cleanup start",
+      "cleanup end",
+    ]);
+  });
+});
+
+describe("async setup in beforeEach", () => {
+  const events: string[] = [];
+
+  beforeEach(async () => {
+    events.push("setup start");
+    await Promise.resolve();
+    events.push("setup end");
+
+    return () => {
+      events.push("cleanup from setup");
+    };
+  });
+
+  afterEach(() => {
+    events.push("afterEach");
+  });
+
+  test("setup completes before the test body", () => {
+    expect(events).toEqual(["setup start", "setup end"]);
+    events.push("test body");
+  });
+
+  afterAll(() => {
+    expect(events).toEqual([
+      "setup start",
+      "setup end",
+      "test body",
+      "afterEach",
+      "cleanup from setup",
+    ]);
+  });
+});
