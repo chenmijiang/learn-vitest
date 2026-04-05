@@ -102,21 +102,123 @@ test.sequential("顺序测试 - 验证全局状态", () => {
 });
 ```
 
-## 快照测试中的注意事项
+## 深入理解：concurrent 的执行顺序
 
-在使用 `test.concurrent` 时，**必须从 TestContext 获取 expect**：
+### 常见困惑
+
+运行 concurrent 测试时，观察 trace 输出会发现：
+
+```
+A-start → B-start → C-start → A-end → B-end → C-end
+```
+
+看起来 start 和 end **分别都是有序的**，这和 sequential 的区别在哪？
+
+### 原因：JS 单线程 + 事件循环
+
+`test.concurrent` 不是多线程并行，而是**异步并发**。JS 是单线程的，执行模型如下：
+
+**Sequential 的时间线：**
+
+```
+t=0ms    A-start
+t=100ms  A-end
+t=100ms  B-start     ← 等 A 完成才启动 B
+t=200ms  B-end
+t=200ms  C-start
+t=300ms  C-end
+总耗时: ~300ms
+```
+
+**Concurrent 的时间线：**
+
+```
+t=0ms    A-start（同步执行到 await sleep，让出控制权）
+t=0ms    B-start（同步执行到 await sleep，让出控制权）
+t=0ms    C-start（同步执行到 await sleep，让出控制权）
+t=100ms  A-end（sleep 到期，按注册顺序回调）
+t=100ms  B-end
+t=100ms  C-end
+总耗时: ~100ms
+```
+
+### 为什么 start 有序？
+
+三个 test 函数被按注册顺序**同步调用**。每个函数从开头执行到第一个 `await` 之前的代码（包括 `trace.push("start")`）都是同步的，所以 start 的顺序就是代码书写顺序。
+
+### 为什么 end 也有序？
+
+因为三个 sleep 时长相同（都是 100ms），它们的 Promise 按注册顺序 resolve，微任务队列按 FIFO 处理，所以 end 也恰好有序。
+
+### 如何验证真正的并发？
+
+给不同任务设置**不同的 sleep 时长**，end 顺序就会由实际耗时决定：
 
 ```typescript
-// ❌ 错误：全局 expect 无法正确关联快照
+test.concurrent("task A (150ms)", async () => await runTask("A", 150));
+test.concurrent("task B (50ms)", async () => await runTask("B", 50));
+test.concurrent("task C (100ms)", async () => await runTask("C", 100));
+// 输出顺序：A-start, B-start, C-start, B-end, C-end, A-end
+```
+
+### 核心区别总结
+
+| 指标              | Sequential   | Concurrent             |
+| ----------------- | ------------ | ---------------------- |
+| 时间重叠          | 无，串行执行 | 有，sleep 时间重叠     |
+| 总耗时（3×100ms） | ~300ms       | ~100ms                 |
+| start 顺序        | 按代码顺序   | 按代码顺序（同步部分） |
+| end 顺序          | 按代码顺序   | 取决于各任务实际耗时   |
+
+> 判断是否真正并发，看的不是日志顺序，而是**总耗时**和**时间是否重叠**。
+
+## concurrent 中的 expect：全局 vs 本地
+
+### 两种 expect 的区别
+
+```typescript
+import { test, expect } from "vitest"; // ← 全局 expect（共享实例）
+
+// ✅ 从 test context 解构的 expect（每个 test 独立实例）
+test.concurrent("test A", async ({ expect }) => {
+  expect(data).toMatchSnapshot();
+});
+```
+
+### 为什么 concurrent 需要本地 expect？
+
+全局 `expect` 是所有 test 共享的单例，内部需要追踪"当前断言属于哪个 test"。sequential 模式下同一时间只有一个 test 在跑，没有歧义；但 concurrent 模式下多个 test **同时运行**，全局 expect 无法正确区分断言归属，会导致：
+
+1. **快照错乱** — snapshot 写到错误的 test 名下
+2. **断言计数混乱** — `expect.assertions(2)` 的计数可能跨 test 累加
+3. **错误归属错误** — 断言失败时报告到错误的 test 上
+
+而 `({ expect })` 解构出的是**绑定到当前 test 的私有实例**，天然隔离，不会串扰。
+
+### 什么时候必须用本地 expect？
+
+| 场景                                      | 全局 `expect` | 本地 `({ expect })` |
+| ----------------------------------------- | :-----------: | :-----------------: |
+| 普通 `test`                               |      OK       |         OK          |
+| `test.concurrent` + 简单断言              |  通常能工作   |        推荐         |
+| `test.concurrent` + **snapshot**          |    会出错     |      **必须**       |
+| `test.concurrent` + `expect.assertions()` |    会出错     |      **必须**       |
+
+### 实际写法
+
+```typescript
+// ❌ concurrent 中用全局 expect — 快照和计数可能出问题
 test.concurrent("snapshot test", async () => {
   expect(data).toMatchSnapshot();
 });
 
-// ✅ 正确：使用 context 中的 expect
+// ✅ concurrent 中用本地 expect — 安全
 test.concurrent("snapshot test", async ({ expect }) => {
   expect(data).toMatchSnapshot();
 });
 ```
+
+> **经验法则**：写 `test.concurrent` 时，养成从参数解构 `({ expect })` 的习惯，避免潜在问题。
 
 ## 组合用法
 
@@ -169,6 +271,8 @@ Test 3: ██████░   (100ms)
 
 ## 信息来源
 
-- [Vitest API - test.concurrent](https://vitest.dev/api/test#test-concurrent)
-- [Vitest API - test.sequential](https://vitest.dev/api/test#test-sequential)
+- [Vitest API - test.concurrent](https://cn.vitest.dev/api/test#test-concurrent)
+- [Vitest API - test.sequential](https://cn.vitest.dev/api/test#test-sequential)
+- [Vitest Guide - Test Context](https://cn.vitest.dev/guide/test-context)
+- [Vitest Guide - Parallelism](https://cn.vitest.dev/guide/parallelism)
 - 项目测试实例：`__tests__/concurrent-sequential.test.ts`
