@@ -65,6 +65,8 @@
 
 ## 阶段 3：理解环境与配置
 
+- [ ] 阅读测试上下文，理解测试环境的概念
+      链接：https://cn.vitest.dev/guide/test-context
 - [ ] 阅读测试环境，理解 `node`、`jsdom`、`happy-dom`、`edge-runtime`
       链接：https://cn.vitest.dev/guide/environment
 - [ ] 理解默认环境是 `node`
