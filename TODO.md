@@ -48,18 +48,18 @@
       链接：https://cn.vitest.dev/api/hooks
 - [x] 阅读测试运行生命周期，理解测试是如何执行的
       链接：https://cn.vitest.dev/guide/lifecycle
-- [ ] 阅读测试筛选，掌握按文件、按名称执行测试
+- [x] 阅读测试筛选，掌握按文件、按名称执行测试
       链接：https://cn.vitest.dev/guide/filtering
 - [x] 学会使用 `-t` 只运行指定名称的测试
-      链接：https://cn.vitest.dev/guide/cli
+      链接：https://cn.vitest.dev/guide/cli、https://cn.vitest.dev/config/testnamepattern.html
 - [x] 学会使用 `.skip`、`.only`、`.todo`
       链接：https://cn.vitest.dev/guide/filtering
-- [ ] 学会给测试和 hooks 配置超时
+- [x] 学会给测试和 hooks 配置超时
       链接：https://cn.vitest.dev/guide/filtering
-- [ ] 在当前项目中给一个已有模块补 5 到 10 个测试
+- [x] 在当前项目中给一个已有模块补 5 到 10 个测试
 - [x] 练习只运行单文件测试
-- [ ] 练习只运行单个测试名
-- [ ] 练习在 watch 模式下修改代码并观察增量执行
+- [x] 练习只运行单个测试名
+- [x] 练习在 watch 模式下修改代码并观察增量执行
 
 效果：能把测试融入日常开发循环，快速回归而不是整套重跑。
 
