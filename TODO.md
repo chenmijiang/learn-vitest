@@ -48,8 +48,6 @@
       链接：https://cn.vitest.dev/api/hooks
 - [x] 阅读测试运行生命周期，理解测试是如何执行的
       链接：https://cn.vitest.dev/guide/lifecycle
-- [ ] 阅读快照测试，理解快照的概念和使用方法
-      链接：https://cn.vitest.dev/guide/snapshot
 - [x] 阅读测试筛选，掌握按文件、按名称执行测试
       链接：https://cn.vitest.dev/guide/filtering
 - [x] 学会使用 `-t` 只运行指定名称的测试
@@ -112,6 +110,8 @@
 
 ## 阶段 5：组件测试与浏览器模式
 
+- [ ] 阅读快照测试，理解快照的概念和使用方法
+      链接：https://cn.vitest.dev/guide/snapshot
 - [ ] 阅读浏览器模式总览，先建立真实浏览器测试的概念
       链接：https://cn.vitest.dev/guide/browser/
 - [ ] 阅读组件测试，理解“测试行为而不是实现细节”
