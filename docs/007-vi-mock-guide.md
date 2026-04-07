@@ -184,14 +184,14 @@ export async function getUser(req, res) {
 // tests/user.test.js - 测试
 import { vi, test, expect } from "vitest";
 import { getUser } from "../controllers/user.js";
+// 直接静态导入 mock 后的模块（vi.mock 悬挂机制保证这行在 mock 之后执行）
+import { findUser } from "../models/user.js";
 
 vi.mock("../models/user.js", () => ({
   findUser: vi.fn(),
 }));
 
 test("should return user", async () => {
-  const { findUser } = await import("../models/user.js");
-
   // 设置 mock 返回值
   findUser.mockResolvedValue({ id: 1, name: "John" });
 
