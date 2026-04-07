@@ -65,20 +65,20 @@
 
 ## 阶段 3：理解环境与配置
 
-- [ ] 阅读测试上下文，理解测试环境的概念
+- [x] 阅读测试上下文，理解测试环境的概念
       链接：https://cn.vitest.dev/guide/test-context
-- [ ] 阅读测试环境，理解 `node`、`jsdom`、`happy-dom`、`edge-runtime`
+- [x] 阅读测试环境，理解 `node`、`jsdom`、`happy-dom`、`edge-runtime`
       链接：https://cn.vitest.dev/guide/environment
-- [ ] 理解默认环境是 `node`
+- [x] 理解默认环境是 `node`
       链接：https://cn.vitest.dev/guide/environment
-- [ ] 理解什么时候该用 DOM 模拟环境，什么时候不用
-- [ ] 阅读快速起步中的配置部分，理解 `vite.config.ts` 和 `vitest.config.ts`
+- [x] 理解什么时候该用 DOM 模拟环境，什么时候不用
+- [x] 阅读快速起步中的配置部分，理解 `vite.config.ts` 和 `vitest.config.ts`
       链接：https://cn.vitest.dev/guide/
-- [ ] 学会在配置文件中写 `test` 选项
+- [x] 学会在配置文件中写 `test` 选项
       链接：https://cn.vitest.dev/config/
-- [ ] 学会对单个测试文件指定环境注释 `@vitest-environment`
+- [x] 学会对单个测试文件指定环境注释 `@vitest-environment`
       链接：https://cn.vitest.dev/guide/environment
-- [ ] 在当前项目里分别尝试 1 次 `node` 环境和 1 次 DOM 环境测试
+- [x] 在当前项目里分别尝试 1 次 `node` 环境和 1 次 DOM 环境测试
 
 效果：遇到不同类型代码时，能先选对测试环境，而不是盲目写测试。
 
