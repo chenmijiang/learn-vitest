@@ -86,19 +86,19 @@
 
 - [ ] 阅读 Mock 总览，先理解 `vi` 的角色
       链接：https://cn.vitest.dev/guide/mocking
-- [ ] 学会使用 `vi.fn`
+- [x] 学会使用 `vi.fn`
       链接：https://cn.vitest.dev/guide/mocking/functions
-- [ ] 学会使用 `vi.spyOn`
+- [x] 学会使用 `vi.spyOn`
       链接：https://cn.vitest.dev/guide/mocking/functions
-- [ ] 学会使用 `vi.mock` 模拟模块
+- [x] 学会使用 `vi.mock` 模拟模块
       链接：https://cn.vitest.dev/guide/mocking/modules
-- [ ] 学会模拟全局对象
+- [x] 学会模拟全局对象
       链接：https://cn.vitest.dev/guide/mocking/globals
-- [ ] 学会模拟日期
+- [x] 学会模拟日期
       链接：https://cn.vitest.dev/guide/mocking/dates
-- [ ] 学会模拟时间和定时器
+- [x] 学会模拟时间和定时器
       链接：https://cn.vitest.dev/guide/mocking/timers
-- [ ] 学会模拟请求
+- [x] 学会模拟请求
       链接：https://cn.vitest.dev/guide/mocking/requests
 - [ ] 理解 mock 的清理、重置、恢复
       链接：https://cn.vitest.dev/api/mock
