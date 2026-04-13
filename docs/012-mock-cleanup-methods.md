@@ -1,89 +1,72 @@
-# Mock 清理方法：clearAllMocks vs resetAllMocks vs restoreAllMocks
+# Mock 清理方法：`clearAllMocks` vs `resetAllMocks` vs `restoreAllMocks`
 
-## 快速对比
+## 先看结论
 
-| 方法                   | 清除历史 | 重置实现 | 恢复原始 | 场景         |
-| ---------------------- | -------- | -------- | -------- | ------------ |
-| `vi.clearAllMocks()`   | ✓        | ✗        | ✗        | 测试间隔清理 |
-| `vi.resetAllMocks()`   | ✓        | ✓        | ✗        | 恢复默认状态 |
-| `vi.restoreAllMocks()` | ✗        | ✗        | ✓        | spy 场景清理 |
+| 方法                   | 做什么                                           | 不做什么                                     | 典型场景               |
+| ---------------------- | ------------------------------------------------ | -------------------------------------------- | ---------------------- |
+| `vi.clearAllMocks()`   | 清空调用历史（`mock.calls` / `mock.results` 等） | 不改实现                                     | 每个用例后清理调用计数 |
+| `vi.resetAllMocks()`   | 清空调用历史 + 重置实现到初始状态                | 不恢复对象原始属性描述符                     | 需要把 mock 行为“归零” |
+| `vi.restoreAllMocks()` | 恢复 `vi.spyOn()` 创建的 spy 到原始实现          | 不清空调用历史；不处理 `vi.mock()` 自动 mock | spy 场景收尾           |
 
----
+## 1) `vi.clearAllMocks()`
 
-## vi.clearAllMocks() - 清除调用历史
+只清调用历史，函数实现保持不变。
 
-**功能：清除 mock 的调用历史，但保留实现。**
+```ts
+import { expect, test, vi } from "vitest";
 
-```javascript
-import { vi, expect, test } from "vitest";
-
-test("clearAllMocks 示例", () => {
-  const mockFn = vi.fn(() => "result");
-
-  mockFn("arg1");
-  expect(mockFn).toHaveBeenCalledTimes(1);
+test("clearAllMocks", () => {
+  const fn = vi.fn(() => "result");
+  fn("a");
+  expect(fn).toHaveBeenCalledTimes(1);
 
   vi.clearAllMocks();
 
-  expect(mockFn).toHaveBeenCalledTimes(0); // ✓ 历史被清空
-  expect(mockFn()).toBe("result"); // ✓ 实现保留
+  expect(fn).toHaveBeenCalledTimes(0);
+  expect(fn()).toBe("result"); // 实现仍在
 });
 ```
 
-**最常见用法：**
+## 2) `vi.resetAllMocks()`
 
-```javascript
-afterEach(() => {
-  vi.clearAllMocks(); // 每个测试后清理
-});
-```
+关键点：`reset` 是“回到初始状态”，不是“统一变成 `undefined`”。
 
----
+- `vi.fn()`（无初始实现）重置后调用返回 `undefined`
+- `vi.fn(() => "initial")`（有初始实现）重置后会恢复为 `"initial"`
 
-## vi.resetAllMocks() - 重置为未实现状态
+```ts
+import { expect, test, vi } from "vitest";
 
-**功能：清除调用历史，并将实现重置为默认状态（返回 `undefined`）。**
+test("resetAllMocks", () => {
+  const emptyMock = vi.fn();
+  const withInitialImpl = vi.fn(() => "initial");
 
-```javascript
-import { vi, expect, test } from "vitest";
-
-test("resetAllMocks 示例", () => {
-  const mockFn = vi.fn(() => "original");
-
-  mockFn.mockReturnValue("custom");
-  mockFn();
-  expect(mockFn()).toBe("custom");
+  emptyMock.mockReturnValue("temp");
+  withInitialImpl.mockReturnValue("temp");
+  expect(emptyMock()).toBe("temp");
+  expect(withInitialImpl()).toBe("temp");
 
   vi.resetAllMocks();
 
-  expect(mockFn).toHaveBeenCalledTimes(0); // ✓ 历史清空
-  expect(mockFn()).toBe(undefined); // ✓ 实现重置
+  expect(emptyMock()).toBe(undefined); // vi.fn() -> undefined
+  expect(withInitialImpl()).toBe("initial"); // vi.fn(impl) -> 回到初始实现
 });
 ```
 
-**用途：** 需要完全重置 mock 状态，恢复到初始化时的样子。
+## 3) `vi.restoreAllMocks()`
 
----
+只针对 `vi.spyOn()` 创建的 spy，恢复到对象原始实现。
 
-## vi.restoreAllMocks() - 恢复原始实现
+官方文档里的两条警告要点：
 
-**功能：恢复所有由 `vi.spyOn()` 创建的 spy 的原始实现。**
+- 不会处理 automocking（`vi.mock()` 生成的 mock）
+- 不会清空调用历史，也不会重置 mock 实现历史
 
-关键特点：
+```ts
+import { expect, test, vi } from "vitest";
 
-- 只作用于 `vi.spyOn()` 创建的 spy
-- **不清空调用历史** ← 重要
-- **不影响 `vi.mock()` 的 auto mock**
-
-```javascript
-import { vi, expect, test } from "vitest";
-
-test("restoreAllMocks 示例", () => {
-  const calculator = {
-    add: (a, b) => a + b,
-  };
-
-  // 创建 spy 并修改实现
+test("restoreAllMocks", () => {
+  const calculator = { add: (a: number, b: number) => a + b };
   const spyAdd = vi.spyOn(calculator, "add");
   spyAdd.mockReturnValue(100);
 
@@ -93,184 +76,21 @@ test("restoreAllMocks 示例", () => {
 
   vi.restoreAllMocks();
 
-  expect(spyAdd).toHaveBeenCalledTimes(1); // ⚠️ 历史仍保留！
-  expect(calculator.add(2, 3)).toBe(5); // ✓ 恢复原始实现
+  expect(calculator.add(2, 3)).toBe(5); // 对象方法已恢复
+  expect(spyAdd).toHaveBeenCalledTimes(2); // 历史保留，但新调用不再进入旧 spy
 });
 ```
 
-**用途：** spy 测试场景中恢复被监视方法的原始实现。
+## 常见误区
 
----
-
-## 理解官方文档的两个 WARNING
-
-### WARNING 1："不会触及 automocking 期间生成的任何 mock"
-
-当使用 `vi.mock()` 时，Vitest 会自动生成 mock（称为 **automocking**），这类自动生成的 mock 无法通过 `vi.restoreAllMocks()` 恢复。只有由 `vi.spyOn()` 创建的 spy 才能被恢复。
-
-```javascript
-// automocking 示例
-vi.mock("./math.js"); // Vitest 自动生成 mock
-
-test("restoreAllMocks 不作用于 auto mock", async () => {
-  const { add } = await import("./math.js");
-
-  vi.restoreAllMocks(); // 无法恢复 automocking
-
-  console.log(add.mock !== undefined); // true - 仍是 mock
-});
-```
-
-### WARNING 2："既不会清空调用历史，也不会重置 mock 的实现"
-
-`vi.restoreAllMocks()` 与 `clearAllMocks()` 和 `resetAllMocks()` 的区别：
-
-```javascript
-const obj = { method: () => "original" };
-const spy = vi.spyOn(obj, "method");
-spy.mockReturnValue("mocked");
-spy();
-
-vi.restoreAllMocks();
-
-// 调用历史保留（不同于其他两个方法）
-expect(spy).toHaveBeenCalledTimes(1); // ✓
-
-// 恢复原始实现（这是唯一的作用）
-expect(obj.method()).toBe("original"); // ✓
-```
-
-**关键理解：** `vi.restoreAllMocks()` 专注恢复原始实现，不承担清理历史的职责。
-
----
-
-## 完整对比表
-
-| 方法                | 清除历史 | 重置实现 | 恢复原始 | 作用于 `vi.fn()` | 作用于 `vi.spyOn()` | 作用于 `vi.mock()` |
-| ------------------- | -------- | -------- | -------- | ---------------- | ------------------- | ------------------ |
-| `clearAllMocks()`   | ✓        | ✗        | ✗        | ✓                | ✓                   | ✓                  |
-| `resetAllMocks()`   | ✓        | ✓        | ✗        | ✓                | ✓                   | ✓                  |
-| `restoreAllMocks()` | ✗        | ✗        | ✓        | ✗                | ✓                   | ✗                  |
-
----
-
-## 使用建议
-
-### 配置文件方式（推荐）
-
-```javascript
-// vitest.config.js
-export default {
-  test: {
-    clearMocks: true, // 自动调用 vi.clearAllMocks()
-    restoreMocks: true, // 自动调用 vi.restoreAllMocks()
-  },
-};
-```
-
-### 手动方式
-
-```javascript
-afterEach(() => {
-  // 场景1：仅清理历史
-  vi.clearAllMocks();
-
-  // 场景2：完全重置
-  vi.resetAllMocks();
-
-  // 场景3：恢复 spy
-  vi.restoreAllMocks();
-});
-```
-
----
-
-## 常见错误
-
-### ❌ 错误 #1：期望 `vi.restoreAllMocks()` 清空调用历史
-
-```javascript
-test("错误的期望", () => {
-  const obj = { method: () => "original" };
-  const spy = vi.spyOn(obj, "method");
-
-  spy();
-  expect(spy).toHaveBeenCalledTimes(1);
-
-  vi.restoreAllMocks();
-
-  // ❌ 错误：期望调用历史被清空
-  expect(spy).toHaveBeenCalledTimes(0); // 失败！历史仍然保留
-
-  // ✅ 正确：历史保留，但实现恢复
-  expect(spy).toHaveBeenCalledTimes(1); // 通过
-  expect(obj.method()).toBe("original"); // 通过
-});
-```
-
-### ❌ 错误 #2：用 `vi.restoreAllMocks()` 恢复 automocking
-
-```javascript
-vi.mock("./api.js");
-
-test("错误的用法", async () => {
-  const { fetch } = await import("./api.js");
-
-  // ❌ 错误：restoreAllMocks 不能恢复 automocking
-  vi.restoreAllMocks();
-  console.log(typeof fetch.mock); // 'object' - 仍是 mock
-
-  // ✅ 正确的做法：使用 vi.unmock() 或 vi.doUnmock()
-  vi.doUnmock("./api.js");
-  const { fetch: realFetch } = await import("./api.js");
-  console.log(realFetch.mock); // undefined - 恢复原始
-});
-```
-
-### ❌ 错误 #3：在 spy 之前调用 `vi.restoreAllMocks()`
-
-```javascript
-test("错误的顺序", () => {
-  // ❌ 错误：还没有 spy，恢复无意义
-  vi.restoreAllMocks();
-
-  const obj = { method: () => "original" };
-  const spy = vi.spyOn(obj, "method");
-  spy.mockReturnValue("mocked");
-
-  // ✅ 正确：在使用完后再恢复
-  expect(obj.method()).toBe("mocked");
-  vi.restoreAllMocks();
-  expect(obj.method()).toBe("original");
-});
-```
-
----
-
-## 总结
-
-- **`vi.clearAllMocks()`** 最常用，日常测试首选
-- **`vi.resetAllMocks()`** 需要完全重置时使用
-- **`vi.restoreAllMocks()`** 专用于 spy 场景
-
-选择标准：
-
-- 只清理历史 → `clearAllMocks()`
-- 完全重置 mock → `resetAllMocks()`
-- 恢复被监视方法 → `restoreAllMocks()`
-
----
+- 误区 1：`resetAllMocks` 后任何 `vi.fn` 都返回 `undefined`
+  - 纠正：只有无初始实现的 `vi.fn()` 是这样；`vi.fn(impl)` 会回到 `impl`。
+- 误区 2：`restoreAllMocks` 会清空调用次数
+  - 纠正：不会，调用历史保留。
+- 误区 3：`restoreAllMocks` 能撤销 `vi.mock()` 的自动 mock
+  - 纠正：不能；它只恢复 `vi.spyOn` 的 spy。
 
 ## 参考资料
 
-中文版本：
-
-- [Vitest 官方 - vi.clearAllMocks()](https://cn.vitest.dev/api/vi.html#vi-clearallmocks)
-- [Vitest 官方 - vi.resetAllMocks()](https://cn.vitest.dev/api/vi.html#vi-resetallmocks)
-- [Vitest 官方 - vi.restoreAllMocks()](https://cn.vitest.dev/api/vi.html#vi-restoreallmocks)
-
-英文版本：
-
-- [Vitest Official - vi.clearAllMocks()](https://vitest.dev/api/vi.html#vi-clearallmocks)
-- [Vitest Official - vi.resetAllMocks()](https://vitest.dev/api/vi.html#vi-resetallmocks)
-- [Vitest Official - vi.restoreAllMocks()](https://vitest.dev/api/vi.html#vi-restoreallmocks)
+- [Vitest 官方 - vi API](https://cn.vitest.dev/api/vi.html)
+- [Vitest 官方 - Mock API](https://cn.vitest.dev/api/mock)
