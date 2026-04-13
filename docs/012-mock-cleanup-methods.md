@@ -106,14 +106,17 @@ test("restoreAllMocks 示例", () => {
 
 ### WARNING 1："不会触及 automocking 期间生成的任何 mock"
 
-`vi.restoreAllMocks()` 只恢复 `vi.spyOn()` 创建的 spy，对 `vi.mock()` 的自动 mock 无效。
+当使用 `vi.mock()` 时，Vitest 会自动生成 mock（称为 **automocking**），这类自动生成的 mock 无法通过 `vi.restoreAllMocks()` 恢复。只有由 `vi.spyOn()` 创建的 spy 才能被恢复。
 
 ```javascript
-vi.mock("./math.js");
+// automocking 示例
+vi.mock("./math.js"); // Vitest 自动生成 mock
 
 test("restoreAllMocks 不作用于 auto mock", async () => {
   const { add } = await import("./math.js");
-  vi.restoreAllMocks();
+
+  vi.restoreAllMocks(); // 无法恢复 automocking
+
   console.log(add.mock !== undefined); // true - 仍是 mock
 });
 ```
@@ -182,6 +185,68 @@ afterEach(() => {
 
 ---
 
+## 常见错误
+
+### ❌ 错误 #1：期望 `vi.restoreAllMocks()` 清空调用历史
+
+```javascript
+test("错误的期望", () => {
+  const obj = { method: () => "original" };
+  const spy = vi.spyOn(obj, "method");
+
+  spy();
+  expect(spy).toHaveBeenCalledTimes(1);
+
+  vi.restoreAllMocks();
+
+  // ❌ 错误：期望调用历史被清空
+  expect(spy).toHaveBeenCalledTimes(0); // 失败！历史仍然保留
+
+  // ✅ 正确：历史保留，但实现恢复
+  expect(spy).toHaveBeenCalledTimes(1); // 通过
+  expect(obj.method()).toBe("original"); // 通过
+});
+```
+
+### ❌ 错误 #2：用 `vi.restoreAllMocks()` 恢复 automocking
+
+```javascript
+vi.mock("./api.js");
+
+test("错误的用法", async () => {
+  const { fetch } = await import("./api.js");
+
+  // ❌ 错误：restoreAllMocks 不能恢复 automocking
+  vi.restoreAllMocks();
+  console.log(typeof fetch.mock); // 'object' - 仍是 mock
+
+  // ✅ 正确的做法：使用 vi.unmock() 或 vi.doUnmock()
+  vi.doUnmock("./api.js");
+  const { fetch: realFetch } = await import("./api.js");
+  console.log(realFetch.mock); // undefined - 恢复原始
+});
+```
+
+### ❌ 错误 #3：在 spy 之前调用 `vi.restoreAllMocks()`
+
+```javascript
+test("错误的顺序", () => {
+  // ❌ 错误：还没有 spy，恢复无意义
+  vi.restoreAllMocks();
+
+  const obj = { method: () => "original" };
+  const spy = vi.spyOn(obj, "method");
+  spy.mockReturnValue("mocked");
+
+  // ✅ 正确：在使用完后再恢复
+  expect(obj.method()).toBe("mocked");
+  vi.restoreAllMocks();
+  expect(obj.method()).toBe("original");
+});
+```
+
+---
+
 ## 总结
 
 - **`vi.clearAllMocks()`** 最常用，日常测试首选
@@ -198,6 +263,14 @@ afterEach(() => {
 
 ## 参考资料
 
+中文版本：
+
 - [Vitest 官方 - vi.clearAllMocks()](https://cn.vitest.dev/api/vi.html#vi-clearallmocks)
 - [Vitest 官方 - vi.resetAllMocks()](https://cn.vitest.dev/api/vi.html#vi-resetallmocks)
 - [Vitest 官方 - vi.restoreAllMocks()](https://cn.vitest.dev/api/vi.html#vi-restoreallmocks)
+
+英文版本：
+
+- [Vitest Official - vi.clearAllMocks()](https://vitest.dev/api/vi.html#vi-clearallmocks)
+- [Vitest Official - vi.resetAllMocks()](https://vitest.dev/api/vi.html#vi-resetallmocks)
+- [Vitest Official - vi.restoreAllMocks()](https://vitest.dev/api/vi.html#vi-restoreallmocks)
