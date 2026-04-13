@@ -84,7 +84,7 @@
 
 ## 阶段 4：掌握 Mock，这是实战关键
 
-- [ ] 阅读 Mock 总览，先理解 `vi` 的角色
+- [x] 阅读 Mock 总览，先理解 `vi` 的角色
       链接：https://cn.vitest.dev/guide/mocking
 - [x] 学会使用 `vi.fn`
       链接：https://cn.vitest.dev/guide/mocking/functions
