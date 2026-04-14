@@ -6,7 +6,7 @@ type: topic
 tags: ["snapshot", "beginner"]
 sources:
   - https://cn.vitest.dev/guide/snapshot
-  - ../../005-snapshot-testing.md
+  - ../../docs/005-snapshot-testing.md
 ---
 
 # Snapshots
@@ -53,9 +53,9 @@ sources:
 
 ## 关联文档
 
-- [005-snapshot-testing.md](../../005-snapshot-testing.md)
+- [005-snapshot-testing.md](../../docs/005-snapshot-testing.md)
 
 ## 来源
 
 - https://cn.vitest.dev/guide/snapshot
-- [005-snapshot-testing.md](../../005-snapshot-testing.md)
+- [005-snapshot-testing.md](../../docs/005-snapshot-testing.md)

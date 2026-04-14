@@ -7,8 +7,8 @@ tags: ["lifecycle", "beginner"]
 sources:
   - https://cn.vitest.dev/api/hooks
   - https://cn.vitest.dev/guide/lifecycle
-  - ../../003-beforeeach-aftereach-order.md
-  - ../../004-aroundEach.md
+  - ../../docs/003-beforeeach-aftereach-order.md
+  - ../../docs/004-aroundEach.md
 ---
 
 # Hooks
@@ -59,12 +59,12 @@ Hooks 负责测试前后的准备与清理；理解执行顺序和包裹式 hook
 
 ## 关联文档
 
-- [003-beforeeach-aftereach-order.md](../../003-beforeeach-aftereach-order.md)
-- [004-aroundEach.md](../../004-aroundEach.md)
+- [003-beforeeach-aftereach-order.md](../../docs/003-beforeeach-aftereach-order.md)
+- [004-aroundEach.md](../../docs/004-aroundEach.md)
 
 ## 来源
 
 - https://cn.vitest.dev/api/hooks
 - https://cn.vitest.dev/guide/lifecycle
-- [003-beforeeach-aftereach-order.md](../../003-beforeeach-aftereach-order.md)
-- [004-aroundEach.md](../../004-aroundEach.md)
+- [003-beforeeach-aftereach-order.md](../../docs/003-beforeeach-aftereach-order.md)
+- [004-aroundEach.md](../../docs/004-aroundEach.md)

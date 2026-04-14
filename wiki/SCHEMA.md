@@ -5,7 +5,7 @@ updated: 2026-04-14
 type: summary
 tags: []
 sources:
-  - ../../AGENTS.md
+  - ../../docs/AGENTS.md
   - https://gist.githubusercontent.com/karpathy/442a6bf555914893e9891c11519de94f/raw/ac46de1ad27f92b28ac95459c782c07f6b8c964a/llm-wiki.md
 ---
 
@@ -45,7 +45,7 @@ type: topic | path | source | summary
 tags: [from taxonomy below]
 sources:
   - https://cn.vitest.dev/...
-  - ../../NNN-xxx.md
+  - ../../docs/NNN-xxx.md
 ---
 ```
 
@@ -129,7 +129,7 @@ When `log.md` exceeds 500 entries, rotate: rename to `log-YYYY.md`, start fresh.
 
 ## Canonical Mapping Format
 
-`docs/wiki/sources/internal-docs-map.md` is the only canonical mapping file and must use explicit `primary` / `secondary` sub-lists for each topic section.
+`wiki/sources/internal-docs-map.md` is the only canonical mapping file and must use explicit `primary` / `secondary` sub-lists for each topic section.
 
 Example:
 
@@ -138,11 +138,11 @@ Example:
 
 ### primary
 
-- [007-vi-mock-guide.md](../../007-vi-mock-guide.md)
+- [007-vi-mock-guide.md](../../docs/007-vi-mock-guide.md)
 
 ### secondary
 
-- [009-vi-mocked-type-helper.md](../../009-vi-mocked-type-helper.md)
+- [009-vi-mocked-type-helper.md](../../docs/009-vi-mocked-type-helper.md)
 ```
 
 Do not encode mapping type in prose suffixes like `（secondary）`.

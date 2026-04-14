@@ -7,8 +7,8 @@ tags: ["mock", "advanced"]
 sources:
   - https://cn.vitest.dev/api/vi
   - https://cn.vitest.dev/guide/mocking/modules
-  - ../../010-vi-dynamic-import-settled.md
-  - ../../011-mockobject-vs-other-mocking-apis.md
+  - ../../docs/010-vi-dynamic-import-settled.md
+  - ../../docs/011-mockobject-vs-other-mocking-apis.md
 ---
 
 # Modules
@@ -55,11 +55,11 @@ sources:
 
 ## 关联文档
 
-- [010-vi-dynamic-import-settled.md](../../010-vi-dynamic-import-settled.md)
-- [011-mockobject-vs-other-mocking-apis.md](../../011-mockobject-vs-other-mocking-apis.md)
+- [010-vi-dynamic-import-settled.md](../../docs/010-vi-dynamic-import-settled.md)
+- [011-mockobject-vs-other-mocking-apis.md](../../docs/011-mockobject-vs-other-mocking-apis.md)
 
 ## 来源
 
 - https://cn.vitest.dev/api/vi
 - https://cn.vitest.dev/guide/mocking/modules
-- [011-mockobject-vs-other-mocking-apis.md](../../011-mockobject-vs-other-mocking-apis.md)
+- [011-mockobject-vs-other-mocking-apis.md](../../docs/011-mockobject-vs-other-mocking-apis.md)

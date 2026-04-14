@@ -1,6 +1,6 @@
 # Wiki Templates
 
-## `docs/wiki/index.md`
+## `wiki/index.md`
 
 ```md
 # Vitest Wiki
@@ -23,7 +23,7 @@
 - 见 [log.md](./log.md)
 ```
 
-## `docs/wiki/log.md`
+## `wiki/log.md`
 
 ```md
 # Wiki Log
@@ -32,8 +32,8 @@
 
 - `ingest`
   - changed:
-    - `docs/wiki/topics/xxx.md`
-    - `docs/wiki/sources/internal-docs-map.md`
+    - `wiki/topics/xxx.md`
+    - `wiki/sources/internal-docs-map.md`
   - source:
     - `docs/NNN-xxx.md`
   - note:
@@ -71,12 +71,12 @@
 
 ## 关联文档
 
-- [NNN-xxx](../../NNN-xxx.md)
+- [NNN-xxx](../../docs/NNN-xxx.md)
 
 ## 来源
 
 - https://cn.vitest.dev/
-- [NNN-xxx](../../NNN-xxx.md)
+- [NNN-xxx](../../docs/NNN-xxx.md)
 ```
 
 ## Path Page Template
@@ -96,5 +96,5 @@
 
 ## 对应项目任务
 
-- [TODO.md](../../TODO.md)
+- [TODO.md](../../docs/TODO.md)
 ```

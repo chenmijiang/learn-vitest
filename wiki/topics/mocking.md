@@ -9,11 +9,11 @@ sources:
   - https://cn.vitest.dev/guide/mocking/functions
   - https://cn.vitest.dev/guide/mocking/modules
   - https://cn.vitest.dev/api/mock
-  - ../../007-vi-mock-guide.md
-  - ../../008-vi-fn-spy-guide.md
-  - ../../009-vi-mocked-type-helper.md
-  - ../../011-mockobject-vs-other-mocking-apis.md
-  - ../../012-mock-cleanup-methods.md
+  - ../../docs/007-vi-mock-guide.md
+  - ../../docs/008-vi-fn-spy-guide.md
+  - ../../docs/009-vi-mocked-type-helper.md
+  - ../../docs/011-mockobject-vs-other-mocking-apis.md
+  - ../../docs/012-mock-cleanup-methods.md
 ---
 
 # Mocking
@@ -73,11 +73,11 @@ Mocking 用来隔离外部依赖、控制副作用和验证交互；它是 Vites
 
 ## 关联文档
 
-- [007-vi-mock-guide.md](../../007-vi-mock-guide.md)
-- [008-vi-fn-spy-guide.md](../../008-vi-fn-spy-guide.md)
-- [009-vi-mocked-type-helper.md](../../009-vi-mocked-type-helper.md)
-- [011-mockobject-vs-other-mocking-apis.md](../../011-mockobject-vs-other-mocking-apis.md)
-- [012-mock-cleanup-methods.md](../../012-mock-cleanup-methods.md)
+- [007-vi-mock-guide.md](../../docs/007-vi-mock-guide.md)
+- [008-vi-fn-spy-guide.md](../../docs/008-vi-fn-spy-guide.md)
+- [009-vi-mocked-type-helper.md](../../docs/009-vi-mocked-type-helper.md)
+- [011-mockobject-vs-other-mocking-apis.md](../../docs/011-mockobject-vs-other-mocking-apis.md)
+- [012-mock-cleanup-methods.md](../../docs/012-mock-cleanup-methods.md)
 
 ## 来源
 
@@ -85,4 +85,4 @@ Mocking 用来隔离外部依赖、控制副作用和验证交互；它是 Vites
 - https://cn.vitest.dev/guide/mocking/functions
 - https://cn.vitest.dev/guide/mocking/modules
 - https://cn.vitest.dev/api/mock
-- [009-vi-mocked-type-helper.md](../../009-vi-mocked-type-helper.md)
+- [009-vi-mocked-type-helper.md](../../docs/009-vi-mocked-type-helper.md)

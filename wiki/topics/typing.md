@@ -7,7 +7,7 @@ tags: ["mock", "advanced"]
 sources:
   - https://cn.vitest.dev/api/vi
   - https://cn.vitest.dev/guide/mocking
-  - ../../009-vi-mocked-type-helper.md
+  - ../../docs/009-vi-mocked-type-helper.md
 ---
 
 # Typing
@@ -54,10 +54,10 @@ sources:
 
 ## 关联文档
 
-- [009-vi-mocked-type-helper.md](../../009-vi-mocked-type-helper.md)
+- [009-vi-mocked-type-helper.md](../../docs/009-vi-mocked-type-helper.md)
 
 ## 来源
 
 - https://cn.vitest.dev/api/vi
 - https://cn.vitest.dev/guide/mocking
-- [009-vi-mocked-type-helper.md](../../009-vi-mocked-type-helper.md)
+- [009-vi-mocked-type-helper.md](../../docs/009-vi-mocked-type-helper.md)

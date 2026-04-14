@@ -11,7 +11,7 @@ Maintain the wiki as a stable knowledge layer between raw docs and user answers.
 
 ## When To Use
 
-- Backfilling existing `docs/NNN-xxx.md` into `docs/wiki/`
+- Backfilling existing `docs/NNN-xxx.md` into `wiki/`
 - Ingesting a newly created publish doc into topic/path/index/map/log
 - Running periodic wiki lint before larger updates
 - Writing back stable, reusable conclusions from Q&A
@@ -24,12 +24,12 @@ Maintain the wiki as a stable knowledge layer between raw docs and user answers.
 
 ## Required Files
 
-- `docs/wiki/SCHEMA.md`
-- `docs/wiki/index.md`
-- `docs/wiki/log.md`
-- `docs/wiki/topics/*.md`
-- `docs/wiki/sources/official-docs.md`
-- `docs/wiki/sources/internal-docs-map.md`
+- `wiki/SCHEMA.md`
+- `wiki/index.md`
+- `wiki/log.md`
+- `wiki/topics/*.md`
+- `wiki/sources/official-docs.md`
+- `wiki/sources/internal-docs-map.md`
 
 ## Quick Reference
 
@@ -42,7 +42,7 @@ Maintain the wiki as a stable knowledge layer between raw docs and user answers.
 
 ## Canonical Rules
 
-- `docs/wiki/sources/internal-docs-map.md` is the runtime source of truth
+- `wiki/sources/internal-docs-map.md` is the runtime source of truth
 - A publish doc is covered only when it appears in the map and is linked under the matching topic page `关联文档`
 - Use explicit `primary` / `secondary` sections in the map; never encode mapping type as prose suffixes
 - Every topic page must include:
@@ -55,7 +55,7 @@ Maintain the wiki as a stable knowledge layer between raw docs and user answers.
   - 关联文档
   - 来源
 - Every index entry must include: link, one-line summary, `updated`, source count
-- No silent wiki edits; every operation appends to `docs/wiki/log.md`
+- No silent wiki edits; every operation appends to `wiki/log.md`
 
 ## Workflows
 

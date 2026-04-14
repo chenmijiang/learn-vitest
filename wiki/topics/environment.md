@@ -7,7 +7,7 @@ tags: ["environment", "config", "beginner"]
 sources:
   - https://cn.vitest.dev/guide/environment
   - https://cn.vitest.dev/guide/test-context
-  - ../../006-vitest-environment-extension.md
+  - ../../docs/006-vitest-environment-extension.md
 ---
 
 # Environment
@@ -58,10 +58,10 @@ sources:
 
 ## 关联文档
 
-- [006-vitest-environment-extension.md](../../006-vitest-environment-extension.md)
+- [006-vitest-environment-extension.md](../../docs/006-vitest-environment-extension.md)
 
 ## 来源
 
 - https://cn.vitest.dev/guide/environment
 - https://cn.vitest.dev/guide/test-context
-- [006-vitest-environment-extension.md](../../006-vitest-environment-extension.md)
+- [006-vitest-environment-extension.md](../../docs/006-vitest-environment-extension.md)

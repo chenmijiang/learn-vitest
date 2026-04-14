@@ -1,7 +1,7 @@
 # Wiki Schema Template
 
-> 通用 SCHEMA 模板，供项目级 `docs/wiki/SCHEMA.md` 实例化使用。
-> 每个 wiki 应在 `docs/wiki/SCHEMA.md` 中有一份针对自身领域的定制版本。
+> 通用 SCHEMA 模板，供项目级 `wiki/SCHEMA.md` 实例化使用。
+> 每个 wiki 应在 `wiki/SCHEMA.md` 中有一份针对自身领域的定制版本。
 
 ## Domain
 

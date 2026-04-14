@@ -18,7 +18,7 @@ sources:
 - `schema-update`
   - changed:
     - `AGENTS.md`
-    - `docs/wiki/SCHEMA.md`
+    - `wiki/SCHEMA.md`
     - `.claude/skills/wiki-maintainer/SKILL.md`
   - source:
     - https://gist.githubusercontent.com/karpathy/442a6bf555914893e9891c11519de94f/raw/ac46de1ad27f92b28ac95459c782c07f6b8c964a/llm-wiki.md
@@ -26,16 +26,16 @@ sources:
 
 - `ingest`
   - changed:
-    - `docs/wiki/index.md`
-    - `docs/wiki/sources/internal-docs-map.md`
-    - `docs/wiki/topics/assertions.md`
-    - `docs/wiki/topics/execution-model.md`
-    - `docs/wiki/topics/hooks.md`
-    - `docs/wiki/topics/environment.md`
-    - `docs/wiki/topics/mocking.md`
-    - `docs/wiki/topics/modules.md`
-    - `docs/wiki/topics/snapshots.md`
-    - `docs/wiki/topics/typing.md`
+    - `wiki/index.md`
+    - `wiki/sources/internal-docs-map.md`
+    - `wiki/topics/assertions.md`
+    - `wiki/topics/execution-model.md`
+    - `wiki/topics/hooks.md`
+    - `wiki/topics/environment.md`
+    - `wiki/topics/mocking.md`
+    - `wiki/topics/modules.md`
+    - `wiki/topics/snapshots.md`
+    - `wiki/topics/typing.md`
   - source:
     - `docs/001-expect-custom-message.md`
     - `docs/002-concurrent-sequential.md`
@@ -53,14 +53,14 @@ sources:
 
 - `lint`
   - changed:
-    - `docs/wiki/SCHEMA.md`
-    - `docs/wiki/index.md`
-    - `docs/wiki/log.md`
-    - `docs/wiki/paths/beginner-path.md`
-    - `docs/wiki/paths/environment-path.md`
-    - `docs/wiki/paths/mocking-path.md`
-    - `docs/wiki/sources/internal-docs-map.md`
-    - `docs/wiki/sources/official-docs.md`
+    - `wiki/SCHEMA.md`
+    - `wiki/index.md`
+    - `wiki/log.md`
+    - `wiki/paths/beginner-path.md`
+    - `wiki/paths/environment-path.md`
+    - `wiki/paths/mocking-path.md`
+    - `wiki/sources/internal-docs-map.md`
+    - `wiki/sources/official-docs.md`
   - checks:
     - 必需文件是否存在，且是否包含 frontmatter
     - 非 topic/path 页面是否满足最少 wikilink 约束
@@ -84,41 +84,41 @@ sources:
 
 - `schema-create`
   - changed:
-    - `docs/wiki/SCHEMA.md`
+    - `wiki/SCHEMA.md`
     - `.claude/skills/wiki-maintainer/references/schema-template.md`
   - note: 建立项目级 wiki 宪法与通用 SCHEMA 模板，定义 domain、命名规范、frontmatter、tag taxonomy、页面阈值、更新策略、stale content 与 query-update 标准
 
 - `frontmatter-update`
   - changed:
-    - `docs/wiki/topics/assertions.md`
-    - `docs/wiki/topics/execution-model.md`
-    - `docs/wiki/topics/hooks.md`
-    - `docs/wiki/topics/environment.md`
-    - `docs/wiki/topics/mocking.md`
-    - `docs/wiki/topics/typing.md`
-    - `docs/wiki/topics/modules.md`
-    - `docs/wiki/topics/snapshots.md`
-    - `docs/wiki/paths/beginner-path.md`
-    - `docs/wiki/paths/mocking-path.md`
-    - `docs/wiki/paths/environment-path.md`
-    - `docs/wiki/sources/official-docs.md`
-    - `docs/wiki/sources/internal-docs-map.md`
+    - `wiki/topics/assertions.md`
+    - `wiki/topics/execution-model.md`
+    - `wiki/topics/hooks.md`
+    - `wiki/topics/environment.md`
+    - `wiki/topics/mocking.md`
+    - `wiki/topics/typing.md`
+    - `wiki/topics/modules.md`
+    - `wiki/topics/snapshots.md`
+    - `wiki/paths/beginner-path.md`
+    - `wiki/paths/mocking-path.md`
+    - `wiki/paths/environment-path.md`
+    - `wiki/sources/official-docs.md`
+    - `wiki/sources/internal-docs-map.md`
   - note: 为所有 wiki 层页面统一添加 YAML frontmatter（title, created, updated, type, tags, sources）
 
 - `wikilinks-update`
   - changed:
-    - `docs/wiki/index.md`
-    - `docs/wiki/topics/assertions.md`
-    - `docs/wiki/topics/execution-model.md`
-    - `docs/wiki/topics/hooks.md`
-    - `docs/wiki/topics/environment.md`
-    - `docs/wiki/topics/mocking.md`
-    - `docs/wiki/topics/typing.md`
-    - `docs/wiki/topics/modules.md`
-    - `docs/wiki/topics/snapshots.md`
-    - `docs/wiki/paths/beginner-path.md`
-    - `docs/wiki/paths/mocking-path.md`
-    - `docs/wiki/paths/environment-path.md`
+    - `wiki/index.md`
+    - `wiki/topics/assertions.md`
+    - `wiki/topics/execution-model.md`
+    - `wiki/topics/hooks.md`
+    - `wiki/topics/environment.md`
+    - `wiki/topics/mocking.md`
+    - `wiki/topics/typing.md`
+    - `wiki/topics/modules.md`
+    - `wiki/topics/snapshots.md`
+    - `wiki/paths/beginner-path.md`
+    - `wiki/paths/mocking-path.md`
+    - `wiki/paths/environment-path.md`
   - note: 在 wiki 层引入 [[wikilinks]] 互链；index.md 与 topic/path 页均增加至少 2 个出站 wikilink
 
 - `skill-update`
@@ -128,7 +128,7 @@ sources:
 
 - `lint`
   - changed:
-    - `docs/wiki/log.md`
+    - `wiki/log.md`
   - checks:
     - `internal-docs-map.md` 与 topic 页关联文档是否一致
     - 所有 wiki 页面 frontmatter 是否完整
@@ -147,26 +147,26 @@ sources:
 
 - `backfill`
   - changed:
-    - `docs/wiki/index.md`
-    - `docs/wiki/paths/beginner-path.md`
-    - `docs/wiki/paths/environment-path.md`
-    - `docs/wiki/paths/mocking-path.md`
-    - `docs/wiki/sources/internal-docs-map.md`
-    - `docs/wiki/sources/official-docs.md`
-    - `docs/wiki/topics/assertions.md`
-    - `docs/wiki/topics/environment.md`
-    - `docs/wiki/topics/execution-model.md`
-    - `docs/wiki/topics/hooks.md`
-    - `docs/wiki/topics/mocking.md`
-    - `docs/wiki/topics/modules.md`
-    - `docs/wiki/topics/snapshots.md`
-    - `docs/wiki/topics/typing.md`
+    - `wiki/index.md`
+    - `wiki/paths/beginner-path.md`
+    - `wiki/paths/environment-path.md`
+    - `wiki/paths/mocking-path.md`
+    - `wiki/sources/internal-docs-map.md`
+    - `wiki/sources/official-docs.md`
+    - `wiki/topics/assertions.md`
+    - `wiki/topics/environment.md`
+    - `wiki/topics/execution-model.md`
+    - `wiki/topics/hooks.md`
+    - `wiki/topics/mocking.md`
+    - `wiki/topics/modules.md`
+    - `wiki/topics/snapshots.md`
+    - `wiki/topics/typing.md`
   - source: `docs/001-expect-custom-message.md` 到 `docs/012-mock-cleanup-methods.md`
   - note: 建立首批 topic 和 path 页面，并完成现有文档到 wiki 的映射
 
 - `ingest`
   - changed:
-    - `docs/wiki/sources/internal-docs-map.md`
+    - `wiki/sources/internal-docs-map.md`
   - source:
     - `docs/001-expect-custom-message.md`
     - `docs/002-concurrent-sequential.md`
@@ -184,11 +184,11 @@ sources:
 
 - `lint`
   - changed:
-    - `docs/wiki/log.md`
-    - `docs/wiki/sources/internal-docs-map.md`
-    - `docs/wiki/topics/hooks.md`
-    - `docs/wiki/topics/mocking.md`
-    - `docs/wiki/topics/modules.md`
+    - `wiki/log.md`
+    - `wiki/sources/internal-docs-map.md`
+    - `wiki/topics/hooks.md`
+    - `wiki/topics/mocking.md`
+    - `wiki/topics/modules.md`
   - checks:
     - `internal-docs-map.md` 与 topic 页关联文档是否一致
     - 是否存在 secondary 映射缺失

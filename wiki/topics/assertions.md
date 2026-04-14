@@ -6,7 +6,7 @@ type: topic
 tags: ["assertion", "beginner"]
 sources:
   - https://cn.vitest.dev/api/expect.html
-  - ../../001-expect-custom-message.md
+  - ../../docs/001-expect-custom-message.md
 ---
 
 # Assertions
@@ -53,9 +53,9 @@ Vitest 支持为 `expect` 传入自定义错误消息，适合在循环、批量
 
 ## 关联文档
 
-- [001-expect-custom-message.md](../../001-expect-custom-message.md)
+- [001-expect-custom-message.md](../../docs/001-expect-custom-message.md)
 
 ## 来源
 
 - https://cn.vitest.dev/api/expect.html
-- [001-expect-custom-message.md](../../001-expect-custom-message.md)
+- [001-expect-custom-message.md](../../docs/001-expect-custom-message.md)

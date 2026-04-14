@@ -5,7 +5,7 @@ updated: 2026-04-14
 type: path
 tags: ["beginner"]
 sources:
-  - ../../../TODO.md
+  - ../../TODO.md
 ---
 
 # 初学者路径
@@ -32,7 +32,7 @@ sources:
 
 ## 对应项目任务
 
-- [TODO.md](../../../TODO.md)
+- [TODO.md](../../TODO.md)
 
 ## 完成标志
 

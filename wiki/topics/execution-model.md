@@ -7,7 +7,7 @@ tags: ["parallelism", "lifecycle"]
 sources:
   - https://cn.vitest.dev/api/test
   - https://cn.vitest.dev/guide/parallelism
-  - ../../002-concurrent-sequential.md
+  - ../../docs/002-concurrent-sequential.md
 ---
 
 # Execution Model
@@ -62,10 +62,10 @@ sources:
 
 ## 关联文档
 
-- [002-concurrent-sequential.md](../../002-concurrent-sequential.md)
+- [002-concurrent-sequential.md](../../docs/002-concurrent-sequential.md)
 
 ## 来源
 
 - https://cn.vitest.dev/api/test
 - https://cn.vitest.dev/guide/parallelism
-- [002-concurrent-sequential.md](../../002-concurrent-sequential.md)
+- [002-concurrent-sequential.md](../../docs/002-concurrent-sequential.md)
