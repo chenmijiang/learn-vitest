@@ -47,6 +47,16 @@ Hooks 负责测试前后的准备与清理；理解执行顺序和包裹式 hook
 - 误以为返回任意 Promise 都会变成 cleanup
 - 把过多业务逻辑塞进 hooks，导致测试本身难读
 
+## 证据状态
+
+- 已验证：`beforeEach/afterEach` 与 `aroundEach` 的基本契约来自官方 hooks/lifecycle 文档与项目实证文档。
+- 待验证：跨版本在细节时序上的实现变化需以当前版本官方文档为准。
+- 冲突中：无。
+
+## 最近更新
+
+- 2026-04-14 backfill：补充 `runTest()` 必须调用这一 aroundEach 核心契约，并将其与 execution-model 页面互链。
+
 ## 关联文档
 
 - [003-beforeeach-aftereach-order.md](../../003-beforeeach-aftereach-order.md)

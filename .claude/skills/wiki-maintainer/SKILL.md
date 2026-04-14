@@ -78,9 +78,11 @@ Steps:
 1. Classify the document by topic
 2. Prefer updating an existing topic page
 3. Create a new topic page only when no good fit exists
-4. Update `docs/wiki/sources/internal-docs-map.md`
-5. Update `index.md` and any relevant path page
-6. Append an `ingest` entry to `log.md`
+4. Update `docs/wiki/sources/internal-docs-map.md` using explicit `primary` / `secondary` sections
+5. Update `index.md` entry metadata (one-line summary, updated date, source count)
+6. Update any relevant path page
+7. Ensure touched topic pages include `证据状态` and `最近更新`
+8. Append an `ingest` entry to `log.md`
 
 ### 3. Lint
 
@@ -102,6 +104,8 @@ Checks:
 10. **Log rotation**: If `log.md` exceeds 500 entries, recommend rotation.
 11. **Contradictions**: Pages sharing tags/entities but stating conflicting facts, or content that contradicts `SCHEMA.md` conventions.
 12. **Unverifiable statements**: Claims without sources or explicit "待验证" markers.
+13. **Index metadata completeness**: Every index entry includes one-line summary, updated date, and source count.
+14. **Topic evidence sections**: Every topic page contains `证据状态` and `最近更新`.
 
 Output:
 
@@ -118,7 +122,7 @@ Steps:
 
 1. Answer the user first
 2. Extract the reusable knowledge delta
-3. Apply the smallest useful update to a topic or path page
+3. By default, propose and apply the smallest useful writeback to a topic or path page in the same turn
 4. If a doc relationship changed, update `internal-docs-map.md`
 5. Append a `query-update` entry to the log
 
@@ -133,6 +137,8 @@ Every topic page should include:
 - 适用场景
 - 核心概念
 - 常见误区
+- 证据状态（已验证 / 待验证 / 冲突中）
+- 最近更新（最近一次写回变化点）
 - 关联文档
 - 来源（官方优先，也可补充项目文档）
 - At least 2 `[[wikilinks]]` to other wiki-layer pages
@@ -158,6 +164,13 @@ Every backfill, ingest, lint, or query-update must append to `docs/wiki/log.md` 
 - follow-up notes
 
 No silent wiki edits.
+
+## Conflict Tracking
+
+When lint or ingest finds contradictions:
+
+- open a conflict item in `docs/wiki/log.md` with `conflict-open`
+- resolve with a later `conflict-resolved` entry after page updates
 
 ## Collaboration Contract
 

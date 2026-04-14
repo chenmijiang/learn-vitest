@@ -2,6 +2,60 @@
 
 ## 2026-04-14
 
+- `schema-update`
+  - changed:
+    - `AGENTS.md`
+    - `docs/wiki/SCHEMA.md`
+    - `.claude/skills/wiki-maintainer/SKILL.md`
+  - source:
+    - https://gist.githubusercontent.com/karpathy/442a6bf555914893e9891c11519de94f/raw/ac46de1ad27f92b28ac95459c782c07f6b8c964a/llm-wiki.md
+  - note: 对齐 LLM Wiki 的“持续复利”目标，新增 index 元数据要求、topic 证据状态/最近更新、结构化 primary/secondary 映射，以及 query-update 默认写回策略
+
+- `ingest`
+  - changed:
+    - `docs/wiki/index.md`
+    - `docs/wiki/sources/internal-docs-map.md`
+    - `docs/wiki/topics/assertions.md`
+    - `docs/wiki/topics/execution-model.md`
+    - `docs/wiki/topics/hooks.md`
+    - `docs/wiki/topics/environment.md`
+    - `docs/wiki/topics/mocking.md`
+    - `docs/wiki/topics/modules.md`
+    - `docs/wiki/topics/snapshots.md`
+    - `docs/wiki/topics/typing.md`
+  - source:
+    - `docs/001-expect-custom-message.md`
+    - `docs/002-concurrent-sequential.md`
+    - `docs/003-beforeeach-aftereach-order.md`
+    - `docs/004-aroundEach.md`
+    - `docs/005-snapshot-testing.md`
+    - `docs/006-vitest-environment-extension.md`
+    - `docs/007-vi-mock-guide.md`
+    - `docs/008-vi-fn-spy-guide.md`
+    - `docs/009-vi-mocked-type-helper.md`
+    - `docs/010-vi-dynamic-import-settled.md`
+    - `docs/011-mockobject-vs-other-mocking-apis.md`
+    - `docs/012-mock-cleanup-methods.md`
+  - note: 生成新版 wiki 内容，补齐 topic 证据状态与最近更新，并将 internal-docs-map 转为结构化 primary/secondary
+
+- `lint`
+  - changed:
+    - `docs/wiki/log.md`
+  - checks:
+    - topic 页面是否包含“证据状态”和“最近更新”
+    - `internal-docs-map.md` 是否使用结构化 primary/secondary
+    - `index.md` 条目是否包含摘要、updated、sources
+  - findings:
+    - 所有 topic 页面均已补齐新增段落
+    - mapping 已移除自然语言 secondary 后缀，改为结构化分组
+    - index 学习入口与主题导航条目均已补齐元数据
+  - follow-up:
+    - 后续新增 topic/path 时继续维护 index 元数据一致性
+
+---
+
+## 2026-04-14
+
 - `schema-create`
   - changed:
     - `docs/wiki/SCHEMA.md`

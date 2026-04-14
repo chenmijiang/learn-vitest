@@ -43,6 +43,16 @@ sources:
 - 把 `vi.dynamicImportSettled` 当成等待一切异步任务的通用工具
 - 没分清模块层面的替换和对象层面的改写
 
+## 证据状态
+
+- 已验证：`vi.dynamicImportSettled` 和模块 mocking 的主要边界有官方文档与项目文档支撑。
+- 待验证：涉及底层加载器实现和缓存策略的推断应以当前版本源码和官方说明复核。
+- 冲突中：无。
+
+## 最近更新
+
+- 2026-04-14 lint-fix：将模块时机问题显式提炼为本页核心概念，减少与 mocking 页的内容重叠。
+
 ## 关联文档
 
 - [010-vi-dynamic-import-settled.md](../../010-vi-dynamic-import-settled.md)
