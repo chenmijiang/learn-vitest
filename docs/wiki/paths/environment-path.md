@@ -5,7 +5,7 @@ updated: 2026-04-14
 type: path
 tags: ["environment", "config", "beginner"]
 sources:
-  - ../../TODO.md
+  - ../../../TODO.md
 ---
 
 # 环境与配置路径
@@ -18,7 +18,7 @@ sources:
 
 1. 先看 [Execution Model](../topics/execution-model.md)，理解测试怎么跑。
 2. 再看 [Environment](../topics/environment.md)，区分 `node`、DOM 模拟和自定义环境。
-3. 回到 [TODO.md](../../TODO.md) 的阶段 3 与阶段 5，对照当前项目动手验证。
+3. 回到 [TODO.md](../../../TODO.md) 的阶段 3 与阶段 5，对照当前项目动手验证。
 
 ## 配套主题
 
@@ -27,7 +27,7 @@ sources:
 
 ## 对应项目任务
 
-- [TODO.md](../../TODO.md)
+- [TODO.md](../../../TODO.md)
 
 ## 完成标志
 

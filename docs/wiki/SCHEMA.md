@@ -1,8 +1,25 @@
+---
+title: Wiki Schema
+created: 2026-04-14
+updated: 2026-04-14
+type: summary
+tags: []
+sources:
+  - ../../AGENTS.md
+  - https://gist.githubusercontent.com/karpathy/442a6bf555914893e9891c11519de94f/raw/ac46de1ad27f92b28ac95459c782c07f6b8c964a/llm-wiki.md
+---
+
 # Wiki Schema
 
 ## Domain
 
 Vitest 初学者学习 wiki。聚合项目内发布文档与官方资料，帮助有前端经验但刚接触 Vitest 的读者快速建立可复用的知识结构。
+
+## Related Pages
+
+- [[index]]
+- [[sources/internal-docs-map]]
+- [[log]]
 
 ## Conventions
 

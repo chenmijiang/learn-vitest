@@ -1,3 +1,15 @@
+---
+title: Vitest Wiki Index
+created: 2026-04-14
+updated: 2026-04-14
+type: summary
+tags: ["beginner"]
+sources:
+  - ./SCHEMA.md
+  - ./sources/official-docs.md
+  - ./sources/internal-docs-map.md
+---
+
 # Vitest Wiki
 
 > 项目级 Vitest 学习知识库。维护规则见 [[SCHEMA]]。

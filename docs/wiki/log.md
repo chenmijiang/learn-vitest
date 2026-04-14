@@ -1,4 +1,17 @@
+---
+title: Wiki Log
+created: 2026-04-14
+updated: 2026-04-14
+type: summary
+tags: []
+sources:
+  - ./SCHEMA.md
+  - ./sources/internal-docs-map.md
+---
+
 # Wiki Log
+
+> 维护规则见 [[SCHEMA]]；主题导航见 [[index]]；文档映射以 [[sources/internal-docs-map]] 为准。
 
 ## 2026-04-14
 
@@ -40,16 +53,29 @@
 
 - `lint`
   - changed:
+    - `docs/wiki/SCHEMA.md`
+    - `docs/wiki/index.md`
     - `docs/wiki/log.md`
+    - `docs/wiki/paths/beginner-path.md`
+    - `docs/wiki/paths/environment-path.md`
+    - `docs/wiki/paths/mocking-path.md`
+    - `docs/wiki/sources/internal-docs-map.md`
+    - `docs/wiki/sources/official-docs.md`
   - checks:
+    - 必需文件是否存在，且是否包含 frontmatter
+    - 非 topic/path 页面是否满足最少 wikilink 约束
     - topic 页面是否包含“证据状态”和“最近更新”
     - `internal-docs-map.md` 是否使用结构化 primary/secondary
     - `index.md` 条目是否包含摘要、updated、sources
   - findings:
+    - `SCHEMA.md`、`index.md`、`log.md` 缺少 frontmatter，现已补齐
+    - `official-docs.md` 与 `internal-docs-map.md` 缺少最少 2 个出站 wikilink，现已补齐
+    - 三个 path 页面原先将 `TODO.md` 写成相对 `docs/` 的错误路径，现已修正到仓库根目录
     - 所有 topic 页面均已补齐新增段落
     - mapping 已移除自然语言 secondary 后缀，改为结构化分组
     - index 学习入口与主题导航条目均已补齐元数据
   - follow-up:
+    - 后续新增 source/summary 页面时，也按 SCHEMA 检查 frontmatter 与 wikilinks
     - 后续新增 topic/path 时继续维护 index 元数据一致性
 
 ---
