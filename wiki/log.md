@@ -15,6 +15,27 @@ sources:
 
 ## 2026-04-15
 
+- `ingest`
+  - changed:
+    - `docs/013-expect-foundation-chain-and-assert.md`
+    - `wiki/index.md`
+    - `wiki/sources/internal-docs-map.md`
+    - `wiki/sources/official-docs.md`
+    - `wiki/topics/assertions.md`
+    - `wiki/log.md`
+  - source:
+    - https://vitest.dev/api/expect.html
+    - https://vitest.dev/api/assert
+    - https://vitest.dev/config/expect
+    - https://vitest.dev/guide/features
+    - https://vitest.dev/guide/extending-matchers
+    - https://main.vitest.dev/guide/migration.html
+    - https://github.com/vitest-dev/vitest/tree/main/packages/expect
+    - https://www.chaijs.com/guide/styles/
+    - https://www.chaijs.com/api/bdd/
+    - https://www.chaijs.com/api/assert/
+  - note: 新增一篇关于 `expect` 底座、链式断言、Jest 兼容层以及 `expect` 与 `assert` 关系的发布型文档，并同步写回 Assertions topic 与文档映射。
+
 - `query-update`
   - changed:
     - `wiki/topics/mocking.md`

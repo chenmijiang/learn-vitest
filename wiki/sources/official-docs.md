@@ -1,7 +1,7 @@
 ---
 title: Official Docs
 created: 2026-04-14
-updated: 2026-04-14
+updated: 2026-04-15
 type: source
 tags: []
 sources:
@@ -29,6 +29,7 @@ sources:
 - Describe API: https://cn.vitest.dev/api/describe
 - Hooks API: https://cn.vitest.dev/api/hooks
 - Expect API: https://cn.vitest.dev/api/expect.html
+- Assert API: https://vitest.dev/api/assert
 - Mock API: https://cn.vitest.dev/api/mock
 
 ## Topic Guides

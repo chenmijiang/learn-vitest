@@ -1,7 +1,7 @@
 ---
 title: Vitest Wiki Index
 created: 2026-04-14
-updated: 2026-04-14
+updated: 2026-04-15
 type: summary
 tags: ["beginner"]
 sources:
@@ -22,7 +22,7 @@ sources:
 
 ## 主题导航
 
-- [[Assertions|topics/assertions.md]] - 断言表达与失败信息设计。`updated: 2026-04-14` `sources: 2`
+- [[Assertions|topics/assertions.md]] - 断言表达、Chai/Jest 断言关系与失败信息设计。`updated: 2026-04-15` `sources: 5`
 - [[Execution Model|topics/execution-model.md]] - 顺序/并发执行模型与本地 `expect` 使用边界。`updated: 2026-04-14` `sources: 3`
 - [[Hooks|topics/hooks.md]] - setup/cleanup 生命周期与 `aroundEach` 包裹契约。`updated: 2026-04-14` `sources: 4`
 - [[Environment|topics/environment.md]] - `node/jsdom/happy-dom` 选择与自定义环境扩展。`updated: 2026-04-14` `sources: 3`

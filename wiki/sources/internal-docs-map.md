@@ -1,7 +1,7 @@
 ---
 title: Internal Docs Map
 created: 2026-04-14
-updated: 2026-04-14
+updated: 2026-04-15
 type: source
 tags: []
 sources:
@@ -17,6 +17,7 @@ sources:
   - ../../docs/010-vi-dynamic-import-settled.md
   - ../../docs/011-mockobject-vs-other-mocking-apis.md
   - ../../docs/012-mock-cleanup-methods.md
+  - ../../docs/013-expect-foundation-chain-and-assert.md
 ---
 
 # 项目文档映射
@@ -32,6 +33,7 @@ sources:
 ### primary
 
 - [001-expect-custom-message.md](../../docs/001-expect-custom-message.md)
+- [013-expect-foundation-chain-and-assert.md](../../docs/013-expect-foundation-chain-and-assert.md)
 
 ## Execution Model
 
