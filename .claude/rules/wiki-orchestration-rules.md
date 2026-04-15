@@ -61,8 +61,9 @@
 ## Source Priority
 
 - 一级来源：Vitest 官方文档（`cn.vitest.dev` / `vitest.dev`）
-- 二级来源：本项目 `docs/NNN-xxx.md`
-- 三级来源：明确标记为经验总结的内容
+- 二级来源：Vitest 官方仓库（`github.com/vitest-dev/vitest`）
+- 三级来源：本项目 `docs/NNN-xxx.md`
+- 四级来源：明确标记为经验总结的内容
 - 无法验证的陈述必须显式标注“待验证”，不得伪装为确定事实
 
 ## Query Policy
