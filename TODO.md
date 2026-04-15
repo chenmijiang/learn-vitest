@@ -152,11 +152,9 @@
 
 ## 阶段 7：工程化能力
 
-- [ ] 阅读测试项目 `projects`，理解多项目配置
+- [x] 阅读测试项目 `projects`，理解多项目配置
       链接：https://cn.vitest.dev/guide/projects
-- [ ] 理解如何在一个仓库中同时跑 node 测试和 browser 测试
-      链接：https://cn.vitest.dev/guide/projects
-- [ ] 学会使用 `--project`
+- [x] 理解如何在一个仓库中同时跑 node 测试和 browser 测试
       链接：https://cn.vitest.dev/guide/projects
 - [ ] 学会使用 `vitest related --run`
       链接：https://cn.vitest.dev/guide/cli
