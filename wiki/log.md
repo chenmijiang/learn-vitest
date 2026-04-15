@@ -15,6 +15,22 @@ sources:
 
 ## 2026-04-15
 
+- `ingest`
+  - changed:
+    - `docs/014-vitest-projects-config-and-extends.md`
+    - `wiki/index.md`
+    - `wiki/log.md`
+    - `wiki/sources/internal-docs-map.md`
+    - `wiki/topics/projects.md`
+  - source:
+    - https://cn.vitest.dev/guide/projects
+    - https://vitest.dev/guide/projects
+    - https://vitest.dev/config/include
+    - https://vitest.dev/api/advanced/vitest
+    - https://github.com/vitest-dev/vitest/blob/main/packages/vitest/src/node/types/config.ts
+    - https://github.com/vitest-dev/vitest/blob/main/packages/vitest/src/public/config.ts
+  - note: 新增一篇围绕 `test.projects`、配置继承边界、`extends` 适用范围和 `defineProject` 类型约束的发布型文档，并将其映射到 `Projects` topic。
+
 - `query-update`
   - changed:
     - `wiki/index.md`

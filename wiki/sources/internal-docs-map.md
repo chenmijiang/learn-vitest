@@ -18,6 +18,7 @@ sources:
   - ../../docs/011-mockobject-vs-other-mocking-apis.md
   - ../../docs/012-mock-cleanup-methods.md
   - ../../docs/013-expect-foundation-chain-and-assert.md
+  - ../../docs/014-vitest-projects-config-and-extends.md
 ---
 
 # 项目文档映射
@@ -54,6 +55,12 @@ sources:
 ### primary
 
 - [006-vitest-environment-extension.md](../../docs/006-vitest-environment-extension.md)
+
+## Projects
+
+### primary
+
+- [014-vitest-projects-config-and-extends.md](../../docs/014-vitest-projects-config-and-extends.md)
 
 ## Mocking
 

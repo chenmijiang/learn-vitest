@@ -9,6 +9,8 @@ sources:
   - https://vitest.dev/guide/projects
   - https://vitest.dev/api/advanced/vitest
   - https://vitest.dev/config/include
+  - https://github.com/vitest-dev/vitest/blob/main/packages/vitest/src/node/types/config.ts
+  - https://github.com/vitest-dev/vitest/blob/main/packages/vitest/src/public/config.ts
 ---
 
 # Projects
@@ -64,10 +66,11 @@ sources:
 ## 最近更新
 
 - 2026-04-15 query-update：补充 `test.projects` 与 `test.include` 的层级区分，明确“根配置默认不是项目”和“项目配置默认不继承根配置”这两个最容易混淆的点。
+- 2026-04-15 ingest：关联发布型文档 `014-vitest-projects-config-and-extends.md`，补充 `extends` 的适用边界、单独项目配置文件的共享配置写法，以及 `defineProject` 与 `defineConfig` 的类型差异。
 
 ## 关联文档
 
-- 当前暂无项目内 `docs/NNN-*.md` 专门覆盖 `projects` 主题。
+- [014-vitest-projects-config-and-extends.md](../../docs/014-vitest-projects-config-and-extends.md)
 
 ## 来源
 
@@ -75,3 +78,5 @@ sources:
 - https://vitest.dev/guide/projects
 - https://vitest.dev/api/advanced/vitest
 - https://vitest.dev/config/include
+- https://github.com/vitest-dev/vitest/blob/main/packages/vitest/src/node/types/config.ts
+- https://github.com/vitest-dev/vitest/blob/main/packages/vitest/src/public/config.ts
