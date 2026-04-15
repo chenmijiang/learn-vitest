@@ -23,10 +23,10 @@ sources:
 ## 主题导航
 
 - [[Assertions|topics/assertions.md]] - 断言表达、Chai/Jest 断言关系与失败信息设计。`updated: 2026-04-15` `sources: 5`
-- [[Execution Model|topics/execution-model.md]] - 顺序/并发执行模型与本地 `expect` 使用边界。`updated: 2026-04-14` `sources: 3`
+- [[Execution Model|topics/execution-model.md]] - 顺序/并发执行模型与本地 `expect` 使用边界。`updated: 2026-04-15` `sources: 6`
 - [[Hooks|topics/hooks.md]] - setup/cleanup 生命周期与 `aroundEach` 包裹契约。`updated: 2026-04-14` `sources: 4`
 - [[Environment|topics/environment.md]] - `node/jsdom/happy-dom` 选择与自定义环境扩展。`updated: 2026-04-14` `sources: 3`
-- [[Mocking|topics/mocking.md]] - `vi.fn`、`vi.spyOn`、`vi.mock` 分层使用与清理策略。`updated: 2026-04-14` `sources: 9`
+- [[Mocking|topics/mocking.md]] - `vi.fn`、`vi.spyOn`、`vi.mock` 分层使用与清理策略。`updated: 2026-04-15` `sources: 10`
 - [[Typing|topics/typing.md]] - `vi.mocked` 类型层语义与 deep/partial 取舍。`updated: 2026-04-14` `sources: 3`
 - [[Modules|topics/modules.md]] - 动态导入稳定性与模块副作用时机。`updated: 2026-04-14` `sources: 4`
 - [[Snapshots|topics/snapshots.md]] - 快照适用边界与审查流程。`updated: 2026-04-14` `sources: 2`

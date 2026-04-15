@@ -15,6 +15,25 @@ sources:
 
 ## 2026-04-15
 
+- `lint`
+  - changed:
+    - `wiki/index.md`
+    - `wiki/log.md`
+  - checks:
+    - 必需文件、frontmatter、topic 必备章节、tag taxonomy
+    - `internal-docs-map.md` 与 topic 页 `关联文档` 同步情况
+    - `index.md` 条目的 `updated` / `sources` 元数据完整性
+    - 相对链接、孤儿 docs、page size
+  - findings:
+    - 所有必需文件均存在，且 frontmatter、topic 必备章节、tags、相对链接检查通过
+    - `internal-docs-map.md` 与各 topic 页 `关联文档` 保持同步，无孤儿 `docs/NNN-*.md`
+    - `wiki/index.md` 中 `Execution Model` 与 `Mocking` 的 `updated` / `sources` 元数据落后于实际 topic 页面，现已修正
+    - 当前所有 wiki 页面均低于 SCHEMA 建议的 ~200 行分拆阈值；`wiki/log.md` 为 260 行，尚未触发 500 条轮转规则
+  - follow-up:
+    - 后续每次 `query-update` 或 `ingest` 修改 topic 时，同步更新 `wiki/index.md` 的 `updated` 与 `sources`
+    - 若继续频繁写入 `wiki/log.md`，接近 500 条时按 SCHEMA 执行 rotation
+    - `Execution Model` 与 `Mocking` 近期更新较快，后续改动后优先复查索引元数据
+
 - `ingest`
   - changed:
     - `docs/013-expect-foundation-chain-and-assert.md`
