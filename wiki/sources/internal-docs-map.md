@@ -27,6 +27,7 @@ sources:
 - [[index]]
 - [[topics/mocking]]
 - [[topics/environment]]
+- [[topics/projects]]
 
 ## Assertions
 

@@ -15,6 +15,21 @@ sources:
 
 ## 2026-04-15
 
+- `query-update`
+  - changed:
+    - `wiki/index.md`
+    - `wiki/log.md`
+    - `wiki/paths/environment-path.md`
+    - `wiki/sources/internal-docs-map.md`
+    - `wiki/sources/official-docs.md`
+    - `wiki/topics/projects.md`
+  - source:
+    - https://cn.vitest.dev/guide/projects
+    - https://vitest.dev/guide/projects
+    - https://vitest.dev/api/advanced/vitest
+    - https://vitest.dev/config/include
+  - note: 新增 `Projects` 主题页，明确 `test.projects` 负责项目发现、`test.include` 负责项目内测试文件匹配，并补充“根配置默认不是项目”和“项目配置默认不继承根配置”的排查结论。
+
 - `lint`
   - changed:
     - `wiki/index.md`

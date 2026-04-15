@@ -15,6 +15,7 @@ sources:
 - [[index]]
 - [[paths/beginner-path]]
 - [[topics/mocking]]
+- [[topics/projects]]
 
 ## Guide
 
