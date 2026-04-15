@@ -30,16 +30,16 @@ Vitest 官方文档明确说明：
 
 从 Chai 的 BDD API 和 Vitest 的实现方式看，`expect(actual)` 可以理解成“创建一个携带当前断言状态的断言对象”。
 
-这类断言对象通常会保存：
+这类断言对象通常会维护：
 
 - 当前被断言的值
-- 是否取反，例如 `.not`
-- 是否进入 Promise 断言语义，例如 `.resolves`、`.rejects`
-- 失败时的错误上下文和展示信息
+- 是否取反（如 `.not`）
+- 是否进入 Promise 断言语义（如 `.resolves`、`.rejects`）
+- matcher 执行失败时需要的上下文信息
 
-链上的不同部分职责不同：
+链上的不同部分职责不同（这是 API 层可观察行为）：
 
-- `to`、`be`、`that` 这类词主要用于组织语义，提升可读性
+- `to`、`be`、`that` 这类词主要用于组织语义，提升可读性（language chains）
 - `equal`、`toBe`、`toEqual`、`toMatchObject` 这类 matcher 才会真正执行比较
 - 断言失败时，统一生成断言错误和 diff 信息
 
@@ -167,9 +167,17 @@ expect.assert.strictEqual(1, 1);
 
 不准确。它们更像是同一底座上的两种接口风格。
 
-### 误区 4：用了 `assert` 也会被 `expect.assertions()` 统计
+### 误区 4：用了 `assert` 也会满足依赖 `expect` 计数的断言检查
 
-不会。Vitest 配置文档明确说明，`expect.assertions()` 和 `expect.hasAssertions()` 只统计 `expect` 调用。
+不会。Vitest 配置文档明确说明，在 `expect.requireAssertions` 这类依赖 `expect` 调用计数的场景里，如果你使用的是 `assert` 或 `.should`，它们不会计入 `expect` 断言次数。
+
+## 示例验证状态
+
+以下示例已在本项目依赖（`vitest@4.1.2`）下做本地验证：
+
+```bash
+node -e "import { expect, assert } from 'vitest'; expect(2 + 2).toBe(4); assert.strictEqual(2 + 2, 4); expect.assert.strictEqual(1, 1); console.log('ok')"
+```
 
 ## 证据说明
 
@@ -178,6 +186,7 @@ expect.assert.strictEqual(1, 1);
   - Vitest 提供 `assert` API
   - Vitest 将 Chai 的 `assert` 重新暴露为 `expect.assert`
   - Chai 将 `expect` 归为 BDD 风格，将 `assert` 归为 TDD 风格
+  - 文中最小可运行示例已在本项目依赖下执行通过（见“示例验证状态”）
 
 - **基于官方文档与源码结构的推断**
   - “为什么默认采用链式断言”这一点，Vitest 官方没有直接写成一条设计宣言；这里的解释基于 Chai 的链式 BDD API、Vitest 对 Chai 的依赖，以及 `@vitest/expect` 作为 Chai plugin 的实现方式推导得出。
@@ -189,7 +198,7 @@ expect.assert.strictEqual(1, 1);
 - Vitest Config - `expect`: https://vitest.dev/config/expect
 - Vitest Guide - Features: https://vitest.dev/guide/features
 - Vitest Guide - Extending Matchers: https://vitest.dev/guide/extending-matchers
-- Vitest Guide - Migration: https://main.vitest.dev/guide/migration.html
+- Vitest Guide - Migration: https://vitest.dev/guide/migration.html
 - `@vitest/expect` README: https://github.com/vitest-dev/vitest/tree/main/packages/expect
 - Chai Styles Guide: https://www.chaijs.com/guide/styles/
 - Chai BDD API: https://www.chaijs.com/api/bdd/
