@@ -100,11 +100,11 @@
       链接：https://cn.vitest.dev/guide/mocking/timers
 - [x] 学会模拟请求
       链接：https://cn.vitest.dev/guide/mocking/requests
-- [ ] 理解 mock 的清理、重置、恢复
+- [x] 理解 mock 的清理、重置、恢复
       链接：https://cn.vitest.dev/api/mock
-- [ ] 在当前项目里写 1 个“依赖外部模块”的 mock 测试
-- [ ] 写 1 个“校验函数是否被调用、参数是否正确”的测试
-- [ ] 写 1 个“模拟时间或定时器”的测试
+- [x] 在当前项目里写 1 个“依赖外部模块”的 mock 测试
+- [x] 写 1 个“校验函数是否被调用、参数是否正确”的测试
+- [x] 写 1 个“模拟时间或定时器”的测试
 
 效果：能隔离副作用、外部依赖和不稳定因素，写出稳定的业务测试。
 
