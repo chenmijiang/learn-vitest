@@ -24,6 +24,33 @@ sources:
     - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/constructor
   - note: 补充类 mock 的构造返回值语义，明确 `mockReturnValue` 等简写不适合类构造 mock；需要模拟类实例时优先使用 `mockImplementation(class { ... })`。
 
+- `query-update`
+  - changed:
+    - `wiki/topics/mocking.md`
+    - `wiki/log.md`
+  - source:
+    - https://cn.vitest.dev/api/mock
+  - note: 补充 `mockClear()` 的作用，明确它只清空调用历史，不重置 mock 实现，也不恢复原始方法。
+
+- `query-update`
+  - changed:
+    - `wiki/topics/execution-model.md`
+    - `wiki/log.md`
+  - source:
+    - https://cn.vitest.dev/api/vi.html
+    - https://cn.vitest.dev/api/expect
+    - https://cn.vitest.dev/api/test
+  - note: 补充 Vitest 中等待异步完成的常见 API 分类，区分直接 `await`、`vi.waitFor()`、`vi.waitUntil()`、`expect.poll()`、`vi.dynamicImportSettled()` 与 fake timers 的异步推进方法。
+
+- `query-update`
+  - changed:
+    - `wiki/topics/mocking.md`
+    - `wiki/log.md`
+  - source:
+    - https://cn.vitest.dev/api/mock
+    - ../../docs/012-mock-cleanup-methods.md
+  - note: 补充 `mockClear()`、`mockReset()`、`mockRestore()` 的边界，明确清历史、重置实现、恢复 `spyOn` 原始方法三者的区别。
+
 ## 2026-04-14
 
 - `schema-update`
