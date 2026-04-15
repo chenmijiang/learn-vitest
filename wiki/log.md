@@ -97,7 +97,7 @@ sources:
   - changed:
     - `AGENTS.md`
     - `wiki/SCHEMA.md`
-    - `.claude/skills/wiki-maintainer/SKILL.md`
+    - `.agents/skills/wiki-maintainer/SKILL.md`
   - source:
     - https://gist.githubusercontent.com/karpathy/442a6bf555914893e9891c11519de94f/raw/ac46de1ad27f92b28ac95459c782c07f6b8c964a/llm-wiki.md
   - note: 对齐 LLM Wiki 的“持续复利”目标，新增 index 元数据要求、topic 证据状态/最近更新、结构化 primary/secondary 映射，以及 query-update 默认写回策略
@@ -163,7 +163,7 @@ sources:
 - `schema-create`
   - changed:
     - `wiki/SCHEMA.md`
-    - `.claude/skills/wiki-maintainer/references/schema-template.md`
+    - `.agents/skills/wiki-maintainer/references/schema-template.md`
   - note: 建立项目级 wiki 宪法与通用 SCHEMA 模板，定义 domain、命名规范、frontmatter、tag taxonomy、页面阈值、更新策略、stale content 与 query-update 标准
 
 - `frontmatter-update`
@@ -201,7 +201,7 @@ sources:
 
 - `skill-update`
   - changed:
-    - `.claude/skills/wiki-maintainer/SKILL.md`
+    - `.agents/skills/wiki-maintainer/SKILL.md`
   - note: 扩展 lint 检查清单（增加 SCHEMA、frontmatter、wikilinks、stale content、page size、log rotation、contradictions 等 12 项检查），并在 Required Files 中增加 SCHEMA.md
 
 - `lint`
