@@ -1,7 +1,7 @@
 ---
 title: Mocking
 created: 2026-04-14
-updated: 2026-04-14
+updated: 2026-04-15
 type: topic
 tags: ["mock", "spy", "beginner"]
 sources:
@@ -9,6 +9,7 @@ sources:
   - https://cn.vitest.dev/guide/mocking/functions
   - https://cn.vitest.dev/guide/mocking/modules
   - https://cn.vitest.dev/api/mock
+  - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/constructor
   - ../../docs/007-vi-mock-guide.md
   - ../../docs/008-vi-fn-spy-guide.md
   - ../../docs/009-vi-mocked-type-helper.md
@@ -55,11 +56,16 @@ Mocking 用来隔离外部依赖、控制副作用和验证交互；它是 Vites
 
 `clearAllMocks`、`resetAllMocks`、`restoreAllMocks` 解决的问题不同，选错会让测试状态互相污染。
 
+### 类构造 mock 的返回值语义
+
+类 mock 不能按普通函数那样直接套用 `mockReturnValue` 一类简写。构造函数如果显式返回对象，`new` 表达式最终拿到的是这个对象，而不是 mock 类实例，原型链和 `instanceof` 判断都会失效。需要模拟类实例时，优先用 `mockImplementation(class { ... })` 保留构造语义；只有在测试“构造函数故意返回自定义对象”这种特殊用例时，才在 `mockImplementation(class { constructor() { return {...} } })` 中显式表达。
+
 ## 常见误区
 
 - 把 `vi.fn`、`vi.spyOn`、`vi.mock` 当成同一层级工具
 - 在 hoisted 工厂里直接引用外部变量
 - 清理 mock 时只记 API 名字，不理解它会不会重置实现或恢复原方法
+- 把类 mock 当普通函数 mock 使用，直接用 `mockReturnValue` 返回对象，结果得到普通对象而不是类实例
 
 ## 证据状态
 
@@ -70,6 +76,7 @@ Mocking 用来隔离外部依赖、控制副作用和验证交互；它是 Vites
 ## 最近更新
 
 - 2026-04-14 backfill：整合对象级与模块级 mocking 边界，强调 `vi.mockObject` 不能替代模块加载阶段替换。
+- 2026-04-15 query-update：补充类 mock 的构造返回值陷阱，明确类实例 mock 优先使用 `mockImplementation(class { ... })`。
 
 ## 关联文档
 
@@ -85,4 +92,5 @@ Mocking 用来隔离外部依赖、控制副作用和验证交互；它是 Vites
 - https://cn.vitest.dev/guide/mocking/functions
 - https://cn.vitest.dev/guide/mocking/modules
 - https://cn.vitest.dev/api/mock
+- https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/constructor
 - [009-vi-mocked-type-helper.md](../../docs/009-vi-mocked-type-helper.md)

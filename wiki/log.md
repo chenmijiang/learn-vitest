@@ -1,7 +1,7 @@
 ---
 title: Wiki Log
 created: 2026-04-14
-updated: 2026-04-14
+updated: 2026-04-15
 type: summary
 tags: []
 sources:
@@ -12,6 +12,17 @@ sources:
 # Wiki Log
 
 > 维护规则见 [[SCHEMA]]；主题导航见 [[index]]；文档映射以 [[sources/internal-docs-map]] 为准。
+
+## 2026-04-15
+
+- `query-update`
+  - changed:
+    - `wiki/topics/mocking.md`
+    - `wiki/log.md`
+  - source:
+    - https://cn.vitest.dev/api/mock
+    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/constructor
+  - note: 补充类 mock 的构造返回值语义，明确 `mockReturnValue` 等简写不适合类构造 mock；需要模拟类实例时优先使用 `mockImplementation(class { ... })`。
 
 ## 2026-04-14
 
