@@ -1,7 +1,7 @@
 ---
 title: Vitest Wiki Index
 created: 2026-04-14
-updated: 2026-04-15
+updated: 2026-04-16
 type: summary
 tags: ["beginner"]
 sources:
@@ -25,7 +25,7 @@ sources:
 - [[Assertions|topics/assertions.md]] - 断言表达、Chai/Jest 断言关系与失败信息设计。`updated: 2026-04-15` `sources: 5`
 - [[Execution Model|topics/execution-model.md]] - 顺序/并发执行模型与本地 `expect` 使用边界。`updated: 2026-04-15` `sources: 6`
 - [[Hooks|topics/hooks.md]] - setup/cleanup 生命周期与 `aroundEach` 包裹契约。`updated: 2026-04-14` `sources: 4`
-- [[Environment|topics/environment.md]] - `node/jsdom/happy-dom` 选择与自定义环境扩展。`updated: 2026-04-14` `sources: 3`
+- [[Environment|topics/environment.md]] - `node/jsdom/happy-dom` 选择、`test.env` 运行时注入与 `define` 常量替换边界。`updated: 2026-04-16` `sources: 6`
 - [[Projects|topics/projects.md]] - `test.projects` 与 `test.include` 的分层职责，以及根配置与项目配置的继承边界。`updated: 2026-04-15` `sources: 6`
 - [[Mocking|topics/mocking.md]] - `vi.fn`、`vi.spyOn`、`vi.mock` 分层使用与清理策略。`updated: 2026-04-15` `sources: 10`
 - [[Typing|topics/typing.md]] - `vi.mocked` 类型层语义与 deep/partial 取舍。`updated: 2026-04-14` `sources: 3`

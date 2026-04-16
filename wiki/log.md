@@ -1,7 +1,7 @@
 ---
 title: Wiki Log
 created: 2026-04-14
-updated: 2026-04-15
+updated: 2026-04-16
 type: summary
 tags: []
 sources:
@@ -12,6 +12,19 @@ sources:
 # Wiki Log
 
 > 维护规则见 [[SCHEMA]]；主题导航见 [[index]]；文档映射以 [[sources/internal-docs-map]] 为准。
+
+## 2026-04-16
+
+- `query-update`
+  - changed:
+    - `wiki/index.md`
+    - `wiki/log.md`
+    - `wiki/topics/environment.md`
+  - source:
+    - https://vitest.dev/guide/features
+    - https://vitest.dev/config/#env
+    - https://vite.dev/config/shared-options#define
+  - note: 补充 `test.env` 与 `define` 的差异，明确前者是测试运行时环境变量注入，后者是转换期常量替换，并记录测试侧通过 `process.env`、`import.meta.env` 或定义的常量标识符读取的边界。
 
 ## 2026-04-15
 
