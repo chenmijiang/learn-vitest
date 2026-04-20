@@ -110,7 +110,7 @@
 
 ## 阶段 5：组件测试与浏览器模式
 
-- [ ] 阅读快照测试，理解快照的概念和使用方法
+- [x] 阅读快照测试，理解快照的概念和使用方法
       链接：https://cn.vitest.dev/guide/snapshot
 - [ ] 阅读浏览器模式总览，先建立真实浏览器测试的概念
       链接：https://cn.vitest.dev/guide/browser/
