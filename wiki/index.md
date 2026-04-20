@@ -1,7 +1,7 @@
 ---
 title: Vitest Wiki Index
 created: 2026-04-14
-updated: 2026-04-16
+updated: 2026-04-20
 type: summary
 tags: ["beginner"]
 sources:
@@ -30,7 +30,7 @@ sources:
 - [[Mocking|topics/mocking.md]] - `vi.fn`、`vi.spyOn`、`vi.mock` 分层使用与清理策略。`updated: 2026-04-15` `sources: 10`
 - [[Typing|topics/typing.md]] - `vi.mocked` 类型层语义与 deep/partial 取舍。`updated: 2026-04-14` `sources: 3`
 - [[Modules|topics/modules.md]] - 动态导入稳定性与模块副作用时机。`updated: 2026-04-14` `sources: 4`
-- [[Snapshots|topics/snapshots.md]] - 快照适用边界与审查流程。`updated: 2026-04-14` `sources: 2`
+- [[Snapshots|topics/snapshots.md]] - 快照适用边界、审查流程与自定义序列化器心智模型。`updated: 2026-04-20` `sources: 4`
 
 ## 来源
 

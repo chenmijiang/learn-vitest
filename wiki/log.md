@@ -1,7 +1,7 @@
 ---
 title: Wiki Log
 created: 2026-04-14
-updated: 2026-04-16
+updated: 2026-04-20
 type: summary
 tags: []
 sources:
@@ -12,6 +12,20 @@ sources:
 # Wiki Log
 
 > 维护规则见 [[SCHEMA]]；主题导航见 [[index]]；文档映射以 [[sources/internal-docs-map]] 为准。
+
+## 2026-04-20
+
+- `query-update`
+  - changed:
+    - `wiki/index.md`
+    - `wiki/log.md`
+    - `wiki/topics/snapshots.md`
+  - source:
+    - https://cn.vitest.dev/guide/snapshot
+    - https://cn.vitest.dev/config/snapshotformat
+    - https://cn.vitest.dev/config/snapshotserializers
+    - ../../docs/005-snapshot-testing.md
+  - note: 补充快照自定义序列化器的直白解释，明确 `test` / `serialize` / `printer` 的分工，并区分 `expect.addSnapshotSerializer`、`snapshotFormat`、`snapshotSerializers` 的职责边界。
 
 ## 2026-04-16
 
