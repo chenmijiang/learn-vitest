@@ -2,7 +2,7 @@ import { describe, expect, test, vi } from "vitest";
 
 describe("mock cleanup methods", () => {
   test("vi.clearAllMocks: clears call history but keeps implementation", () => {
-    const mockFn = vi.fn(() => "result");
+    const mockFn = vi.fn((arg) => "result");
 
     mockFn("a");
     expect(mockFn).toHaveBeenCalledTimes(1);
@@ -10,7 +10,7 @@ describe("mock cleanup methods", () => {
     vi.clearAllMocks();
 
     expect(mockFn).toHaveBeenCalledTimes(0);
-    expect(mockFn()).toBe("result");
+    expect(mockFn("b")).toBe("result");
   });
 
   test("vi.resetAllMocks: resets history and implementation state", () => {
