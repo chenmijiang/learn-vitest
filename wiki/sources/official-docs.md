@@ -1,7 +1,7 @@
 ---
 title: Official Docs
 created: 2026-04-14
-updated: 2026-04-15
+updated: 2026-04-22
 type: source
 tags: []
 sources:
@@ -36,6 +36,7 @@ sources:
 ## Topic Guides
 
 - Environment: https://cn.vitest.dev/guide/environment
+- Environment Options: https://vitest.dev/config/environmentoptions
 - Mocking: https://cn.vitest.dev/guide/mocking
 - Snapshot: https://cn.vitest.dev/guide/snapshot
 - Projects: https://cn.vitest.dev/guide/projects

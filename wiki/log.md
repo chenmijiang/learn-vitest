@@ -1,7 +1,7 @@
 ---
 title: Wiki Log
 created: 2026-04-14
-updated: 2026-04-20
+updated: 2026-04-22
 type: summary
 tags: []
 sources:
@@ -12,6 +12,20 @@ sources:
 # Wiki Log
 
 > 维护规则见 [[SCHEMA]]；主题导航见 [[index]]；文档映射以 [[sources/internal-docs-map]] 为准。
+
+## 2026-04-22
+
+- `query-update`
+  - changed:
+    - `wiki/index.md`
+    - `wiki/log.md`
+    - `wiki/sources/official-docs.md`
+    - `wiki/topics/environment.md`
+  - source:
+    - https://cn.vitest.dev/guide/environment
+    - https://vitest.dev/config/environmentoptions
+    - https://cn.vitest.dev/guide/browser/
+  - note: 补充“浏览器环境但不是 Browser Mode”应优先使用 `jsdom` 或 `happy-dom` 的判断，并明确它们与 `@vitest/browser-*` provider 依赖不是一回事。
 
 ## 2026-04-20
 
