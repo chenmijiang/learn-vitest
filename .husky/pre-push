@@ -1,2 +1,2 @@
 #!/usr/bin/env sh
-bunx vitest run
+bunx vitest run --browser.headless
