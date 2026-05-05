@@ -2,11 +2,11 @@ import {
   afterAll,
   afterEach,
   aroundAll,
+  test,
   aroundEach,
   beforeAll,
   beforeEach,
   describe,
-  test,
 } from "vitest";
 
 describe("outer", () => {
