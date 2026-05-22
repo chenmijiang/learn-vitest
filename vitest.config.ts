@@ -1,3 +1,4 @@
+import react from "@vitejs/plugin-react";
 import { playwright } from "@vitest/browser-playwright";
 import { defineConfig } from "vitest/config";
 
@@ -9,13 +10,14 @@ export default defineConfig({
         test: {
           name: "node-tests",
           include: ["__tests__/**/*.test.ts"],
-          exclude: ["__tests__/browser/**/*.test.ts"],
+          exclude: ["__tests__/browser/**/*.test.{ts,tsx}"],
         },
       },
       {
+        plugins: [react()],
         test: {
           name: "browser-tests",
-          include: ["__tests__/browser/**/*.test.ts"],
+          include: ["__tests__/browser/**/*.test.{ts,tsx}"],
           browser: {
             enabled: true,
             provider: playwright(),
