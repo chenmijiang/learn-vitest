@@ -1,7 +1,7 @@
 ---
 title: Wiki Log
 created: 2026-04-14
-updated: 2026-04-22
+updated: 2026-05-22
 type: summary
 tags: []
 sources:
@@ -12,6 +12,19 @@ sources:
 # Wiki Log
 
 > 维护规则见 [[SCHEMA]]；主题导航见 [[index]]；文档映射以 [[sources/internal-docs-map]] 为准。
+
+## 2026-05-22
+
+- `query-update`
+  - changed:
+    - `wiki/index.md`
+    - `wiki/log.md`
+    - `wiki/topics/environment.md`
+  - source:
+    - https://github.com/facebook/react/blob/main/CHANGELOG.md
+    - https://github.com/testing-library/react-testing-library
+    - https://github.com/vitest-community/vitest-browser-react
+  - note: 在 Environment 主题下新增 Browser Mode 下的 React 组件测试库选型，明确 React 19 起 `react-dom/test-utils` 移除、`react-test-renderer` 弃用并被官方点名替换为 RTL；本项目用 `vitest-browser-react` 即可，不应再叠加 `@testing-library/react`。
 
 ## 2026-04-22
 

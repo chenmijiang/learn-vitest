@@ -1,9 +1,9 @@
 ---
 title: Environment
 created: 2026-04-14
-updated: 2026-04-22
+updated: 2026-05-22
 type: topic
-tags: ["environment", "config", "beginner"]
+tags: ["environment", "config", "browser", "beginner"]
 sources:
   - https://cn.vitest.dev/guide/environment
   - https://vitest.dev/config/environmentoptions
@@ -12,6 +12,9 @@ sources:
   - https://vitest.dev/config/#env
   - https://vite.dev/config/shared-options#define
   - https://cn.vitest.dev/guide/test-context
+  - https://github.com/facebook/react/blob/main/CHANGELOG.md
+  - https://github.com/testing-library/react-testing-library
+  - https://github.com/vitest-community/vitest-browser-react
   - ../../docs/006-vitest-environment-extension.md
 ---
 
@@ -64,6 +67,14 @@ sources:
 
 在自定义环境里，把运行时对象安全地挂到全局环境时，这个工具很关键。
 
+### Browser Mode 下的 React 组件测试库选型
+
+选定 Browser Mode 之后，组件测试库的归属也随之收敛：
+
+- **React 官方已经不再维护自己的测试库**。React 19（2024-12）起：`react-dom/test-utils` 整包移除（仅 `act` 迁到 `react` 主包，`import { act } from 'react'`）；`react-test-renderer` 打弃用警告并切到 Concurrent 模式；`react-test-renderer/shallow` 移除。官方 CHANGELOG 在弃用条目里直接点名 `@testing-library/react` 作为迁移目标。
+- **`@testing-library/*` 提供的是"按用户视角查询"的方法论**：查询优先级 `getByRole` > `getByLabelText` > `getByPlaceholderText` > `getByText` > ... > `getByTestId`。这套方法论被 `vitest-browser-react` 直接采纳。
+- **本项目选 Browser Mode 后，用 `vitest-browser-react` 即可，不要再叠加 `@testing-library/react`**：两者底层都依赖 `react-dom`，叠加会重复一份渲染基建，且断言风格割裂（vitest-browser-react 是异步 `await expect.element(...).toBeVisible()`，RTL + `jest-dom` 是同步 `expect(el).toBeInTheDocument()`）。
+
 ## 常见误区
 
 - 遇到浏览器 API 就立即上完整浏览器模式，而不是先判断 DOM 模拟是否够用
@@ -71,15 +82,18 @@ sources:
 - 已经装了 `@vitest/browser-playwright`，就误以为不再需要 `jsdom` 或 `happy-dom`
 - 扩展全局对象后忘记资源清理
 - 把 `define` 当成运行时环境变量配置，导致以为它会同步出现在 `process.env` 的动态读取结果里
+- 在 Browser Mode 项目里仍然按 React 旧文档去用 `react-dom/test-utils` 或 `react-test-renderer`；这两者在 React 19 已经被移除/弃用，应该直接用 `vitest-browser-react`
+- 在 `vitest-browser-react` 之上再装一份 `@testing-library/react`，期待"双保险"；实际只会让查询/断言风格混乱并多一层 `react-dom` 渲染基建
 
 ## 证据状态
 
-- 已验证：预设环境选择、DOM 模拟环境与 Browser Mode 的边界、`environmentOptions` 配置入口、自定义环境、`test.env` 的运行时注入、`.env` 自动加载边界，以及 `define` 的常量替换语义都已回到官方文档核对。
+- 已验证：预设环境选择、DOM 模拟环境与 Browser Mode 的边界、`environmentOptions` 配置入口、自定义环境、`test.env` 的运行时注入、`.env` 自动加载边界、`define` 的常量替换语义，以及 React 19 测试库弃用与 `vitest-browser-react` 沿用 testing-library 查询方法论的结论，均已对照官方 CHANGELOG / 仓库 README 核对。
 - 待验证：不同 Vitest/Vite 大版本下 `import.meta.env` 暴露细节和周边兼容行为，仍应以当前版本文档为准。
 - 冲突中：无。
 
 ## 最近更新
 
+- 2026-05-22 query-update：新增 Browser Mode 下的 React 组件测试库选型，明确 React 19 起官方测试库已基本废弃并点名推荐 RTL，本项目使用 `vitest-browser-react` 时不应再叠加 `@testing-library/react`。
 - 2026-04-22 query-update：补充“浏览器环境但不是 Browser Mode”的判断方式，明确应使用 `jsdom` 或 `happy-dom`，并区分它们与 `@vitest/browser-*` provider 的依赖关系。
 - 2026-04-16 query-update：补充 `test.env` 与 `define` 的边界，明确前者是运行时环境变量注入，后者是转换期常量替换，并说明测试中的读取方式。
 - 2026-04-14 ingest：把“先选宿主，再写测试”明确为环境页的主判断原则，避免把环境问题误当断言问题。
@@ -97,4 +111,7 @@ sources:
 - https://vitest.dev/config/#env
 - https://vite.dev/config/shared-options#define
 - https://cn.vitest.dev/guide/test-context
+- https://github.com/facebook/react/blob/main/CHANGELOG.md（React 19.0.0 章节，`react-dom/test-utils` 移除与 `react-test-renderer` 弃用）
+- https://github.com/testing-library/react-testing-library（RTL 官方仓库与查询优先级原则）
+- https://github.com/vitest-community/vitest-browser-react（"adopts testing-library principles" 表述与 v2.2.0 API）
 - [006-vitest-environment-extension.md](../../docs/006-vitest-environment-extension.md)
