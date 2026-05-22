@@ -6,7 +6,7 @@
   "scripts": {
     "test": "vitest",
     "test:run": "vitest run",
-    "postinstall": "husky",
+    "postinstall": "husky && playwright install chromium",
     "format": "prettier --write ."
   },
   "dependencies": {},
