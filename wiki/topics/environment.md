@@ -1,7 +1,7 @@
 ---
 title: Environment
 created: 2026-04-14
-updated: 2026-05-22
+updated: 2026-05-26
 type: topic
 tags: ["environment", "config", "browser", "beginner"]
 sources:
@@ -72,8 +72,8 @@ sources:
 选定 Browser Mode 之后，组件测试库的归属也随之收敛：
 
 - **React 官方已经不再维护自己的测试库**。React 19（2024-12）起：`react-dom/test-utils` 整包移除（仅 `act` 迁到 `react` 主包，`import { act } from 'react'`）；`react-test-renderer` 打弃用警告并切到 Concurrent 模式；`react-test-renderer/shallow` 移除。官方 CHANGELOG 在弃用条目里直接点名 `@testing-library/react` 作为迁移目标。
-- **`@testing-library/*` 提供的是"按用户视角查询"的方法论**：查询优先级 `getByRole` > `getByLabelText` > `getByPlaceholderText` > `getByText` > ... > `getByTestId`。这套方法论被 `vitest-browser-react` 直接采纳。
 - **本项目选 Browser Mode 后，用 `vitest-browser-react` 即可，不要再叠加 `@testing-library/react`**：两者底层都依赖 `react-dom`，叠加会重复一份渲染基建，且断言风格割裂（vitest-browser-react 是异步 `await expect.element(...).toBeVisible()`，RTL + `jest-dom` 是同步 `expect(el).toBeInTheDocument()`）。
+- **`vitest-browser-react` 沿用 `@testing-library/*` 的"按用户视角查询"方法论**（查询优先级、`fireEvent` vs `user-event` 等如何具体写测试，归在 [[component-testing]]，本页不再展开）。
 
 ## 常见误区
 
@@ -93,6 +93,7 @@ sources:
 
 ## 最近更新
 
+- 2026-05-26 query-update：把"Browser Mode 下的 React 组件测试库选型"小节里关于 RTL 查询方法论的描述压缩成一行并指向新建的 [[component-testing]]，环境页只保留选型结论。
 - 2026-05-22 query-update：新增 Browser Mode 下的 React 组件测试库选型，明确 React 19 起官方测试库已基本废弃并点名推荐 RTL，本项目使用 `vitest-browser-react` 时不应再叠加 `@testing-library/react`。
 - 2026-04-22 query-update：补充“浏览器环境但不是 Browser Mode”的判断方式，明确应使用 `jsdom` 或 `happy-dom`，并区分它们与 `@vitest/browser-*` provider 的依赖关系。
 - 2026-04-16 query-update：补充 `test.env` 与 `define` 的边界，明确前者是运行时环境变量注入，后者是转换期常量替换，并说明测试中的读取方式。

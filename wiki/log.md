@@ -1,7 +1,7 @@
 ---
 title: Wiki Log
 created: 2026-04-14
-updated: 2026-05-22
+updated: 2026-05-26
 type: summary
 tags: []
 sources:
@@ -12,6 +12,21 @@ sources:
 # Wiki Log
 
 > 维护规则见 [[SCHEMA]]；主题导航见 [[index]]；文档映射以 [[sources/internal-docs-map]] 为准。
+
+## 2026-05-26
+
+- `query-update`
+  - changed:
+    - `wiki/index.md`
+    - `wiki/log.md`
+    - `wiki/topics/component-testing.md`
+    - `wiki/topics/environment.md`
+  - source:
+    - https://testing-library.com/docs/queries/about/#priority
+    - https://testing-library.com/docs/dom-testing-library/api-events
+    - https://github.com/vitest-community/vitest-browser-react
+    - https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/date
+  - note: 新建 [[component-testing]] 主题页，沉淀 Browser Mode 下 RTL 方法论：查询优先级三档分类（accessible > semantic > test ids）、`fireEvent` 的 target 赋值 + dispatch 语义和 file input 的 `Object.defineProperty` 兜底、`fireEvent` vs `user-event` 的官方偏向、断言风格差异、`<input type="date">` 的 `YYYY-MM-DD` 规范化坑；同时把 [[environment]] 里的 RTL 方法论描述收拢成一行交叉链接，环境页只保留选型结论。本次未新增 `docs/NNN-xxx.md`，`internal-docs-map.md` 无需变更。
 
 ## 2026-05-22
 
