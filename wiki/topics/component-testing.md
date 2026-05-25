@@ -32,16 +32,24 @@ sources:
 
 ### 查询优先级
 
-testing-library 官方把查询分成三档，强烈建议从无障碍角度优先使用前面的查询，越往后越远离真实用户体验：
+testing-library 官方把查询分成三档，强烈建议从无障碍角度优先使用前面的查询，越往后越远离真实用户体验。整体顺序为：`getByRole` > `getByLabelText` > `getByPlaceholderText` > `getByText` > `getByDisplayValue` > `getByAltText` > `getByTitle` > `getByTestId`。
 
-1. **Accessible to Everyone**（直接对应用户可感知的内容）
-   1. `getByRole`：基于无障碍树的角色 + accessible name，覆盖面最广，推荐作为默认首选
-   2. `getByLabelText`：表单字段首选，模拟用户根据标签定位输入框
-   3. `getByPlaceholderText`：只有 placeholder 可用时退而求其次，不能替代 label
-   4. `getByText`：用于非交互文本元素
-   5. `getByDisplayValue`：表单已有值的场景（例如编辑页）
-2. **Semantic Queries** 6. `getByAltText`：`img` / `area` / 部分 `input` 等支持 `alt` 的元素7. `getByTitle`：屏幕阅读器读取不一致、视觉用户默认看不到，谨慎使用
-3. **Test IDs** 8. `getByTestId`：只在确实无法用 role/text 等定位时使用，因为用户既看不到也听不到测试 id
+**第 1 档：Accessible to Everyone**（直接对应用户可感知的内容）
+
+- `getByRole`：基于无障碍树的角色 + accessible name，覆盖面最广，推荐作为默认首选
+- `getByLabelText`：表单字段首选，模拟用户根据标签定位输入框
+- `getByPlaceholderText`：只有 placeholder 可用时退而求其次，不能替代 label
+- `getByText`：用于非交互文本元素
+- `getByDisplayValue`：表单已有值的场景（例如编辑页）
+
+**第 2 档：Semantic Queries**
+
+- `getByAltText`：`img` / `area` / 部分 `input` 等支持 `alt` 的元素
+- `getByTitle`：屏幕阅读器读取不一致、视觉用户默认看不到，谨慎使用
+
+**第 3 档：Test IDs**
+
+- `getByTestId`：只在确实无法用 role/text 等定位时使用，因为用户既看不到也听不到测试 id
 
 只有 `getByRole` 找不到、且语义查询也不合适时，再考虑 `data-testid`。
 
