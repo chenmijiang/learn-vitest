@@ -1,7 +1,7 @@
 ---
 title: Component Testing
 created: 2026-05-26
-updated: 2026-05-26
+updated: 2026-05-27
 type: topic
 tags: ["browser", "environment", "beginner"]
 sources:
@@ -9,6 +9,8 @@ sources:
   - https://testing-library.com/docs/dom-testing-library/api-events
   - https://github.com/vitest-community/vitest-browser-react
   - https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/date
+  - https://testing-library.com/docs/user-event/setup
+  - https://vitest.dev/guide/browser/interactivity-api
 ---
 
 # Component Testing
@@ -85,6 +87,36 @@ input.dispatchEvent(new Event("change", { bubbles: true }));
 
 这部分的环境层结论（包括"为什么本项目不要在 `vitest-browser-react` 之上再叠 RTL"）沉淀在 [[environment]]，本页不再展开。
 
+### `user-event`：setup 实例 vs 直接调用
+
+`userEvent.setup()` 返回一个**带状态**的实例，目的不是 API 入口，而是承载三类只能跨多次调用才有意义的能力：
+
+- **共享输入设备状态**：方法之间共享键盘修饰键、指针位置等设备状态。`{Shift>}` 按下后再 `click`，必须是同一个实例上的两次调用，Shift 才真的"还按着"。
+- **可传配置**：`setup({ delay, advanceTimers, pointerEventsCheck, skipHover, ... })`。最典型的是配合 `vi.useFakeTimers()` 时传 `advanceTimers: vi.advanceTimersByTime`，否则带 `delay` 的 `type/keyboard` 会卡在假时钟下。
+- **替换 clipboard stub**：`setup()` 会替换默认的 `navigator.clipboard` stub，让 `copy/paste/cut` 测得了。
+
+直接在默认导出上调用 `userEvent.click(...)` 这种写法，在 testing-library 文档里被定位为 v13 → v14 的过渡兼容写法，官方建议改用 `setup()` 实例。
+
+**Vitest Browser Mode 下有一个额外差别**：从 `vitest/browser` 引入的 `userEvent` 是**单例**——官方原话："Unlike `@testing-library/user-event`, the default `userEvent` instance from `vitest/browser` is created once, not every time its methods are called!" 也就是说，在 Vitest 下直接调用 `userEvent.*` 也会跨调用保留设备状态。但 setup 仍然必要，理由是**测试间的隔离**（每个 test 拿干净实例，避免修饰键状态泄漏到下一个用例）和**传配置**（fake timer 推进、delay、pointer 检查策略等）。
+
+实战写法：
+
+```ts
+import { userEvent } from "vitest/browser";
+import { beforeEach, test } from "vitest";
+
+let user: ReturnType<typeof userEvent.setup>;
+beforeEach(() => {
+  user = userEvent.setup();
+});
+
+test("shift + click", async () => {
+  await user.keyboard("{Shift>}");
+  await user.click(button);
+  await user.keyboard("{/Shift}");
+});
+```
+
 ## 常见误区
 
 - **把 `fireEvent` 当真实用户行为模拟**：它只是属性赋值 + 单个事件派发，不会触发完整的用户级事件序列，容易掩盖 `onFocus` / `onBlur` / `onKeyDown` 等真实场景下才会发生的副作用
@@ -94,12 +126,13 @@ input.dispatchEvent(new Event("change", { bubbles: true }));
 
 ## 证据状态
 
-- 已验证：查询优先级顺序与三档分类、`fireEvent` 的 `target` 赋值语义与 file input 的 `Object.defineProperty` 兜底、官方对 `user-event` 的偏向推荐，均已对照 testing-library 官方页面核对。`<input type="date">` 的 `YYYY-MM-DD` 规范化与 locale 仅影响显示，已对照 MDN 核对。`vitest-browser-react` 沿用 testing-library 原则、断言异步可重试，已对照仓库 README 核对。
+- 已验证：查询优先级顺序与三档分类、`fireEvent` 的 `target` 赋值语义与 file input 的 `Object.defineProperty` 兜底、官方对 `user-event` 的偏向推荐，均已对照 testing-library 官方页面核对。`<input type="date">` 的 `YYYY-MM-DD` 规范化与 locale 仅影响显示，已对照 MDN 核对。`vitest-browser-react` 沿用 testing-library 原则、断言异步可重试，已对照仓库 README 核对。user-event `setup()` 的三个动机（共享设备状态 / 选项 / clipboard stub）与直接调用的 v14 过渡定位已对照 testing-library 官方 `user-event/setup` 页面核对；Vitest Browser Mode 下 `userEvent` 从 `vitest/browser` 引入、默认实例为单例已对照官方 `guide/browser/interactivity-api` 页面核对。
 - 待验证：无。
 - 冲突中：无。
 
 ## 最近更新
 
+- 2026-05-27 query-update：新增 "user-event：setup 实例 vs 直接调用" 一节，明确 `setup()` 的三个动机（共享设备状态、传选项、替换 clipboard stub）、直接调用的 v14 过渡定位，以及 Vitest Browser Mode 下从 `vitest/browser` 引入的 `userEvent` 是单例（与 testing-library 不同），但 setup 仍需用于测试间隔离与传配置。
 - 2026-05-26 query-update：新建 component-testing 主题页，沉淀 Browser Mode 下 RTL 方法论（查询优先级、`fireEvent` 语义、`fireEvent` vs `user-event`、断言风格差异）和 `<input type="date">` 的格式坑，并把 [[environment]] 里关于 RTL 方法论的描述收拢成一行交叉链接。
 
 ## 关联文档
@@ -112,4 +145,6 @@ input.dispatchEvent(new Event("change", { bubbles: true }));
 - https://testing-library.com/docs/dom-testing-library/api-events（`fireEvent` 工作原理、`target` 赋值、file input 的 `Object.defineProperty`、`fireEvent` vs `user-event` 的官方建议）
 - https://github.com/vitest-community/vitest-browser-react（沿用 testing-library 原则、异步 `expect.element` 断言、CDP 驱动用户事件）
 - https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/date（`value` 永远是 `YYYY-MM-DD`，显示格式随 locale 变化）
+- https://testing-library.com/docs/user-event/setup（`setup()` 的设计意图、共享设备状态、clipboard stub、v14 过渡说明）
+- https://vitest.dev/guide/browser/interactivity-api（Vitest Browser Mode 下 `userEvent` 从 `vitest/browser` 引入、默认实例为单例）
 - [[environment]]（Browser Mode 与组件测试库选型的环境层结论）

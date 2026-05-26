@@ -1,7 +1,7 @@
 ---
 title: Wiki Log
 created: 2026-04-14
-updated: 2026-05-26
+updated: 2026-05-27
 type: summary
 tags: []
 sources:
@@ -12,6 +12,18 @@ sources:
 # Wiki Log
 
 > 维护规则见 [[SCHEMA]]；主题导航见 [[index]]；文档映射以 [[sources/internal-docs-map]] 为准。
+
+## 2026-05-27
+
+- `query-update`
+  - changed:
+    - `wiki/index.md`
+    - `wiki/log.md`
+    - `wiki/topics/component-testing.md`
+  - source:
+    - https://testing-library.com/docs/user-event/setup
+    - https://vitest.dev/guide/browser/interactivity-api
+  - note: 在 [[component-testing]] 新增 "user-event：setup 实例 vs 直接调用"，沉淀 `setup()` 的三个动机（共享输入设备状态、可传选项如 `advanceTimers`/`delay`/`pointerEventsCheck`、替换 clipboard stub）、直接调用在 testing-library 的 v13→v14 过渡定位，以及 Vitest Browser Mode 下从 `vitest/browser` 引入的 `userEvent` 是单例（与 `@testing-library/user-event` 不同），但 setup 仍然必要用于测试间隔离与传配置。本次未新增 `docs/NNN-xxx.md`，`internal-docs-map.md` 无需变更。
 
 ## 2026-05-26
 
