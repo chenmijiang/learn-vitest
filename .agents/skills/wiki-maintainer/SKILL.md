@@ -78,18 +78,21 @@ Maintain the wiki as a stable knowledge layer between raw docs and user answers.
 
 ### Lint
 
-Check:
+1. Run the mechanical lint script first — it reports orphan docs, map ↔ `关联文档` mismatches, broken doc paths, and missing required topic sections:
 
-- required files exist
-- frontmatter fields are complete
-- tags are valid per `SCHEMA.md`
-- map/topic links are in sync
-- orphan docs and broken links
-- missing `来源`
-- stale pages, duplicate topics, oversized pages
-- unverifiable statements
-- index metadata completeness
-- topic `证据状态` / `最近更新` presence
+   ```sh
+   bun run .agents/skills/wiki-maintainer/scripts/lint.ts
+   ```
+
+   Exits 0 if clean, 1 with grouped findings otherwise. Treat the output as the authoritative starting point — fix every reported item before doing the judgement-level checks below.
+
+2. Then check the things the script cannot:
+   - frontmatter fields are complete and tags are valid per `SCHEMA.md`
+   - missing `来源` on topic pages
+   - stale pages, duplicate topics, oversized pages
+   - unverifiable statements (delegate batches to the `vitest-doc-verifier` subagent)
+   - index metadata completeness
+   - topic `证据状态` / `最近更新` recency vs. the change history
 
 Append `lint` to `log.md` with findings and follow-up.
 
