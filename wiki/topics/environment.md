@@ -55,6 +55,8 @@ sources:
 - `happy-dom`：更轻更快，但浏览器行为覆盖面和细节兼容性通常不如 `jsdom`；使用时需要额外安装 `happy-dom`
 - Browser Mode 相关包如 `@vitest/browser-playwright` 只在真实浏览器模式下需要，不能替代 `jsdom` / `happy-dom`
 
+选定 DOM 模拟环境后，`@testing-library/jest-dom` matcher 注入、全局 `cleanup()` 等副作用归属于 setup 文件层级，配置入口与三层 setup 边界归 [[hooks]] 主题。
+
 ### `environmentOptions`
 
 如果你已经选择 `jsdom` 或 `happy-dom`，进一步的 URL、视口等环境细节应放到 `test.environmentOptions` 下，并按环境名分组配置。
@@ -93,6 +95,7 @@ sources:
 
 ## 最近更新
 
+- 2026-05-26 query-update：在"依赖选择"末尾增补一行跨主题指引，把 jest-dom matcher 注入、`cleanup()` 等环境相关的 setup 文件细节明确指向 [[hooks]]，避免读者在环境页找 setup 配置。
 - 2026-05-26 query-update：把"Browser Mode 下的 React 组件测试库选型"小节里关于 RTL 查询方法论的描述压缩成一行并指向新建的 [[component-testing]]，环境页只保留选型结论。
 - 2026-05-22 query-update：新增 Browser Mode 下的 React 组件测试库选型，明确 React 19 起官方测试库已基本废弃并点名推荐 RTL，本项目使用 `vitest-browser-react` 时不应再叠加 `@testing-library/react`。
 - 2026-04-22 query-update：补充“浏览器环境但不是 Browser Mode”的判断方式，明确应使用 `jsdom` 或 `happy-dom`，并区分它们与 `@vitest/browser-*` provider 的依赖关系。

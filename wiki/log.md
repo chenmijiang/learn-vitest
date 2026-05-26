@@ -19,6 +19,18 @@ sources:
   - changed:
     - `wiki/index.md`
     - `wiki/log.md`
+    - `wiki/topics/hooks.md`
+    - `wiki/topics/environment.md`
+  - source:
+    - https://cn.vitest.dev/config/setupfiles
+    - https://cn.vitest.dev/config/globalsetup
+    - https://cn.vitest.dev/guide/lifecycle
+  - note: 在 [[hooks]] 新增配置层 `setupFiles` 与 `globalSetup` 与文件内 hooks 的三层 setup 边界（执行频率、进程归属、teardown 顺序、`project.provide` + `inject` 传值、`sequence.setupFiles`、`setupFiles` 导出被忽略），补充 setup 文件按"作用域 + 环境"两维拆分的组织建议，以及 matcher 注入误放 `globalSetup`、容器/数据库误放 `setupFiles` 等典型误区；并在 [[environment]] 的"依赖选择"末尾加一行跨主题指引，指向 [[hooks]] 处理 setup 文件层级。本次未新增 `docs/NNN-xxx.md`，`internal-docs-map.md` 无需变更。
+
+- `query-update`
+  - changed:
+    - `wiki/index.md`
+    - `wiki/log.md`
     - `wiki/topics/component-testing.md`
     - `wiki/topics/environment.md`
   - source:

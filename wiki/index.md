@@ -24,7 +24,7 @@ sources:
 
 - [[Assertions|topics/assertions.md]] - 断言表达、Chai/Jest 断言关系与失败信息设计。`updated: 2026-04-15` `sources: 5`
 - [[Execution Model|topics/execution-model.md]] - 顺序/并发执行模型与本地 `expect` 使用边界。`updated: 2026-04-15` `sources: 6`
-- [[Hooks|topics/hooks.md]] - setup/cleanup 生命周期与 `aroundEach` 包裹契约。`updated: 2026-04-14` `sources: 4`
+- [[Hooks|topics/hooks.md]] - setup/cleanup 生命周期、`aroundEach` 包裹契约，以及配置层 `setupFiles` / `globalSetup` 与文件内 hooks 的三层 setup 边界。`updated: 2026-05-26` `sources: 6`
 - [[Environment|topics/environment.md]] - `node/jsdom/happy-dom` 选择、Browser Mode 区分、`environmentOptions` 入口、`test.env` / `define` 边界，以及 Browser Mode 下的 React 组件测试库选型。`updated: 2026-05-26` `sources: 11`
 - [[Component Testing|topics/component-testing.md]] - Browser Mode 下沿用 RTL 方法论：查询优先级、`fireEvent` 的赋值 + dispatch 语义、`fireEvent` vs `user-event`、断言风格差异。`updated: 2026-05-26` `sources: 4`
 - [[Projects|topics/projects.md]] - `test.projects` 与 `test.include` 的分层职责，以及根配置与项目配置的继承边界。`updated: 2026-04-15` `sources: 6`
