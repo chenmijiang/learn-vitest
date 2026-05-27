@@ -81,7 +81,7 @@ Maintain the wiki as a stable knowledge layer between raw docs and user answers.
 1. Run the mechanical lint script first — it reports orphan docs, map ↔ `关联文档` mismatches, broken doc paths, and missing required topic sections:
 
    ```sh
-   bun run .agents/skills/wiki-maintainer/scripts/lint.ts
+   bun run .claude/skills/wiki-maintainer/scripts/lint.ts
    ```
 
    Exits 0 if clean, 1 with grouped findings otherwise. Treat the output as the authoritative starting point — fix every reported item before doing the judgement-level checks below.

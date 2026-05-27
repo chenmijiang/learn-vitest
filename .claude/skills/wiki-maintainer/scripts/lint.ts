@@ -2,7 +2,7 @@
 /// <reference types="bun" />
 /**
  * Wiki lint — enforces the consistency rules from
- * .agents/rules/wiki-orchestration-rules.md.
+ * .claude/rules/wiki-orchestration-rules.md.
  *
  * Checks:
  *   1. Every `docs/NNN-*.md` is mapped under at least one topic in
