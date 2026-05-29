@@ -15,6 +15,19 @@ sources:
 
 ## 2026-05-29
 
+- `lint`（整体巡检）
+  - mechanical：`bun run .claude/skills/wiki-maintainer/scripts/lint.ts` → clean（无孤儿文档、map↔关联文档一致、无失效链接、必含章节齐全）
+  - 结构：11 个 topic 全部含完整 8 段（一句话总结 / 适用场景 / 核心概念 / 常见误区 / 证据状态 / 最近更新 / 关联文档 / 来源）；frontmatter 完整，tags 全部在 SCHEMA 分类内
+  - 体量：最大页 component-testing 150 行，均未超 ~200 行拆分阈值；`log.md` 414 行（< 500 条轮转阈值）
+  - 时效：最旧 `updated` 为 typing/modules 2026-04-14（距今约 45 天），未触发 90 天 stale 阈值
+  - 内容校验（vitest-doc-verifier，对照官方文档）：
+    - [[visual-regression]]：`toMatchScreenshot`、`__screenshots__` 基准、`test.browser.expect.toMatchScreenshot` 下 `comparatorName: 'pixelmatch'` + `comparatorOptions.allowedMismatchedPixelRatio`、`name-browser-platform.png` 文件名、stable screenshot detection 全部 VERIFIED
+    - [[component-testing]]：`userEvent` 从 `vitest/browser` 引入、默认实例为单例、`setup()` 仍推荐 全部 VERIFIED
+    - [[environment]]：`test.browser`（需 `provider` + `instances`）、`browser.enabled` 独立于 `environment` 字段 VERIFIED；另确认官方已移除 Browser Mode 的 "experimental" 标记——经核查本项目 topic 页并未声称其为实验性，故无需修正
+  - 结论：本轮无需内容改动；wiki 与官方文档一致。
+
+## 2026-05-29
+
 - `query-update`
   - changed:
     - `wiki/index.md`
