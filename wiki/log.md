@@ -15,6 +15,15 @@ sources:
 
 ## 2026-05-29
 
+- `query-update`
+  - changed:
+    - `wiki/index.md`
+    - `wiki/log.md`
+    - `wiki/topics/environment.md`
+  - source:
+    - https://cn.vitest.dev/guide/browser/
+  - note: 在 [[environment]] 证据状态补记一条已验证事实——Browser Mode 经 `test.browser.enabled: true` 启用（独立于 `environment` 字段，需 `provider` + `instances`），官方 `guide/browser/` 已移除 "experimental" 标记。源自本日 lint 的官方文档抽检；本页历来未声称其实验性，故仅作正向记录、未改动正文措辞。未新增 `docs/NNN-xxx.md`，来源已在页内 sources 列表中，`internal-docs-map.md` 无需变更。
+
 - `lint`（整体巡检）
   - mechanical：`bun run .claude/skills/wiki-maintainer/scripts/lint.ts` → clean（无孤儿文档、map↔关联文档一致、无失效链接、必含章节齐全）
   - 结构：11 个 topic 全部含完整 8 段（一句话总结 / 适用场景 / 核心概念 / 常见误区 / 证据状态 / 最近更新 / 关联文档 / 来源）；frontmatter 完整，tags 全部在 SCHEMA 分类内

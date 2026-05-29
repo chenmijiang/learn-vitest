@@ -1,7 +1,7 @@
 ---
 title: Environment
 created: 2026-04-14
-updated: 2026-05-26
+updated: 2026-05-29
 type: topic
 tags: ["environment", "config", "browser", "beginner"]
 sources:
@@ -90,11 +90,13 @@ sources:
 ## 证据状态
 
 - 已验证：预设环境选择、DOM 模拟环境与 Browser Mode 的边界、`environmentOptions` 配置入口、自定义环境、`test.env` 的运行时注入、`.env` 自动加载边界、`define` 的常量替换语义，以及 React 19 测试库弃用与 `vitest-browser-react` 沿用 testing-library 查询方法论的结论，均已对照官方 CHANGELOG / 仓库 README 核对。
+- 已验证（2026-05-29）：Browser Mode 通过 `test.browser.enabled: true` 启用，独立于 `environment` 字段，需配置 `provider`（playwright / webdriverio / preview）与 `instances` 数组；且官方 `guide/browser/` 当前已**移除 "experimental" 标记**——本页历来未声称其为实验性，此处仅作正向记录，便于后续补写时不要回退到"实验性"措辞。
 - 待验证：不同 Vitest/Vite 大版本下 `import.meta.env` 暴露细节和周边兼容行为，仍应以当前版本文档为准。
 - 冲突中：无。
 
 ## 最近更新
 
+- 2026-05-29 query-update：在证据状态补记一条已验证事实——Browser Mode 经 `test.browser.enabled` 启用（独立于 `environment`，需 `provider` + `instances`），且官方文档已移除 "experimental" 标记。来自一次 wiki lint 的官方文档抽检，未改动正文措辞。
 - 2026-05-26 query-update：在"依赖选择"末尾增补一行跨主题指引，把 jest-dom matcher 注入、`cleanup()` 等环境相关的 setup 文件细节明确指向 [[hooks]]，避免读者在环境页找 setup 配置。
 - 2026-05-26 query-update：把"Browser Mode 下的 React 组件测试库选型"小节里关于 RTL 查询方法论的描述压缩成一行并指向新建的 [[component-testing]]，环境页只保留选型结论。
 - 2026-05-22 query-update：新增 Browser Mode 下的 React 组件测试库选型，明确 React 19 起官方测试库已基本废弃并点名推荐 RTL，本项目使用 `vitest-browser-react` 时不应再叠加 `@testing-library/react`。
