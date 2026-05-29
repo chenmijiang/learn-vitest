@@ -1,7 +1,7 @@
 ---
 title: Vitest Wiki Index
 created: 2026-04-14
-updated: 2026-05-27
+updated: 2026-05-29
 type: summary
 tags: ["beginner"]
 sources:
@@ -27,6 +27,7 @@ sources:
 - [[Hooks|topics/hooks.md]] - setup/cleanup 生命周期、`aroundEach` 包裹契约，以及配置层 `setupFiles` / `globalSetup` 与文件内 hooks 的三层 setup 边界。`updated: 2026-05-26` `sources: 6`
 - [[Environment|topics/environment.md]] - `node/jsdom/happy-dom` 选择、Browser Mode 区分、`environmentOptions` 入口、`test.env` / `define` 边界，以及 Browser Mode 下的 React 组件测试库选型。`updated: 2026-05-26` `sources: 11`
 - [[Component Testing|topics/component-testing.md]] - Browser Mode 下沿用 RTL 方法论：查询优先级、`fireEvent` 的赋值 + dispatch 语义、`fireEvent` vs `user-event`、断言风格差异，以及 `userEvent.setup()` 实例的设计意图与 Vitest Browser Mode 下的单例差异。`updated: 2026-05-27` `sources: 6`
+- [[Visual Regression Testing|topics/visual-regression.md]] - Browser Mode 下的视觉回归测试：`toMatchScreenshot` 截图对比、`__screenshots__` 基准、稳定截图检测、`pixelmatch`/`allowedMismatchedPixelRatio` 配置，以及 mask/禁用动画/固定视口/统一 CI 环境等稳定性实践。`updated: 2026-05-29` `sources: 1`
 - [[Projects|topics/projects.md]] - `test.projects` 与 `test.include` 的分层职责，以及根配置与项目配置的继承边界。`updated: 2026-04-15` `sources: 6`
 - [[Mocking|topics/mocking.md]] - `vi.fn`、`vi.spyOn`、`vi.mock` 分层使用与清理策略。`updated: 2026-04-15` `sources: 10`
 - [[Typing|topics/typing.md]] - `vi.mocked` 类型层语义与 deep/partial 取舍。`updated: 2026-04-14` `sources: 3`

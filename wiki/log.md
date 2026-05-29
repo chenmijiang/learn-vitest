@@ -1,7 +1,7 @@
 ---
 title: Wiki Log
 created: 2026-04-14
-updated: 2026-05-27
+updated: 2026-05-29
 type: summary
 tags: []
 sources:
@@ -12,6 +12,17 @@ sources:
 # Wiki Log
 
 > 维护规则见 [[SCHEMA]]；主题导航见 [[index]]；文档映射以 [[sources/internal-docs-map]] 为准。
+
+## 2026-05-29
+
+- `query-update`
+  - changed:
+    - `wiki/index.md`
+    - `wiki/log.md`
+    - `wiki/topics/visual-regression.md`（新建）
+  - source:
+    - https://cn.vitest.dev/guide/browser/visual-regression-testing.html
+  - note: 新建 [[visual-regression]] 主题页，沉淀 Browser Mode 下的视觉回归测试：概念上拆"可视化外观 + 回归对比"、与功能测试和文本 [[snapshots]] 的区别、`toMatchScreenshot` 用法、`__screenshots__` 基准目录（需提交 git）、稳定截图检测机制、`comparatorName: 'pixelmatch'` 与 `allowedMismatchedPixelRatio` 配置、稳定性最佳实践（只截元素 / `mask` 遮盖动态内容 / 禁用动画 / 固定视口 / 统一 CI 环境）、跨平台文件名差异（`name-chromium-darwin.png`）、基准更新走手动工作流。组件测试方法论已在 [[component-testing]]，故另起独立 topic 避免该页膨胀。本次未新增 `docs/NNN-xxx.md`，`internal-docs-map.md` 无需变更。
 
 ## 2026-05-27
 
