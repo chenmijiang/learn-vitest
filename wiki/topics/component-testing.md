@@ -99,6 +99,38 @@ input.dispatchEvent(new Event("change", { bubbles: true }));
 
 在 Vitest Browser Mode 下，`vitest-browser-react` 提供的 `page.getByRole(...).click()` 等交互走的是 CDP（Chrome DevTools Protocol），是比 `fireEvent` 更接近真实用户的路径。
 
+### Locator：惰性、可重试的元素句柄
+
+上面那些 `page.getByRole(...)` 返回的并不是 DOM 元素，而是一个 **locator**。官方定义："A locator is a representation of an element or a number of elements."——它是**由选择器定义的、对元素的惰性句柄**，不是元素本身。
+
+这与传统 testing-library 有一个根本差别：
+
+- **testing-library**：`getByRole(...)` **立即查 DOM 并返回元素**（查不到即抛错）。
+- **Vitest Browser Mode**：`page.getByRole(...)` **返回 locator 对象**，此刻**还没真正查 DOM**。
+
+由此带来三个核心特性：
+
+- **惰性求值**：创建 locator 不触发查询，只有在交互 / 断言 / 取元素时才查。
+- **自动重试**：交互和断言会在需要时反复重试至条件满足或超时，省掉手写 `waitFor`——这正是 `await expect.element(locator).toBeVisible()` 能"持续重试"的根因（见下一节）。
+- **可组合**：locator 可链式收窄（`nth/first/last/filter/and/or`）。
+
+API 速览：
+
+```ts
+// 定位（返回 locator，名字对齐 testing-library 语义，但实现非其包装）
+page.getByRole("button", { name: "提交" });
+// 交互（触发查询 + 自动重试）
+await locator.click(); // fill / clear / hover / selectOptions ...
+// 物化成真实元素（需要时）
+locator.element(); // 严格模式：多个/零个元素会抛错
+locator.query(); // 单个或 null
+locator.elements(); // 数组
+// 可重试断言（最常用）
+await expect.element(locator).toBeVisible();
+```
+
+**关于"它封装了什么"的准确说法**：locator 的 `getBy*` 方法**在命名与无障碍语义上对齐 testing-library**，但其实现**fork 自 Playwright 的 locators（基于 `Ivya` 库）**，并不是对 `@testing-library/dom` 查询的包装。真正被封装的是 **provider 层**：同一套 Locator API 暴露给所有 provider——`playwright` 原生支持，`webdriverio` / `preview` 则转换成 CSS 选择器实现等价行为，从而让测试代码与具体浏览器驱动解耦。
+
 ### 断言风格差异
 
 - `vitest-browser-react`：**异步、可重试**的 `await expect.element(locator).toBeVisible()`，查询会在断言期间持续重试
@@ -147,11 +179,13 @@ test("shift + click", async () => {
 
 - 已验证：查询优先级顺序与三档分类、`fireEvent` 的 `target` 赋值语义与 file input 的 `Object.defineProperty` 兜底、官方对 `user-event` 的偏向推荐，均已对照 testing-library 官方页面核对。`<input type="date">` 的 `YYYY-MM-DD` 规范化与 locale 仅影响显示，已对照 MDN 核对。`vitest-browser-react` 沿用 testing-library 原则、断言异步可重试，已对照仓库 README 核对。user-event `setup()` 的三个动机（共享设备状态 / 选项 / clipboard stub）与直接调用的 v14 过渡定位已对照 testing-library 官方 `user-event/setup` 页面核对；Vitest Browser Mode 下 `userEvent` 从 `vitest/browser` 引入、默认实例为单例已对照官方 `guide/browser/interactivity-api` 页面核对。
 - 已验证（2026-05-29）：ARIA 的 role（多数来自原生标签隐含角色）与 accessible name（`aria-labelledby` / `aria-label` / `<label>` / 文本 / `title`）构成 `getByRole` / `getByLabelText` 的定位依据，"优先语义化原生 HTML"为 ARIA 第一法则，已对照 MDN ARIA 文档核对。
+- 已验证（2026-05-29）：locator 是惰性、可自动重试的元素句柄（`page.getBy*` 返回 locator 而非元素，与 testing-library 立即返回元素不同）；其 `getBy*` 在语义/命名上对齐 testing-library，但实现 fork 自 Playwright locators（`Ivya`），并作为统一 API 屏蔽 provider 差异（playwright 原生、webdriverio/preview 转 CSS 选择器）。已对照官方 `guide/browser/locators` 页面核对。
 - 待验证：无。
 - 冲突中：无。
 
 ## 最近更新
 
+- 2026-05-29 query-update：新增 "Locator：惰性、可重试的元素句柄" 一节，澄清 `page.getBy*` 返回的是 locator 而非元素、惰性求值 / 自动重试 / 可组合三特性、`element()/query()/elements()` 与 `expect.element` 的关系，以及"封装"的准确性质——`getBy*` 对齐 testing-library 语义但实现 fork 自 Playwright（`Ivya`），真正被封装的是 provider 层。
 - 2026-05-29 query-update：在"核心概念"前置新增 "ARIA：role 与 accessible name（查询的语义地基）" 一节，解释 role（原生标签隐含角色）与 accessible name 的来源及其与 `getByRole` / `getByLabelText` 的对应关系，并点明"优先语义化原生 HTML"的 ARIA 第一法则，作为查询优先级的语义背景。
 - 2026-05-27 query-update：新增 "user-event：setup 实例 vs 直接调用" 一节，明确 `setup()` 的三个动机（共享设备状态、传选项、替换 clipboard stub）、直接调用的 v14 过渡定位，以及 Vitest Browser Mode 下从 `vitest/browser` 引入的 `userEvent` 是单例（与 testing-library 不同），但 setup 仍需用于测试间隔离与传配置。
 - 2026-05-26 query-update：新建 component-testing 主题页，沉淀 Browser Mode 下 RTL 方法论（查询优先级、`fireEvent` 语义、`fireEvent` vs `user-event`、断言风格差异）和 `<input type="date">` 的格式坑，并把 [[environment]] 里关于 RTL 方法论的描述收拢成一行交叉链接。
@@ -169,4 +203,5 @@ test("shift + click", async () => {
 - https://testing-library.com/docs/user-event/setup（`setup()` 的设计意图、共享设备状态、clipboard stub、v14 过渡说明）
 - https://vitest.dev/guide/browser/interactivity-api（Vitest Browser Mode 下 `userEvent` 从 `vitest/browser` 引入、默认实例为单例）
 - https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA（ARIA role / accessible name 语义，作为 `getByRole` / `getByLabelText` 查询的背景）
+- https://vitest.dev/guide/browser/locators（Locator 概念：惰性可重试句柄、`getBy*` 方法、`element()/query()/elements()`、fork 自 Playwright locators 并统一 provider）
 - [[environment]]（Browser Mode 与组件测试库选型的环境层结论）
