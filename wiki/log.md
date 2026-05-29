@@ -19,6 +19,15 @@ sources:
   - changed:
     - `wiki/index.md`
     - `wiki/log.md`
+    - `wiki/topics/component-testing.md`
+  - source:
+    - https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA
+  - note: 在 [[component-testing]] "核心概念"前置新增 "ARIA：role 与 accessible name（查询的语义地基）" 一节，解释 role（多数来自原生标签隐含角色）与 accessible name（`aria-labelledby`/`aria-label`/`<label>`/文本/`title`）的来源及其与 `getByRole` / `getByLabelText` 的对应关系，点明"优先语义化原生 HTML"的 ARIA 第一法则，作为查询优先级的语义背景。新增 MDN ARIA 来源（sources 6→7）。未新增 `docs/NNN-xxx.md`，`internal-docs-map.md` 无需变更。
+
+- `query-update`
+  - changed:
+    - `wiki/index.md`
+    - `wiki/log.md`
     - `wiki/topics/environment.md`
   - source:
     - https://cn.vitest.dev/guide/browser/

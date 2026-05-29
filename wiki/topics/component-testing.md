@@ -1,7 +1,7 @@
 ---
 title: Component Testing
 created: 2026-05-26
-updated: 2026-05-27
+updated: 2026-05-29
 type: topic
 tags: ["browser", "environment", "beginner"]
 sources:
@@ -11,6 +11,7 @@ sources:
   - https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/date
   - https://testing-library.com/docs/user-event/setup
   - https://vitest.dev/guide/browser/interactivity-api
+  - https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA
 ---
 
 # Component Testing
@@ -31,6 +32,24 @@ sources:
 - 想理解为什么官方建议从 `getByRole` 起步、为什么 `fireEvent` 不等于真实用户行为
 
 ## 核心概念
+
+### ARIA：role 与 accessible name（查询的语义地基）
+
+testing-library 的查询优先级不是凭空排的，它直接建立在 **ARIA（Accessible Rich Internet Applications）** 这套 W3C 无障碍语义之上。理解两个概念就够用：
+
+- **role（角色）**：元素"是什么控件"。绝大多数来自原生标签的**隐含角色**——`<button>` 隐含 `button`、`<nav>` 隐含 `navigation`、`<input type="checkbox">` 隐含 `checkbox`，**无需手写 `role=`**。只有原生标签表达不了语义时才用 `role="..."` 兜底。
+- **accessible name（无障碍名称）**：辅助技术念出来的"这个控件叫什么"。来源按优先级大致是 `aria-labelledby` > `aria-label` > 关联的 `<label>` / 原生文本内容 > `title`。
+
+这正是查询 API 的工作原理：
+
+```tsx
+// role='button'（来自 <button> 隐含角色） + name='提交'（来自按钮文本/aria-label）
+page.getByRole("button", { name: "提交" });
+// 对应 <label>、aria-label、aria-labelledby 提供的无障碍名称
+page.getByLabelText("用户名");
+```
+
+> 第一条 ARIA 法则：**能用语义化原生 HTML 就别加 ARIA 属性**。写好原生标签，`getByRole` 自然就能定位——可访问性与可测试性是同一件事的两面。
 
 ### 查询优先级
 
@@ -127,11 +146,13 @@ test("shift + click", async () => {
 ## 证据状态
 
 - 已验证：查询优先级顺序与三档分类、`fireEvent` 的 `target` 赋值语义与 file input 的 `Object.defineProperty` 兜底、官方对 `user-event` 的偏向推荐，均已对照 testing-library 官方页面核对。`<input type="date">` 的 `YYYY-MM-DD` 规范化与 locale 仅影响显示，已对照 MDN 核对。`vitest-browser-react` 沿用 testing-library 原则、断言异步可重试，已对照仓库 README 核对。user-event `setup()` 的三个动机（共享设备状态 / 选项 / clipboard stub）与直接调用的 v14 过渡定位已对照 testing-library 官方 `user-event/setup` 页面核对；Vitest Browser Mode 下 `userEvent` 从 `vitest/browser` 引入、默认实例为单例已对照官方 `guide/browser/interactivity-api` 页面核对。
+- 已验证（2026-05-29）：ARIA 的 role（多数来自原生标签隐含角色）与 accessible name（`aria-labelledby` / `aria-label` / `<label>` / 文本 / `title`）构成 `getByRole` / `getByLabelText` 的定位依据，"优先语义化原生 HTML"为 ARIA 第一法则，已对照 MDN ARIA 文档核对。
 - 待验证：无。
 - 冲突中：无。
 
 ## 最近更新
 
+- 2026-05-29 query-update：在"核心概念"前置新增 "ARIA：role 与 accessible name（查询的语义地基）" 一节，解释 role（原生标签隐含角色）与 accessible name 的来源及其与 `getByRole` / `getByLabelText` 的对应关系，并点明"优先语义化原生 HTML"的 ARIA 第一法则，作为查询优先级的语义背景。
 - 2026-05-27 query-update：新增 "user-event：setup 实例 vs 直接调用" 一节，明确 `setup()` 的三个动机（共享设备状态、传选项、替换 clipboard stub）、直接调用的 v14 过渡定位，以及 Vitest Browser Mode 下从 `vitest/browser` 引入的 `userEvent` 是单例（与 testing-library 不同），但 setup 仍需用于测试间隔离与传配置。
 - 2026-05-26 query-update：新建 component-testing 主题页，沉淀 Browser Mode 下 RTL 方法论（查询优先级、`fireEvent` 语义、`fireEvent` vs `user-event`、断言风格差异）和 `<input type="date">` 的格式坑，并把 [[environment]] 里关于 RTL 方法论的描述收拢成一行交叉链接。
 
@@ -147,4 +168,5 @@ test("shift + click", async () => {
 - https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/date（`value` 永远是 `YYYY-MM-DD`，显示格式随 locale 变化）
 - https://testing-library.com/docs/user-event/setup（`setup()` 的设计意图、共享设备状态、clipboard stub、v14 过渡说明）
 - https://vitest.dev/guide/browser/interactivity-api（Vitest Browser Mode 下 `userEvent` 从 `vitest/browser` 引入、默认实例为单例）
+- https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA（ARIA role / accessible name 语义，作为 `getByRole` / `getByLabelText` 查询的背景）
 - [[environment]]（Browser Mode 与组件测试库选型的环境层结论）
