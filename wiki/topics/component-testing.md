@@ -1,7 +1,7 @@
 ---
 title: Component Testing
 created: 2026-05-26
-updated: 2026-05-31
+updated: 2026-06-01
 type: topic
 tags: ["browser", "environment", "beginner"]
 sources:
@@ -132,6 +132,37 @@ await expect.element(locator).toBeVisible();
 
 **关于"它封装了什么"的准确说法**：locator 的 `getBy*` 方法**在命名与无障碍语义上对齐 testing-library**，但其实现**fork 自 Playwright 的 locators（基于 `Ivya` 库）**，并不是对 `@testing-library/dom` 查询的包装。真正被封装的是 **provider 层**：同一套 Locator API 暴露给所有 provider——`playwright` 原生支持，`webdriverio` / `preview` 则转换成 CSS 选择器实现等价行为，从而让测试代码与具体浏览器驱动解耦。
 
+### `page` vs `render()` 返回的 `screen`：作用域差别
+
+定位器方法既能从 `vitest/browser` 的 `page` 上拿，也能从 `vitest-browser-react` 的 `render()` 返回值（习惯叫 `screen`）上拿。两者**返回同一种 locator 对象**（惰性 / 可重试 / 可链式），API 完全一致，真正的区别只有一个——**查询作用域（scope）**：
+
+- **`page`（来自 `vitest/browser`）**：全局浏览器上下文对象，`getBy*` 默认从**整个文档**（`document.body`）开始查。
+- **`render()` 返回的 `screen`（来自 `vitest-browser-react`）**：作用域**收窄到本次渲染组件的容器子树**，约等于 `page.elementLocator(container).getBy*`。`render()` 默认在每个测试前**自动 cleanup**（想保留渲染结果可改从 `vitest-browser-react/pure` 引入）。
+
+```tsx
+import { render } from "vitest-browser-react";
+import { page } from "vitest/browser";
+
+const screen = await render(<LoginForm />);
+
+// ✅ 默认:在被测组件子树内查,范围精确,不会误匹配页面其它地方
+await screen.getByRole("button", { name: "提交" }).click();
+
+// 组件用 React Portal 把弹窗/Toast 挂到 document.body 时,它在容器子树之外,
+// screen 查不到 —— 改用 page 从整个文档查
+await expect.element(page.getByRole("dialog")).toBeVisible();
+```
+
+实战选择：
+
+- **默认一律用 `screen`**：作用域精确、不会被同页面其它元素干扰，是官方推荐的常规写法。
+- **只有元素被渲染到组件子树之外时才用 `page`**：最典型是 **React Portal**（`Modal` / `Dialog` / `Tooltip` / `Toast` 常被挂到 `document.body`，不在容器内，`screen` 查不到）。
+- 需要手动框定根节点时，用 `page.elementLocator(el).getBy*` 自己指定作用域——这正是 `screen` 内部所做的事。
+- 二者可在同一测试里**混用**：组件内部用 `screen`，跨出 portal 的部分用 `page`。
+- 记忆口诀：**`screen` = 在我这个组件里找，`page` = 在整个页面里找；优先 `screen`，够不着（portal / document 级）再上 `page`**。
+
+环境层为什么选 `vitest-browser-react` 这套基建，见 [[environment]]。
+
 ### 断言风格差异
 
 - `vitest-browser-react`：**异步、可重试**的 `await expect.element(locator).toBeVisible()`，查询会在断言期间持续重试
@@ -196,18 +227,21 @@ expect(result.current.count).toBe(1);
 - **默认就用 `getByTestId`**：跳过 role/label 等可访问性优先的查询，会让测试既不反映用户路径，也不能反向驱动可访问性设计
 - **在 Browser Mode 里到处手写 `act`**：Browser Mode 的断言本就异步可重试，不需要手动 flush；`act` / `renderHook` 是经典 RTL（jsdom）的工具，跨基建套用只会增加噪音
 - **把 `renderHook` 当测 Hook 的默认手段**：官方更推荐真实组件 + `render`，`renderHook` 适用于库作者或高复用 Hook，滥用会让被测逻辑藏在抽象后面
+- **用 `screen.getBy*` 找 Portal 内容**：`Modal` / `Dialog` / `Toast` 经 React Portal 挂到 `document.body`，在组件容器子树之外，`screen` 查不到——这类元素要改用 `page.getBy*` 从整个文档查
 
 ## 证据状态
 
 - 已验证：查询优先级顺序与三档分类、`fireEvent` 的 `target` 赋值语义与 file input 的 `Object.defineProperty` 兜底、官方对 `user-event` 的偏向推荐，均已对照 testing-library 官方页面核对。`<input type="date">` 的 `YYYY-MM-DD` 规范化与 locale 仅影响显示，已对照 MDN 核对。`vitest-browser-react` 沿用 testing-library 原则、断言异步可重试，已对照仓库 README 核对。user-event `setup()` 的三个动机（共享设备状态 / 选项 / clipboard stub）与直接调用的 v14 过渡定位已对照 testing-library 官方 `user-event/setup` 页面核对；Vitest Browser Mode 下 `userEvent` 从 `vitest/browser` 引入、默认实例为单例已对照官方 `guide/browser/interactivity-api` 页面核对。
 - 已验证（2026-05-29）：ARIA 的 role（多数来自原生标签隐含角色）与 accessible name（`aria-labelledby` / `aria-label` / `<label>` / 文本 / `title`）构成 `getByRole` / `getByLabelText` 的定位依据，"优先语义化原生 HTML"为 ARIA 第一法则，已对照 MDN ARIA 文档核对。
 - 已验证（2026-05-29）：locator 是惰性、可自动重试的元素句柄（`page.getBy*` 返回 locator 而非元素，与 testing-library 立即返回元素不同）；其 `getBy*` 在语义/命名上对齐 testing-library，但实现 fork 自 Playwright locators（`Ivya`），并作为统一 API 屏蔽 provider 差异（playwright 原生、webdriverio/preview 转 CSS 选择器）。已对照官方 `guide/browser/locators` 页面核对。
+- 已验证（2026-06-01）：`page`（`vitest/browser`）与 `render()` 返回的 `screen`（`vitest-browser-react`）返回同一种 locator 对象、API 一致，区别只在作用域——`page.getBy*` 默认 scope 为整个 document，`screen.getBy*` 收窄到渲染组件的容器子树（约等于 `page.elementLocator(container)`）；`render()` 默认每个测试前自动 cleanup，`vitest-browser-react/pure` 可关闭。Portal 内容在容器之外需用 `page` 查。已对照官方 `guide/browser/locators` 与 `vitest-browser-react` 仓库 README 核对。
 - 已验证（2026-05-31）：`act` 是 React 官方 `act()` 的轻包装，`render`/`fireEvent`/`user-event` 内部已包 `act`，仅在绕过交互直接改 state 或出现 `not wrapped in act` 警告时手写，官方建议从 `@testing-library/react` 导入；`renderHook` 是 `render` + 内部空组件的封装，返回 `result`/`rerender`/`unmount`，官方更推荐真实组件 + `render`。均已对照 testing-library 官方 React API 页面核对；二者属经典 RTL（jsdom/node），与 Browser Mode 异步可重试断言为不同基建。
 - 待验证：无。
 - 冲突中：无。
 
 ## 最近更新
 
+- 2026-06-01 query-update：在 "Locator" 一节后新增 "`page` vs `render()` 返回的 `screen`：作用域差别" 一节，澄清两个导入来源返回同一种 locator、区别只在 scope（`page` 查整个 document、`screen` 收窄到组件容器子树），给出 React Portal 场景必须用 `page` 的实战选择与"优先 screen，够不着再上 page"口诀，并补一条 Portal 相关常见误区。
 - 2026-05-31 query-update：新增 "经典 RTL 的 `act` / `renderHook`（与 Browser Mode 的边界）" 一节，说明 `act` 的 flush 语义与"日常不必手写"、`renderHook` 的 `result`/`rerender`/`unmount` 与官方"优先真实组件 + render"建议，并划清二者属 jsdom/node 经典 RTL、与本项目 Browser Mode 异步断言为不同基建；同步补两条常见误区。
 - 2026-05-29 query-update：新增 "Locator：惰性、可重试的元素句柄" 一节，澄清 `page.getBy*` 返回的是 locator 而非元素、惰性求值 / 自动重试 / 可组合三特性、`element()/query()/elements()` 与 `expect.element` 的关系，以及"封装"的准确性质——`getBy*` 对齐 testing-library 语义但实现 fork 自 Playwright（`Ivya`），真正被封装的是 provider 层。
 - 2026-05-29 query-update：在"核心概念"前置新增 "ARIA：role 与 accessible name（查询的语义地基）" 一节，解释 role（原生标签隐含角色）与 accessible name 的来源及其与 `getByRole` / `getByLabelText` 的对应关系，并点明"优先语义化原生 HTML"的 ARIA 第一法则，作为查询优先级的语义背景。

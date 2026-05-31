@@ -1,7 +1,7 @@
 ---
 title: Wiki Log
 created: 2026-04-14
-updated: 2026-05-31
+updated: 2026-06-01
 type: summary
 tags: []
 sources:
@@ -12,6 +12,18 @@ sources:
 # Wiki Log
 
 > 维护规则见 [[SCHEMA]]；主题导航见 [[index]]；文档映射以 [[sources/internal-docs-map]] 为准。
+
+## 2026-06-01
+
+- `query-update`
+  - changed:
+    - `wiki/index.md`
+    - `wiki/log.md`
+    - `wiki/topics/component-testing.md`
+  - source:
+    - https://vitest.dev/guide/browser/locators
+    - https://github.com/vitest-dev/vitest-browser-react
+  - note: 回答用户"`vitest-browser-react` 与 `vitest/browser` 都能拿定位器方法,两者区别及实战用法"。在 [[component-testing]] 的 "Locator" 一节后新增 "`page` vs `render()` 返回的 `screen`:作用域差别" 一节:两者返回同一种 locator 对象、API 一致,区别只在 scope —— `page`(`vitest/browser`)默认查整个 document(`document.body`),`screen`(`render()` 返回值)收窄到渲染组件容器子树(约等于 `page.elementLocator(container)`),`render()` 默认自动 cleanup、`/pure` 可关闭;实战默认用 `screen`,元素在组件子树之外(典型 React Portal: Modal/Dialog/Toast 挂到 body)才用 `page`,可 `page.elementLocator(el)` 手动框定、同测试可混用,口诀"优先 screen,够不着再上 page"。补一条 Portal 常见误区。两个来源(locators 页 + vitest-browser-react README)均已在 sources 中,source 数不变(9)。未新增 `docs/NNN-xxx.md`,`internal-docs-map.md` 无需变更。
 
 ## 2026-05-31
 
