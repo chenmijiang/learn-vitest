@@ -1,7 +1,7 @@
 ---
 title: Wiki Log
 created: 2026-04-14
-updated: 2026-05-29
+updated: 2026-05-31
 type: summary
 tags: []
 sources:
@@ -12,6 +12,18 @@ sources:
 # Wiki Log
 
 > 维护规则见 [[SCHEMA]]；主题导航见 [[index]]；文档映射以 [[sources/internal-docs-map]] 为准。
+
+## 2026-05-31
+
+- `query-update`
+  - changed:
+    - `wiki/index.md`
+    - `wiki/log.md`
+    - `wiki/topics/component-testing.md`
+    - `wiki/topics/hooks.md`
+  - source:
+    - https://testing-library.com/docs/react-testing-library/api/
+  - note: 回答用户"`@testing-library/react` 的 `act` / `renderHook` 用途"。在 [[component-testing]] 新增 "经典 RTL 的 `act` / `renderHook`（与 Browser Mode 的边界）" 一节：`act` 是 React 官方 `act()` 轻包装，`render`/`fireEvent`/`user-event` 内部已包 act、日常不必手写，仅在绕过交互直接改 state 或出现 `not wrapped in act` 警告时手写，官方建议从 `@testing-library/react` 导入；`renderHook` 是 `render` + 内部空组件封装，返回 `result`/`rerender`/`unmount`，官方更推荐真实组件 + `render`，不是默认选择。明确二者属经典 RTL（jsdom/node），与本项目 Browser Mode 异步可重试断言为不同基建。同步补两条常见误区、新增官方 React API 来源（sources 8→9），并在 [[hooks]] 相关主题加一行消歧交叉链接（Vitest 生命周期 hooks ≠ React 自定义 Hook 测试）。未新增 `docs/NNN-xxx.md`，`internal-docs-map.md` 无需变更。
 
 ## 2026-05-29
 

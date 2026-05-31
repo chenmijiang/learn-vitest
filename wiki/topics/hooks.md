@@ -23,6 +23,7 @@ Hooks 负责测试前后的准备与清理；理解执行顺序和包裹式 hook
 
 - [[execution-model]]
 - [[environment]]
+- [[component-testing]]（区分：本页是 Vitest 生命周期 hooks；测试 **React 自定义 Hook** 用 `renderHook` / `act`，见该页"经典 RTL 的 act / renderHook"一节）
 
 ## 适用场景
 
