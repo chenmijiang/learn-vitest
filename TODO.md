@@ -112,20 +112,20 @@
 
 - [x] 阅读快照测试，理解快照的概念和使用方法
       链接：https://cn.vitest.dev/guide/snapshot
-- [ ] 阅读浏览器模式总览，先建立真实浏览器测试的概念
+- [x] 阅读浏览器模式总览，先建立真实浏览器测试的概念
       链接：https://cn.vitest.dev/guide/browser/
-- [ ] 阅读组件测试，理解“测试行为而不是实现细节”
+- [x] 阅读组件测试，理解“测试行为而不是实现细节”
       链接：https://cn.vitest.dev/guide/browser/component-testing
-- [ ] 学会最基础的 `page`、`userEvent`、`expect.element`
+- [x] 学会最基础的 `page`、`userEvent`、`expect.element`
       链接：https://cn.vitest.dev/guide/browser/
-- [ ] 理解 browser mode 与 `jsdom` / `happy-dom` 的区别
+- [x] 理解 browser mode 与 `jsdom` / `happy-dom` 的区别
       链接：https://cn.vitest.dev/guide/browser/
-- [ ] 阅读 UI 模式，了解交互式查看测试结果的方式
+- [x] 阅读 UI 模式，了解交互式查看测试结果的方式
       链接：https://cn.vitest.dev/guide/ui
 - [ ] 在当前项目里给一个界面组件补测试
-- [ ] 测试一次初始渲染
-- [ ] 测试一次输入或点击交互
-- [ ] 测试一次成功状态、失败状态或空状态
+- [x] 测试一次初始渲染
+- [x] 测试一次输入或点击交互
+- [x] 测试一次成功状态、失败状态或空状态
 - [ ] 如果项目使用 React、Vue、Svelte 等框架，对照官网示例跑通对应方案
 
 效果：能开始测试表单、弹窗、交互组件，而不仅是纯函数。
