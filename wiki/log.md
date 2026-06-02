@@ -1,7 +1,7 @@
 ---
 title: Wiki Log
 created: 2026-04-14
-updated: 2026-06-01
+updated: 2026-06-03
 type: summary
 tags: []
 sources:
@@ -12,6 +12,18 @@ sources:
 # Wiki Log
 
 > 维护规则见 [[SCHEMA]]；主题导航见 [[index]]；文档映射以 [[sources/internal-docs-map]] 为准。
+
+## 2026-06-03
+
+- `query-update`
+  - changed:
+    - `wiki/index.md`
+    - `wiki/log.md`
+    - `wiki/topics/coverage.md`（新建）
+  - source:
+    - https://cn.vitest.dev/guide/coverage
+    - https://cn.vitest.dev/config/coverage
+  - note: 回答用户连续三轮覆盖率问答（「什么是覆盖率」「有什么用」「旧项目怎么引入」）。wiki 此前无覆盖率主题，新建 [[coverage]] 独立 topic：覆盖率定义（源码被执行比例，与测试体积无关）、四类指标（lines/statements/branches/functions，Branches 最能暴露漏测）、provider（v8 默认 vs istanbul，含包名 `@vitest/coverage-v8` / `@vitest/coverage-istanbul` 与首次运行自动安装提示）、`--coverage` 启用与 `vitest.config.ts` 写法、reporter 与各配置默认值（reporter 默认 `['text','html','clover','json']`、reportsDirectory 默认 `./coverage`、clean 默认 true）、`thresholds` 阈值门禁（正数=最低百分比/负数=最大未覆盖项数/`perFile`/`autoUpdate`/`100`/glob 分目录）、旧项目六步引入与「防倒退优先于达标」门禁策略。provider/包名/配置字段/默认值/thresholds 均对照官方核对，类比与门禁打法标注为经验总结。`coverage` 标签已在 SCHEMA taxonomy 中。暂无对应 `docs/NNN-xxx.md`，`internal-docs-map.md` 无需变更，index 主题导航新增一条（sources: 2）。
 
 ## 2026-06-01
 
