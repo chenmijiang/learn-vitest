@@ -1,7 +1,7 @@
 ---
 title: Vitest Wiki Index
 created: 2026-04-14
-updated: 2026-05-29
+updated: 2026-06-03
 type: summary
 tags: ["beginner"]
 sources:
@@ -33,6 +33,7 @@ sources:
 - [[Typing|topics/typing.md]] - `vi.mocked` 类型层语义与 deep/partial 取舍。`updated: 2026-04-14` `sources: 3`
 - [[Modules|topics/modules.md]] - 动态导入稳定性与模块副作用时机。`updated: 2026-04-14` `sources: 4`
 - [[Snapshots|topics/snapshots.md]] - 快照适用边界、审查流程与自定义序列化器心智模型。`updated: 2026-04-20` `sources: 4`
+- [[Coverage|topics/coverage.md]] - 覆盖率概念与四类指标（lines/statements/branches/functions）、v8 vs istanbul provider、`--coverage` 启用、reporter 与默认值、`thresholds` 阈值门禁，以及旧项目分步引入与「防倒退优先」的门禁策略。`updated: 2026-06-03` `sources: 2`
 
 ## 来源
 
