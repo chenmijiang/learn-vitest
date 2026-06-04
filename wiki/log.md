@@ -15,6 +15,19 @@ sources:
 
 ## 2026-06-04
 
+- `query-update`
+  - changed:
+    - `wiki/topics/component-testing.md`
+    - `wiki/topics/environment.md`
+    - `wiki/index.md`
+    - `wiki/log.md`
+  - source:
+    - https://vitest.dev/api/browser/interactivity
+    - https://playwright.dev/docs/actionability
+    - https://testing-library.com/docs/guiding-principles/
+    - https://github.com/enzymejs/enzyme/issues/2556
+    - https://dev.to/wojtekmaj/enzyme-is-dead-now-what-ekl
+  - note: 回写一次 grill-me 问答（"browser mode 与 jsdom/happy-dom 模拟环境割裂"）产生的三条可复用结论。[[component-testing]] 新增 "`userEvent` 的保真度：为什么统一 API 名也消不掉与 jsdom 的割裂" 一节——Vitest 的 `userEvent` 是 `@testing-library/user-event` 子集但走 CDP/WebDriver 而非 faking events（对照官方 `api/browser/interactivity`），jsdom 无布局 / 无命中检测靠 JS 合成事件，以"遮罩盖住按钮"为例说明同一行 `click` 两边可相反（Browser Mode 经 Playwright 可操作性检查失败、jsdom 假绿，对照 Playwright `docs/actionability`），并补一条常见误区、两条来源。[[environment]] 新增 "决策清单：什么走 jsdom，什么走 Browser Mode"（保真度光谱 + 触发信号表 + 三条速判启发式 + 经 [[projects]] 共存），并在"组件测试库选型"补"为什么方法论选 testing-library 而非 Enzyme/react-test-renderer"（testing-library 准则"tests resemble how software is used"且不测实现细节、Enzyme 停维护无 React18 适配器、ARIA 浏览器无关为唯一两端通用方法论层），补一条常见误区、三条来源（含一条经验总结）。index 两条目同步 `updated`/`sources`（environment 11→14、component-testing 9→11）与摘要。本次未新增 `docs/NNN-xxx.md`，无文档映射变更，`internal-docs-map.md` 不动。
 - `ingest`
   - changed:
     - `wiki/topics/browser-mode.md`（新建）

@@ -1,10 +1,12 @@
 ---
 title: Component Testing
 created: 2026-05-26
-updated: 2026-06-01
+updated: 2026-06-04
 type: topic
 tags: ["browser", "environment", "beginner"]
 sources:
+  - https://vitest.dev/api/browser/interactivity
+  - https://playwright.dev/docs/actionability
   - https://testing-library.com/docs/queries/about/#priority
   - https://testing-library.com/docs/dom-testing-library/api-events
   - https://github.com/vitest-community/vitest-browser-react
@@ -170,6 +172,20 @@ await expect.element(page.getByRole("dialog")).toBeVisible();
 
 这部分的环境层结论（包括"为什么本项目不要在 `vitest-browser-react` 之上再叠 RTL"）沉淀在 [[environment]]，本页不再展开。
 
+### `userEvent` 的保真度：为什么统一 API 名也消不掉与 jsdom 的割裂
+
+常见误解是"jsdom 也用上 user-event、API 名一样了，就和 Browser Mode 一致"。其实 Vitest **早就把 API 名统一了**，割裂仍在——根因在执行引擎，不在命名：
+
+- **Vitest Browser Mode 的 `userEvent` 是 `@testing-library/user-event` 的一个子集，但底层用 CDP / WebDriver 驱动，而不是 faking events**（官方原文："implements a subset of `@testing-library/user-event` APIs using Chrome DevTools Protocol or webdriver instead of faking events"）。同名 API，引擎是真浏览器输入管线。
+- **jsdom 没有布局引擎、没有命中检测（hit-testing）**，交互只能用 JS 合成事件再 `dispatchEvent` 到目标节点。
+
+于是同一行 `userEvent.click(el)` 两边可能结果相反。最典型：一个提交按钮被半透明遮罩（`position:fixed; inset:0`，尚未消失）盖住——
+
+- **Browser Mode（playwright provider）**：点击前做**可操作性检查（actionability）**——要求元素*可见 / 稳定 / 未被遮挡（Receives Events）/ 可用*；遮罩拦截事件，点击失败 → **bug 被抓到**。
+- **jsdom**：无命中检测，事件直接派发到按钮 → **测试假绿，bug 漏掉**。
+
+结论：跨环境复用测试代码时，**"API 名一致" ≠ "行为一致"**。凡依赖真实布局 / 可见性 / 命中检测 / 焦点 / 时序的交互，应到 Browser Mode 验证。环境层"什么测试走哪个环境"的决策清单见 [[environment]]。
+
 ### `user-event`：setup 实例 vs 直接调用
 
 `userEvent.setup()` 返回一个**带状态**的实例，目的不是 API 入口，而是承载三类只能跨多次调用才有意义的能力：
@@ -228,6 +244,7 @@ expect(result.current.count).toBe(1);
 - **在 Browser Mode 里到处手写 `act`**：Browser Mode 的断言本就异步可重试，不需要手动 flush；`act` / `renderHook` 是经典 RTL（jsdom）的工具，跨基建套用只会增加噪音
 - **把 `renderHook` 当测 Hook 的默认手段**：官方更推荐真实组件 + `render`，`renderHook` 适用于库作者或高复用 Hook，滥用会让被测逻辑藏在抽象后面
 - **用 `screen.getBy*` 找 Portal 内容**：`Modal` / `Dialog` / `Toast` 经 React Portal 挂到 `document.body`，在组件容器子树之外，`screen` 查不到——这类元素要改用 `page.getBy*` 从整个文档查
+- **以为给 jsdom 装上 user-event、API 名对齐就等于 Browser Mode**：Vitest 的 `userEvent` 虽是 testing-library API 子集，但走 CDP/WebDriver 真实输入；jsdom 无布局 / 无命中检测、靠 JS 合成事件，遮挡、可见性、命中检测类行为两边可不同（如被遮罩盖住的按钮：Browser Mode 点击失败、jsdom 假绿）
 
 ## 证据状态
 
@@ -236,11 +253,13 @@ expect(result.current.count).toBe(1);
 - 已验证（2026-05-29）：locator 是惰性、可自动重试的元素句柄（`page.getBy*` 返回 locator 而非元素，与 testing-library 立即返回元素不同）；其 `getBy*` 在语义/命名上对齐 testing-library，但实现 fork 自 Playwright locators（`Ivya`），并作为统一 API 屏蔽 provider 差异（playwright 原生、webdriverio/preview 转 CSS 选择器）。已对照官方 `guide/browser/locators` 页面核对。
 - 已验证（2026-06-01）：`page`（`vitest/browser`）与 `render()` 返回的 `screen`（`vitest-browser-react`）返回同一种 locator 对象、API 一致，区别只在作用域——`page.getBy*` 默认 scope 为整个 document，`screen.getBy*` 收窄到渲染组件的容器子树（约等于 `page.elementLocator(container)`）；`render()` 默认每个测试前自动 cleanup，`vitest-browser-react/pure` 可关闭。Portal 内容在容器之外需用 `page` 查。已对照官方 `guide/browser/locators` 与 `vitest-browser-react` 仓库 README 核对。
 - 已验证（2026-05-31）：`act` 是 React 官方 `act()` 的轻包装，`render`/`fireEvent`/`user-event` 内部已包 `act`，仅在绕过交互直接改 state 或出现 `not wrapped in act` 警告时手写，官方建议从 `@testing-library/react` 导入；`renderHook` 是 `render` + 内部空组件的封装，返回 `result`/`rerender`/`unmount`，官方更推荐真实组件 + `render`。均已对照 testing-library 官方 React API 页面核对；二者属经典 RTL（jsdom/node），与 Browser Mode 异步可重试断言为不同基建。
+- 已验证（2026-06-04）：Vitest Browser Mode 的 `userEvent` 是 `@testing-library/user-event` 的子集、用 CDP/WebDriver 而非 faking events，已对照官方 `api/browser/interactivity` 核对；Browser Mode（playwright provider）点击前的可操作性检查（可见 / 稳定 / 未被遮挡 Receives Events / 可用）已对照 Playwright `docs/actionability` 核对；jsdom 无布局与命中检测属其固有限制。"统一 API 名 ≠ 行为一致"为据此推出的选型结论。
 - 待验证：无。
 - 冲突中：无。
 
 ## 最近更新
 
+- 2026-06-04 query-update：新增 "`userEvent` 的保真度：为什么统一 API 名也消不掉与 jsdom 的割裂" 一节，澄清 Vitest 的 `userEvent` 是 testing-library API 子集但走 CDP/WebDriver、jsdom 无命中检测，以遮罩盖住按钮为例说明同一行 `click` 两边可相反（Browser Mode 失败、jsdom 假绿），补一条相关常见误区；环境层决策清单交叉链接到 [[environment]]。新增 Vitest interactivity 与 Playwright actionability 两条来源。
 - 2026-06-01 query-update：在 "Locator" 一节后新增 "`page` vs `render()` 返回的 `screen`：作用域差别" 一节，澄清两个导入来源返回同一种 locator、区别只在 scope（`page` 查整个 document、`screen` 收窄到组件容器子树），给出 React Portal 场景必须用 `page` 的实战选择与"优先 screen，够不着再上 page"口诀，并补一条 Portal 相关常见误区。
 - 2026-05-31 query-update：新增 "经典 RTL 的 `act` / `renderHook`（与 Browser Mode 的边界）" 一节，说明 `act` 的 flush 语义与"日常不必手写"、`renderHook` 的 `result`/`rerender`/`unmount` 与官方"优先真实组件 + render"建议，并划清二者属 jsdom/node 经典 RTL、与本项目 Browser Mode 异步断言为不同基建；同步补两条常见误区。
 - 2026-05-29 query-update：新增 "Locator：惰性、可重试的元素句柄" 一节，澄清 `page.getBy*` 返回的是 locator 而非元素、惰性求值 / 自动重试 / 可组合三特性、`element()/query()/elements()` 与 `expect.element` 的关系，以及"封装"的准确性质——`getBy*` 对齐 testing-library 语义但实现 fork 自 Playwright（`Ivya`），真正被封装的是 provider 层。
@@ -254,6 +273,8 @@ expect(result.current.count).toBe(1);
 
 ## 来源
 
+- https://vitest.dev/api/browser/interactivity（`userEvent` 是 `@testing-library/user-event` 子集、用 CDP/WebDriver 而非 faking events）
+- https://playwright.dev/docs/actionability（点击前的可操作性检查：可见 / 稳定 / 未被遮挡 / 可用）
 - https://testing-library.com/docs/queries/about/#priority（查询优先级与三档分类）
 - https://testing-library.com/docs/dom-testing-library/api-events（`fireEvent` 工作原理、`target` 赋值、file input 的 `Object.defineProperty`、`fireEvent` vs `user-event` 的官方建议）
 - https://github.com/vitest-community/vitest-browser-react（沿用 testing-library 原则、异步 `expect.element` 断言、CDP 驱动用户事件）
