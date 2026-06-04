@@ -1,7 +1,7 @@
 ---
 title: Internal Docs Map
 created: 2026-04-14
-updated: 2026-04-15
+updated: 2026-06-04
 type: source
 tags: []
 sources:
@@ -19,6 +19,7 @@ sources:
   - ../../docs/012-mock-cleanup-methods.md
   - ../../docs/013-expect-foundation-chain-and-assert.md
   - ../../docs/014-vitest-projects-config-and-extends.md
+  - ../../docs/015-browser-mode-config-options.md
 ---
 
 # 项目文档映射
@@ -29,6 +30,7 @@ sources:
 - [[topics/mocking]]
 - [[topics/environment]]
 - [[topics/projects]]
+- [[topics/browser-mode]]
 
 ## Assertions
 
@@ -61,6 +63,12 @@ sources:
 ### primary
 
 - [014-vitest-projects-config-and-extends.md](../../docs/014-vitest-projects-config-and-extends.md)
+
+## Browser Mode
+
+### primary
+
+- [015-browser-mode-config-options.md](../../docs/015-browser-mode-config-options.md)
 
 ## Mocking
 

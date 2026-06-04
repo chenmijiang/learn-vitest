@@ -1,7 +1,7 @@
 ---
 title: Wiki Log
 created: 2026-04-14
-updated: 2026-06-03
+updated: 2026-06-04
 type: summary
 tags: []
 sources:
@@ -12,6 +12,20 @@ sources:
 # Wiki Log
 
 > 维护规则见 [[SCHEMA]]；主题导航见 [[index]]；文档映射以 [[sources/internal-docs-map]] 为准。
+
+## 2026-06-04
+
+- `ingest`
+  - changed:
+    - `wiki/topics/browser-mode.md`（新建）
+    - `wiki/sources/internal-docs-map.md`
+    - `wiki/index.md`
+    - `wiki/log.md`
+  - source:
+    - ../../docs/015-browser-mode-config-options.md
+    - https://cn.vitest.dev/config/
+    - https://github.com/vitest-dev/vitest/tree/main/docs/config/browser
+  - note: 将新建发布文档 `docs/015-browser-mode-config-options.md`（`test.browser` 配置项全览）并入 wiki。现有 topic 中 component-testing（RTL 方法论）、environment（环境选型）、visual-regression（截图断言）均不适合承载完整的浏览器配置参考，故新建独立 topic [[browser-mode]]：沉淀全部 20 个 `browser.*` 选项按"三件套（enabled/provider/instances）/ 运行行为（headless/viewport/testerHtmlPath/isolate 废弃）/ 服务连接（api 及 allowWrite/allowExec、connectTimeout）/ 截图追踪（screenshotFailures/screenshotDirectory/trace/expect）/ 定位器与 UI（locators._、ui、detailsPanelPosition）/ 脚本命令（orchestratorScripts/commands/trackUnhandledErrors）"分类的名称、类型、默认值与用途，并补 provider 工厂调用、api 网络安全默认值等常见误区。选项清单逐项对照官方仓库 `docs/config/browser/_.md`（main）核对。`internal-docs-map.md` 新增 Browser Mode 小节（primary → 015）并加入 frontmatter sources，index 主题导航新增一条（sources: 4），与 [[environment]]/[[component-testing]]/[[visual-regression]] 交叉链接。`browser`/`config`/`environment` 标签均在 SCHEMA taxonomy 中。
 
 ## 2026-06-03
 
