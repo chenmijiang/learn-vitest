@@ -1,12 +1,13 @@
 ---
 title: Browser Mode 配置
 created: 2026-06-04
-updated: 2026-06-04
+updated: 2026-06-06
 type: topic
 tags: ["browser", "config", "environment"]
 sources:
   - https://cn.vitest.dev/guide/browser/
   - https://cn.vitest.dev/config/
+  - https://cn.vitest.dev/guide/browser/playwright-traces.html
   - https://github.com/vitest-dev/vitest/tree/main/docs/config/browser
   - ../../docs/015-browser-mode-config-options.md
 ---
@@ -57,8 +58,25 @@ sources:
 
 - `screenshotFailures`（`boolean`，默认 `!browser.ui`）：失败时截图。
 - `screenshotDirectory`（`string`，默认测试文件旁 `__screenshots__`）：截图目录。
-- `trace`（默认 `'off'`）：录制 Playwright trace，取值 `'on'`/`'off'`/`'on-first-retry'`/`'on-all-retries'`/`'retain-on-failure'` 或对象（`mode`/`tracesDir`/`screenshots`/`snapshots`）。
+- `trace`（默认 `'off'`）：录制 Playwright trace，取值 `'on'`/`'off'`/`'on-first-retry'`/`'on-all-retries'`/`'retain-on-failure'` 或对象（`mode`/`tracesDir`/`screenshots`/`snapshots`）。详见下文 [Playwright Trace](#playwright-trace-调试录制)。
 - `expect`（`ExpectOptions`）：截图断言默认项，主要是 `expect.toMatchScreenshot`，详见 [[visual-regression]]。
+
+### Playwright Trace（调试录制）
+
+把测试运行时浏览器里发生的一切录制成 `.trace.zip`，事后可视化回放——相当于测试的「行车记录仪」，专治 CI 偶发失败、本地难复现。仅 `provider` 为 Playwright 时可用。
+
+- **记录内容**：操作步骤（click/fill/hover…）前后的 DOM 快照、截图、`expect.element(...)` 断言；每个时间线条目自动链接回对应测试源码行，可直接跳转。
+- **开启**：配置 `browser.trace`（默认 `'off'`），或 CLI `vitest --browser.trace=on`。五种 mode：
+  - `'off'`：默认，不录。
+  - `'on'`：每个测试都录。
+  - `'on-first-retry'`：仅首次重试录。
+  - `'on-all-retries'`：所有重试录。
+  - `'retain-on-failure'`：仅失败时保留。
+  - CI 推荐 `'retain-on-failure'` 或 `'on-first-retry'`，抓失败现场又不给每个用例都生成 zip。
+- **对象形式**：`trace: { mode, tracesDir, screenshots, snapshots }`，进一步控制录制行为与输出目录。
+- **文件存储**：默认输出到测试文件旁的 `__traces__/`，命名 `项目名-测试名-repeat-retry.trace.zip`（如 `chromium-my-test-0-0.trace.zip`）；用 `tracesDir` 改目录。
+- **查看**：命令行 `npx playwright show-trace "路径/xxx.trace.zip"`，或把文件拖到 https://trace.playwright.dev 。
+- **自定义标记 mark**：给时间线打分组标记让长流程更易读——`await page.getByRole('button').mark('...')` 标记单个元素就绪；`await page.mark('sign in flow', async () => { ... })` 把多步操作分组成命名区块。
 
 ### 定位器（locators）
 
@@ -88,11 +106,13 @@ sources:
 ## 证据状态
 
 - 已验证（2026-06-04）：全部 20 个 `test.browser` 选项的名称、类型、默认值与用途，依据 Vitest 官方仓库 `docs/config/browser/*.md`（main 分支）逐项核对，对应官网 `cn.vitest.dev/config/` browser 章节。带版本标注项（`api.allowWrite`/`api.allowExec` 4.1.0、`locators.errorFormat` 5.0.0）以官方文档为准。
+- 已验证（2026-06-06）：Playwright Trace 小节（mode 取值、`__traces__/` 默认目录与命名、`npx playwright show-trace` / trace.playwright.dev 查看、`page.mark` 标记）依据官方 `cn.vitest.dev/guide/browser/playwright-traces.html`。
 - 待验证：无。
 - 冲突中：无。
 
 ## 最近更新
 
+- 2026-06-06 query-update：把 `trace` 从一行配置说明扩展为「Playwright Trace（调试录制）」小节——记录内容、五种 mode 与 CI 取舍、对象形式、`__traces__/` 存储与命名、`show-trace`/trace.playwright.dev 查看、`page.mark` 自定义标记；来源补官方 playwright-traces 页。
 - 2026-06-04 ingest：新建 browser-mode 主题页，沉淀 `docs/015-browser-mode-config-options.md` 的结论——`test.browser` 全部 20 个配置项按"三件套 / 运行行为 / 服务连接 / 截图追踪 / 定位器与 UI / 脚本命令"分类的名称、类型、默认值与用途，并补 provider 工厂、`api` 安全子项等常见误区。
 
 ## 关联文档
@@ -103,6 +123,7 @@ sources:
 
 - https://cn.vitest.dev/guide/browser/（浏览器模式配置总览与启用示例）
 - https://cn.vitest.dev/config/（配置参考 `browser.*` 章节）
+- https://cn.vitest.dev/guide/browser/playwright-traces.html（Playwright Trace 的录制、查看与 `page.mark` 标记）
 - https://github.com/vitest-dev/vitest/tree/main/docs/config/browser（各 `browser.*` 选项的类型 / 默认值 / 说明，逐项核对来源）
 - [[environment]]（Browser Mode 与 jsdom/happy-dom 的环境层取舍）
 - [[component-testing]]（Browser Mode 下的查询与交互写法）

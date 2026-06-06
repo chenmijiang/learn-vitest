@@ -1,7 +1,7 @@
 ---
 title: Wiki Log
 created: 2026-04-14
-updated: 2026-06-04
+updated: 2026-06-06
 type: summary
 tags: []
 sources:
@@ -14,6 +14,15 @@ sources:
 > 维护规则见 [[SCHEMA]]；主题导航见 [[index]]；文档映射以 [[sources/internal-docs-map]] 为准。
 
 ## 2026-06-06
+
+- `query-update`
+  - changed:
+    - `wiki/topics/browser-mode.md`
+    - `wiki/index.md`
+    - `wiki/log.md`
+  - source:
+    - https://cn.vitest.dev/guide/browser/playwright-traces.html
+  - note: 由 Q&A（用户询问 Playwright trace）触发。把 browser-mode topic 里 `trace` 的一行配置说明扩展为「Playwright Trace（调试录制）」小节：trace 是什么（浏览器模式录制 `.trace.zip` 回放，仅 Playwright provider）、记录内容（DOM 快照/截图/`expect.element` 断言/操作步骤，自动链接回测试源码行）、五种 mode（off/on/on-first-retry/on-all-retries/retain-on-failure，CI 推荐 retain-on-failure 或 on-first-retry）、对象形式 `{mode,tracesDir,screenshots,snapshots}`、`__traces__/` 默认存储与命名、`npx playwright show-trace` / trace.playwright.dev 查看、`page.mark` 自定义标记。topic frontmatter `updated`→2026-06-06、sources 加 playwright-traces 页；证据状态加 2026-06-06 已验证行；index 条目摘要补 Playwright Trace、`updated`→2026-06-06、`sources` 4→5。未新增 `docs/NNN-xxx.md`，`internal-docs-map.md` 无需变更（纯官方来源回写）。
 
 - `ingest`
   - changed:
