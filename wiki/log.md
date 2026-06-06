@@ -15,6 +15,30 @@ sources:
 
 ## 2026-06-06
 
+- `query-update`
+  - trigger: 问答「coverage 配置：watermarks 作用 / thresholds 按文件还是整体判 / processingConcurrency 是什么」，产出 wiki 未覆盖的可复用结论
+  - changed:
+    - `wiki/topics/coverage.md`：Thresholds 小节加「判定基准：整体 vs 逐文件」子段；新增「Watermarks 与 processingConcurrency」小节 + 三阶段心智模型；常见误区 +3；证据状态 +1 行（2026-06-06，对照本地源码）；最近更新 +1 条
+    - `wiki/index.md`：Coverage 条目摘要补 thresholds 整体/逐文件判定、watermarks、processingConcurrency（`updated` 保持 2026-06-06，`sources: 3` 不变）
+  - evidence:
+    - `thresholds` 判定基准源码 `packages/vitest/src/node/coverage.ts:497-575`（perFile 决定 `getCoverageSummary()` 整体 vs `files().map()` 逐文件；正负数语义；`process.exitCode = 1`）
+    - `watermarks` 默认 `[50,80]`（`defaults.ts:52`）、传给 istanbul-reports（`coverage-v8/src/provider.ts:141`）
+    - `processingConcurrency` 默认 `Math.min(20, availableParallelism ?? cpus.length)`（`defaults.ts:46`）、报告处理切 chunk 并发（`coverage-v8/src/provider.ts:181/445`）
+  - map: 无新增 `docs/NNN`，`internal-docs-map.md` Coverage primary→017 不变
+  - quality-gate: 已写 log；map 与 topic 关联文档一致（未变）；index 条目带摘要/更新时间/来源数量；链接有效；来源本地源码 + 官方配置页
+
+- `query-update`
+  - trigger: 问答「coverage 的 reporter 是什么 / 不同类型 reporter 的场景 / 为何 provider=v8 但报表显示 istanbul」，产出 wiki 未覆盖的可复用结论
+  - changed:
+    - `wiki/topics/coverage.md`：核心概念新增「Provider 与 Reporter 是两件事」「Reporter 类型与适用场景」两小节；常见误区 +1；证据状态 +1 行（2026-06-06，对照本地源码）；最近更新 +1 条
+    - `wiki/index.md`：Coverage 条目摘要补 provider/reporter 分层与 reporter 场景对照（`updated` 保持 2026-06-06，`sources: 3` 不变）
+  - evidence:
+    - 本地源码 `packages/coverage-v8/src/provider.ts:11-12,153` 与 `packages/coverage-istanbul/src/provider.ts:12/14/201` 均 import 并调用 `istanbul-lib-report`/`istanbul-reports`
+    - reporter 名单 `cli/completions.ts`、`config/resolveConfig.ts`；默认值 `defaults.ts:41`
+    - 实测某 v8 项目 `coverage/index.html` 底部链接 `istanbul.js.org`，html 资源为 istanbul-reports 模板自带
+  - map: 无新增 `docs/NNN`，`internal-docs-map.md` Coverage primary→017 已存在，无需改动
+  - quality-gate: 已写 log；map 与 topic 关联文档一致（未变）；index 条目带摘要/更新时间/来源数量；链接有效；来源官方+源码
+
 - `ingest`
   - changed:
     - `docs/017-coverage-internals-v8-vs-istanbul.md`（新建，由 conversation-summary 生成）
