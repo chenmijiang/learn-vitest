@@ -132,19 +132,18 @@
 
 ## 阶段 6：覆盖率与质量控制
 
-- [ ] 阅读覆盖率文档，理解 Vitest 的覆盖率能力
+- [x] 阅读覆盖率文档，理解 Vitest 的覆盖率能力
       链接：https://cn.vitest.dev/guide/coverage
-- [ ] 理解 `v8` 和 `istanbul` 的差别
+- [x] 理解 `v8` 和 `istanbul` 的差别
       链接：https://cn.vitest.dev/guide/coverage
-- [ ] 学会启用 `--coverage`
+- [x] 学会启用 `--coverage`
       链接：https://cn.vitest.dev/guide/coverage
-- [ ] 学会配置 `coverage.include`
+- [x] 学会配置 `coverage.include`
       链接：https://cn.vitest.dev/guide/coverage
-- [ ] 学会配置 `coverage.exclude`
+- [x] 学会配置 `coverage.exclude`
       链接：https://cn.vitest.dev/guide/coverage
-- [ ] 学会查看 HTML 覆盖率报告
+- [x] 学会查看 HTML 覆盖率报告
       链接：https://cn.vitest.dev/guide/coverage
-- [ ] 在当前项目里生成一次覆盖率报告
 - [ ] 找出 3 个未覆盖或覆盖薄弱的模块
 - [ ] 补至少 1 个关键模块的缺失测试
 
