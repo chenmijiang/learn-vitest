@@ -15,6 +15,20 @@ sources:
 
 ## 2026-06-06
 
+- `ingest`
+  - changed:
+    - `docs/016-snapshot-types-and-update-workflow.md`（新建，由 conversation-summary 生成）
+    - `wiki/topics/snapshots.md`
+    - `wiki/topics/visual-regression.md`
+    - `wiki/sources/internal-docs-map.md`
+    - `wiki/index.md`
+    - `wiki/log.md`
+  - source:
+    - ../../docs/016-snapshot-types-and-update-workflow.md
+    - https://cn.vitest.dev/guide/snapshot
+    - https://cn.vitest.dev/guide/browser/visual-regression-testing.html
+  - note: 并入新建发布文档 `docs/016`（Vitest 快照类型全谱与生成/更新/清除工作流）。primary topic [[snapshots]]：核心概念新增 "快照类型全谱（文本 vs 图像）"（产物形态取决于 API 而非环境——Browser Mode 里 `toMatchSnapshot` 仍出 `.snap` 文本，`toMatchScreenshot` 才出 `.png`；文本侧 5 个 API 的存储位置/形态对照表：`toMatchSnapshot`→`__snapshots__/*.snap`、`toMatchInlineSnapshot`→写回测试文件、`toMatchFileSnapshot`→任意指定文件、`toThrowErrorMatching[Inline]Snapshot`→错误消息序列化 `[Error: ...]`）与 "生成 / 更新 / 清除 / 重建工作流"（首次自动生成、`-u`/`--update`、watch 按 `u`、obsolete 随 `-u` 删除、CI `process.env.CI` 为真默认不写快照），补三条常见误区、frontmatter 加两条来源（visual-regression 页 + docs/016）。secondary topic [[visual-regression]]：关联文档加 docs/016、补 frontmatter 来源与最近更新。`internal-docs-map.md` 新增 Snapshots primary→016 与 Visual Regression secondary→016，并入 frontmatter sources。index 两条目同步 `updated`/摘要/`sources`（snapshots 4→6、visual-regression 1→2）。全部 9 条事实经 `vitest-doc-verifier` 对照官方核对为 VERIFIED。`snapshot`/`browser` 标签均在 SCHEMA taxonomy 中。
+
 - `query-update`
   - changed:
     - `wiki/topics/component-testing.md`

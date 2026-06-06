@@ -1,11 +1,12 @@
 ---
 title: Visual Regression Testing
 created: 2026-05-29
-updated: 2026-05-29
+updated: 2026-06-06
 type: topic
 tags: ["browser", "snapshot", "advanced"]
 sources:
   - https://cn.vitest.dev/guide/browser/visual-regression-testing.html
+  - ../../docs/016-snapshot-types-and-update-workflow.md
 ---
 
 # Visual Regression Testing
@@ -95,11 +96,12 @@ test: {
 
 ## 最近更新
 
+- 2026-06-06 ingest：关联新建发布文档 `docs/016-snapshot-types-and-update-workflow.md`（secondary）——该文把 `toMatchScreenshot` 图像快照放入「文本 vs 图像」快照类型全谱中与文本快照对照，本页作为图像侧的深入主题被其引用。
 - 2026-05-29 query-update：新建 visual-regression 主题页，沉淀视觉回归测试概念（可视化外观 + 回归对比）、`toMatchScreenshot` 用法与 `__screenshots__` 基准、稳定截图检测、pixelmatch/`allowedMismatchedPixelRatio` 配置、稳定性最佳实践（mask/禁用动画/固定视口/统一 CI 环境）、跨平台文件名差异，以及与功能测试和文本 [[snapshots]] 的区别。
 
 ## 关联文档
 
-- 无（当前 `docs/` 下尚无视觉回归测试专题发布文档）
+- [016-snapshot-types-and-update-workflow.md](../../docs/016-snapshot-types-and-update-workflow.md)（secondary：图像快照 `toMatchScreenshot` 在快照类型全谱中的定位，与文本快照的对照）
 
 ## 来源
 

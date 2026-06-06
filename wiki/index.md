@@ -28,12 +28,12 @@ sources:
 - [[Environment|topics/environment.md]] - `node/jsdom/happy-dom` 选择、Browser Mode 区分、`environmentOptions` 入口、`test.env` / `define` 边界，Browser Mode 下的 React 组件测试库选型（及为什么方法论选 testing-library 而非 Enzyme），以及"什么走 jsdom、什么走 Browser Mode"的保真度光谱决策清单。`updated: 2026-06-04` `sources: 14`
 - [[Component Testing|topics/component-testing.md]] - Browser Mode 下沿用 RTL 方法论：查询优先级、`fireEvent` 的赋值 + dispatch 语义、`fireEvent` vs `user-event`、断言风格差异，以及 `userEvent.setup()` 实例的设计意图与 Vitest Browser Mode 下的单例差异，并含 ARIA role / accessible name 作为查询语义地基、Locator 惰性可重试句柄的概念与 provider 抽象，经典 RTL `act` / `renderHook` 的用途与 Browser Mode 的边界，`page`（document 级）vs `render()` 返回 `screen`（容器级）的作用域区别，以及 `userEvent` 走 CDP/WebDriver vs jsdom 合成事件的保真度差异（为什么统一 API 名也消不掉割裂），并含如何把 Playwright codegen 录制产物适配进 Vitest（locator 因 `Ivya` 可复用、`page`/导航/断言须改写，暂无内置录制器）。`updated: 2026-06-06` `sources: 14`
 - [[Browser Mode 配置|topics/browser-mode.md]] - `test.browser` 全部 20 个配置项：`enabled`/`provider`/`instances` 三件套，加运行行为、服务连接（`api`/`connectTimeout`）、截图追踪（`screenshotFailures`/`trace`）、定位器与 UI、脚本命令的名称/类型/默认值/用途。`updated: 2026-06-04` `sources: 4`
-- [[Visual Regression Testing|topics/visual-regression.md]] - Browser Mode 下的视觉回归测试：`toMatchScreenshot` 截图对比、`__screenshots__` 基准、稳定截图检测、`pixelmatch`/`allowedMismatchedPixelRatio` 配置，以及 mask/禁用动画/固定视口/统一 CI 环境等稳定性实践。`updated: 2026-05-29` `sources: 1`
+- [[Visual Regression Testing|topics/visual-regression.md]] - Browser Mode 下的视觉回归测试：`toMatchScreenshot` 截图对比、`__screenshots__` 基准、稳定截图检测、`pixelmatch`/`allowedMismatchedPixelRatio` 配置，以及 mask/禁用动画/固定视口/统一 CI 环境等稳定性实践。`updated: 2026-06-06` `sources: 2`
 - [[Projects|topics/projects.md]] - `test.projects` 与 `test.include` 的分层职责，以及根配置与项目配置的继承边界。`updated: 2026-04-15` `sources: 6`
 - [[Mocking|topics/mocking.md]] - `vi.fn`、`vi.spyOn`、`vi.mock` 分层使用与清理策略。`updated: 2026-04-15` `sources: 10`
 - [[Typing|topics/typing.md]] - `vi.mocked` 类型层语义与 deep/partial 取舍。`updated: 2026-04-14` `sources: 3`
 - [[Modules|topics/modules.md]] - 动态导入稳定性与模块副作用时机。`updated: 2026-04-14` `sources: 4`
-- [[Snapshots|topics/snapshots.md]] - 快照适用边界、审查流程与自定义序列化器心智模型。`updated: 2026-04-20` `sources: 4`
+- [[Snapshots|topics/snapshots.md]] - 快照适用边界、审查流程与自定义序列化器心智模型，以及文本 vs 图像快照类型全谱（5 个文本 API + `toMatchScreenshot`）与生成/更新（`-u`、watch `u`）/清除 obsolete/CI 默认不写快照的工作流。`updated: 2026-06-06` `sources: 6`
 - [[Coverage|topics/coverage.md]] - 覆盖率概念与四类指标（lines/statements/branches/functions）、v8 vs istanbul provider、`--coverage` 启用、reporter 与默认值、`thresholds` 阈值门禁，以及旧项目分步引入与「防倒退优先」的门禁策略。`updated: 2026-06-03` `sources: 2`
 
 ## 来源

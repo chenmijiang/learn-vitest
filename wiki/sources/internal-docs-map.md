@@ -20,6 +20,7 @@ sources:
   - ../../docs/013-expect-foundation-chain-and-assert.md
   - ../../docs/014-vitest-projects-config-and-extends.md
   - ../../docs/015-browser-mode-config-options.md
+  - ../../docs/016-snapshot-types-and-update-workflow.md
 ---
 
 # 项目文档映射
@@ -104,3 +105,10 @@ sources:
 ### primary
 
 - [005-snapshot-testing.md](../../docs/005-snapshot-testing.md)
+- [016-snapshot-types-and-update-workflow.md](../../docs/016-snapshot-types-and-update-workflow.md)
+
+## Visual Regression
+
+### secondary
+
+- [016-snapshot-types-and-update-workflow.md](../../docs/016-snapshot-types-and-update-workflow.md)
