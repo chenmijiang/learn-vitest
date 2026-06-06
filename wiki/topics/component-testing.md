@@ -1,10 +1,13 @@
 ---
 title: Component Testing
 created: 2026-05-26
-updated: 2026-06-04
+updated: 2026-06-06
 type: topic
 tags: ["browser", "environment", "beginner"]
 sources:
+  - https://vitest.dev/api/browser/locators
+  - https://playwright.dev/docs/codegen
+  - https://github.com/vitest-dev/vitest/issues/9530
   - https://vitest.dev/api/browser/interactivity
   - https://playwright.dev/docs/actionability
   - https://testing-library.com/docs/queries/about/#priority
@@ -165,6 +168,22 @@ await expect.element(page.getByRole("dialog")).toBeVisible();
 
 环境层为什么选 `vitest-browser-react` 这套基建，见 [[environment]]。
 
+### 复用 Playwright codegen 的录制产物
+
+常见疑问："Browser Mode 用 playwright provider，能不能直接把 `playwright codegen` 录制生成的代码贴进 Vitest？"答案是**定位器那部分可适配后复用，但不能整段照搬**——根因正是上一节的 `Ivya`：Vitest 的 locator API fork 自 Playwright locators，`getBy*` 查询与交互方法刻意对齐，所以 codegen 输出的 `getByRole(...).click()` 这类行迁移成本最低。
+
+可复用 vs 必须改写：
+
+- **可直接复用**：`getByRole` / `getByText` / `getByTestId` 等定位器，以及 `.click()` / `.fill()` / `.hover()` / `.selectOptions()` 等交互方法（两边命名一致）。
+- **必须改写**：
+  - `import { test } from '@playwright/test'` → Vitest 的 `test`/`expect` + `import { page } from 'vitest/browser'`（Vitest 的 `page` 不是 Playwright 的 `page`）。
+  - `page.goto(url)` 等整页导航 → Vitest 没有此 API，组件测试改为 `render(<Component />)` 挂载（典型用 `vitest-browser-react`）。
+  - `await expect(locator).toBeVisible()` → Vitest 的异步可重试断言 `await expect.element(locator).toBeVisible()`。
+
+实操路径：用 `npx playwright codegen <本地 dev server 地址>` 录制，主要为了拿 codegen 自动挑选的稳定 locator（优先 role/text/test id 并保证唯一），再把 `getBy*().click()` 这类行抠出来，换 import、删导航（改 `render`）、改断言。
+
+> ⚠️ Vitest **目前没有内置录制器 / Codegen 标签页**，"Test Recorder/Codegen tab in UI for Browser Mode" 仅是一个尚未实现的功能提案（GitHub issue #9530）。现阶段只能"借 Playwright codegen 录、手动适配进 Vitest"，没有一键导入。（证据状态：issue 本身为 `待验证`——其实现进展可能随版本变化，引用前应复查。）
+
 ### 断言风格差异
 
 - `vitest-browser-react`：**异步、可重试**的 `await expect.element(locator).toBeVisible()`，查询会在断言期间持续重试
@@ -245,6 +264,7 @@ expect(result.current.count).toBe(1);
 - **把 `renderHook` 当测 Hook 的默认手段**：官方更推荐真实组件 + `render`，`renderHook` 适用于库作者或高复用 Hook，滥用会让被测逻辑藏在抽象后面
 - **用 `screen.getBy*` 找 Portal 内容**：`Modal` / `Dialog` / `Toast` 经 React Portal 挂到 `document.body`，在组件容器子树之外，`screen` 查不到——这类元素要改用 `page.getBy*` 从整个文档查
 - **以为给 jsdom 装上 user-event、API 名对齐就等于 Browser Mode**：Vitest 的 `userEvent` 虽是 testing-library API 子集，但走 CDP/WebDriver 真实输入；jsdom 无布局 / 无命中检测、靠 JS 合成事件，遮挡、可见性、命中检测类行为两边可不同（如被遮罩盖住的按钮：Browser Mode 点击失败、jsdom 假绿）
+- **把 Playwright codegen 产物整段贴进 Vitest**：Vitest 的 `page` 不是 Playwright 的 `page`，没有 `page.goto` 导航——只有 locator/交互行因共用 `Ivya` 可复用，外壳（import、导航→`render`、断言→`expect.element`）必须改写；且 Vitest 暂无内置录制器（issue #9530 未实现）
 
 ## 证据状态
 
@@ -254,11 +274,13 @@ expect(result.current.count).toBe(1);
 - 已验证（2026-06-01）：`page`（`vitest/browser`）与 `render()` 返回的 `screen`（`vitest-browser-react`）返回同一种 locator 对象、API 一致，区别只在作用域——`page.getBy*` 默认 scope 为整个 document，`screen.getBy*` 收窄到渲染组件的容器子树（约等于 `page.elementLocator(container)`）；`render()` 默认每个测试前自动 cleanup，`vitest-browser-react/pure` 可关闭。Portal 内容在容器之外需用 `page` 查。已对照官方 `guide/browser/locators` 与 `vitest-browser-react` 仓库 README 核对。
 - 已验证（2026-05-31）：`act` 是 React 官方 `act()` 的轻包装，`render`/`fireEvent`/`user-event` 内部已包 `act`，仅在绕过交互直接改 state 或出现 `not wrapped in act` 警告时手写，官方建议从 `@testing-library/react` 导入；`renderHook` 是 `render` + 内部空组件的封装，返回 `result`/`rerender`/`unmount`，官方更推荐真实组件 + `render`。均已对照 testing-library 官方 React API 页面核对；二者属经典 RTL（jsdom/node），与 Browser Mode 异步可重试断言为不同基建。
 - 已验证（2026-06-04）：Vitest Browser Mode 的 `userEvent` 是 `@testing-library/user-event` 的子集、用 CDP/WebDriver 而非 faking events，已对照官方 `api/browser/interactivity` 核对；Browser Mode（playwright provider）点击前的可操作性检查（可见 / 稳定 / 未被遮挡 Receives Events / 可用）已对照 Playwright `docs/actionability` 核对；jsdom 无布局与命中检测属其固有限制。"统一 API 名 ≠ 行为一致"为据此推出的选型结论。
-- 待验证：无。
+- 已验证（2026-06-06）：Vitest 的 locator API fork 自 Playwright locators（`Ivya`），故 `getByRole`/`getByText`/`getByTestId` 查询与 `.click()`/`.fill()`/`.hover()`/`.selectOptions()` 交互方法与 Playwright codegen 产物命名一致、可适配复用；Vitest 的 `page` 来自 `vitest/browser` 且无 `page.goto`（组件测试以 `render` 挂载替代整页导航），断言为异步 `expect.element`。均已对照官方 `api/browser/locators`、`guide/browser/` 核对。
+- 待验证：Vitest 内置录制器 / Codegen 标签页尚未实现，依据功能提案 GitHub issue vitest-dev/vitest#9530；其实现进展可能随版本变化，引用前应复查。
 - 冲突中：无。
 
 ## 最近更新
 
+- 2026-06-06 query-update：在 Locator 系列后新增 "复用 Playwright codegen 的录制产物" 一节——因 locator API fork 自 Playwright（`Ivya`），codegen 的 `getBy*().click()` 等行可适配复用，但 `page`（`vitest/browser`，无 `page.goto`）、import、断言（`expect.element`）必须改写，组件测试以 `render` 替代整页导航；并标注 Vitest 暂无内置录制器（issue #9530 未实现，待验证）。补一条常见误区、两条来源（Playwright codegen、issue #9530）。
 - 2026-06-04 query-update：新增 "`userEvent` 的保真度：为什么统一 API 名也消不掉与 jsdom 的割裂" 一节，澄清 Vitest 的 `userEvent` 是 testing-library API 子集但走 CDP/WebDriver、jsdom 无命中检测，以遮罩盖住按钮为例说明同一行 `click` 两边可相反（Browser Mode 失败、jsdom 假绿），补一条相关常见误区；环境层决策清单交叉链接到 [[environment]]。新增 Vitest interactivity 与 Playwright actionability 两条来源。
 - 2026-06-01 query-update：在 "Locator" 一节后新增 "`page` vs `render()` 返回的 `screen`：作用域差别" 一节，澄清两个导入来源返回同一种 locator、区别只在 scope（`page` 查整个 document、`screen` 收窄到组件容器子树），给出 React Portal 场景必须用 `page` 的实战选择与"优先 screen，够不着再上 page"口诀，并补一条 Portal 相关常见误区。
 - 2026-05-31 query-update：新增 "经典 RTL 的 `act` / `renderHook`（与 Browser Mode 的边界）" 一节，说明 `act` 的 flush 语义与"日常不必手写"、`renderHook` 的 `result`/`rerender`/`unmount` 与官方"优先真实组件 + render"建议，并划清二者属 jsdom/node 经典 RTL、与本项目 Browser Mode 异步断言为不同基建；同步补两条常见误区。
@@ -283,5 +305,8 @@ expect(result.current.count).toBe(1);
 - https://vitest.dev/guide/browser/interactivity-api（Vitest Browser Mode 下 `userEvent` 从 `vitest/browser` 引入、默认实例为单例）
 - https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA（ARIA role / accessible name 语义，作为 `getByRole` / `getByLabelText` 查询的背景）
 - https://vitest.dev/guide/browser/locators（Locator 概念：惰性可重试句柄、`getBy*` 方法、`element()/query()/elements()`、fork 自 Playwright locators 并统一 provider）
+- https://vitest.dev/api/browser/locators（locator 交互方法 `click`/`fill`/`hover`/`selectOptions` 等、`page` 从 `vitest/browser` 引入、API 对齐 Playwright）
+- https://playwright.dev/docs/codegen（Playwright codegen 录制：自动挑选 role/text/test id 优先且唯一的 locator）
+- https://github.com/vitest-dev/vitest/issues/9530（功能提案：Browser Mode UI 的 Test Recorder/Codegen 标签页，尚未实现，待验证）
 - https://testing-library.com/docs/react-testing-library/api/（经典 RTL 的 `act` 轻包装语义与导入建议、`renderHook` 的 `result`/`rerender`/`unmount` 及"优先真实组件 + render"建议）
 - [[environment]]（Browser Mode 与组件测试库选型的环境层结论）

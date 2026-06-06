@@ -13,6 +13,20 @@ sources:
 
 > 维护规则见 [[SCHEMA]]；主题导航见 [[index]]；文档映射以 [[sources/internal-docs-map]] 为准。
 
+## 2026-06-06
+
+- `query-update`
+  - changed:
+    - `wiki/topics/component-testing.md`
+    - `wiki/index.md`
+    - `wiki/log.md`
+  - source:
+    - https://vitest.dev/api/browser/locators
+    - https://vitest.dev/guide/browser/
+    - https://playwright.dev/docs/codegen
+    - https://github.com/vitest-dev/vitest/issues/9530
+  - note: 回答用户"Browser Mode + playwright provider 下能否把 `playwright codegen` 录制产物写进 Vitest"。在 [[component-testing]] 的 Locator 系列后新增 "复用 Playwright codegen 的录制产物" 一节：因 locator API fork 自 Playwright（`Ivya`），codegen 的 `getByRole/getByText/getByTestId` 查询与 `.click()/.fill()/.hover()/.selectOptions()` 交互行可适配复用；但不可整段照搬——`import` 换 `vitest/browser` 的 `page` + Vitest `test/expect`、`page.goto` 整页导航 Vitest 无此 API 须改 `render` 挂载、断言改异步 `expect.element`；实操用 `npx playwright codegen <dev server>` 主要为拿稳定 locator 再抠行适配。标注 Vitest 暂无内置录制器（"Test Recorder/Codegen tab" 仅功能提案 issue #9530，未实现，置 `待验证`）。补一条常见误区、两条来源（Playwright codegen、issue #9530），证据状态新增一条已验证 + 一条待验证。index 条目同步 `updated`/摘要、`sources` 11→14。未新增 `docs/NNN-xxx.md`，文档关系未变，`internal-docs-map.md` 不动。
+
 ## 2026-06-04
 
 - `query-update`
