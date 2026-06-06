@@ -15,6 +15,23 @@ sources:
 
 ## 2026-06-06
 
+- `ingest`
+  - changed:
+    - `docs/017-coverage-internals-v8-vs-istanbul.md`（新建，由 conversation-summary 生成）
+    - `wiki/topics/coverage.md`
+    - `wiki/sources/internal-docs-map.md`
+    - `wiki/index.md`
+    - `wiki/log.md`
+  - source:
+    - ../../docs/017-coverage-internals-v8-vs-istanbul.md
+    - https://v8.dev/blog/javascript-code-coverage
+    - https://docs.google.com/document/d/1wCydi2HEZRF0skDeLb6CH0abZnTyVo5Vz5u-jhwi7es/mobilebasic
+    - https://vitest.dev/guide/coverage
+    - https://github.com/istanbuljs/nyc
+    - https://github.com/istanbuljs/babel-plugin-istanbul
+    - https://ariya.io/2012/12/javascript-code-coverage-with-istanbul
+  - note: 并入新建发布文档 `docs/017`（覆盖率底层原理：V8 原生覆盖 vs Istanbul 插桩——机制/历史/选型），源自用户「分段分析 V8 code coverage 博客 + best-effort/precise 差异 + V8 现状 + Istanbul 是什么/历史/原理/选型」连续四轮问答。primary topic [[coverage]]（现有页偏配置用法，本次补原理深化，不另建页）：核心概念新增「底层原理：插桩 vs 原生（机制速览）」小节——Istanbul=运行前 AST 注入计数器 + 全局 `__coverage__`（`babel-plugin-istanbul`，跨任意运行时但慢/占内存），V8=复用 Ignition 的 invocation counter、源码原样执行，分 best-effort（零开销/仅二进制/GC 丢数据）与 precise（钉 feedback vector 防丢/可报执行次数/计数全准需关优化）两模式；并补历史与精度三点：V8「精确计数需关优化」限制约 2019 年（`crrev.com/c/1613996`）解除（函数可在所有块覆盖模式下优化内联）、Istanbul ~2012 由 Yahoo Krishnan Anantheswaran 创建且现以 istanbuljs（`nyc`+`babel-plugin-istanbul`）生态存续/原始 `istanbul` 包停更、Vitest 自 v3.2.0 起 V8 用 AST 重映射使报告与 Istanbul 一致。topic frontmatter `updated`→2026-06-06、sources 加 docs/017；关联文档由「暂无」改为 docs/017；证据状态新增 2026-06-06 已验证行；最近更新加 ingest 记录。`internal-docs-map.md` 新增 Coverage primary→017 并入 frontmatter sources。index 条目摘要补底层原理、`updated`→2026-06-06、`sources` 2→3。全部事实对照 V8 官方博客（一级）、V8 Block Coverage 设计文档、Vitest 官方覆盖率指南（一级）、istanbuljs 官方仓库核对为已验证。`coverage`/`config`/`beginner` 标签均在 SCHEMA taxonomy 中。
+
 - `query-update`
   - changed:
     - `wiki/topics/browser-mode.md`

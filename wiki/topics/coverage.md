@@ -1,12 +1,13 @@
 ---
 title: Coverage
 created: 2026-06-03
-updated: 2026-06-03
+updated: 2026-06-06
 type: topic
 tags: ["coverage", "config", "beginner"]
 sources:
   - https://cn.vitest.dev/guide/coverage
   - https://cn.vitest.dev/config/coverage
+  - ../../docs/017-coverage-internals-v8-vs-istanbul.md
 ---
 
 # Coverage
@@ -51,6 +52,21 @@ Vitest 本身不含覆盖率引擎，需单独安装 provider 包：
   - 安装：`npm i -D @vitest/coverage-istanbul`
 
 首次运行 `--coverage` 时，Vitest 会**提示自动安装**对应 provider 包。
+
+### 底层原理：插桩 vs 原生（机制速览）
+
+两个 provider 解决同一问题（源码哪些被执行），但路线相反：
+
+- **Istanbul = 改你的代码来数（插桩）**：运行**前**把源码解析成 AST，在每条语句 / 分支 / 函数入口注入计数器，维护全局 `__coverage__` 对象，跑完读取生成报告。通常由 `babel-plugin-istanbul` 完成。优点是跨任意 JS 运行时、精度天然准；代价是要预处理、更慢、文件变大、更占内存。
+- **V8 = 让引擎帮你数（原生）**：复用 V8 引擎运行时本就存在的 invocation counter（feedback vector 上的调用计数器，原是给优化编译器做内联决策用的），源码**原样执行、无需插桩**。分 `best-effort`（零开销、只报"跑没跑过"、被 GC 回收的函数会丢）与 `precise`（钉住 feedback vector 防丢、可报执行次数、计数完全准确需关优化）两种模式，Vitest provider 走 precise 路线。
+
+历史与精度补充：
+
+- V8 早期块覆盖「精确计数必须关优化」的限制约 2019 年（`crrev.com/c/1613996`）已解除，函数现在可在所有块覆盖模式下被优化和内联。
+- Istanbul 由 Yahoo 的 Krishnan Anantheswaran 于 ~2012 年创建，现以 istanbuljs 生态（`nyc` + `babel-plugin-istanbul`）存续，原始 `istanbul` 包已停更。
+- 精度差距已被抹平：Vitest 自 **v3.2.0** 起 V8 provider 用 **AST 重映射**，报告与 Istanbul **一致**——兼得 V8 的速度与 Istanbul 的精度。
+
+> 机制细节、best-effort/precise 四维差异、插桩示例与完整选型见 [017-coverage-internals-v8-vs-istanbul.md](../../docs/017-coverage-internals-v8-vs-istanbul.md)。
 
 ### 启用方式
 
@@ -132,18 +148,21 @@ thresholds: {
 ## 证据状态
 
 - 已验证（2026-06-03）：覆盖率定义、四类指标、v8/istanbul provider 区别与包名、`--coverage` 启用、reporter 与各配置默认值、`thresholds`（含 `perFile`/`autoUpdate`/`100`/glob）均对照官方覆盖率指南与配置页核对。
+- 已验证（2026-06-06）：底层原理——Istanbul 插桩（AST 注入计数器 + `__coverage__`，由 `babel-plugin-istanbul` 完成）vs V8 原生（复用 invocation counter，best-effort/precise 两模式）、V8「精确计数需关优化」限制约 2019 年（`crrev.com/c/1613996`）解除、Istanbul ~2012 起源与 istanbuljs（`nyc`）生态现状、Vitest v3.2.0 起 V8 AST 重映射使报告与 Istanbul 一致，均对照 V8 官方博客 / V8 Block Coverage 设计文档 / Vitest 官方指南 / istanbuljs 仓库核对（见 `docs/017`）。
 - 经验总结（未在官方逐条列出）：四指标的通俗类比、Branches 最能暴露漏测的判断、「旧项目引入落地步骤」与「防倒退优先于达标」的门禁打法，属通用测试工程经验。
 - 冲突中：无。
 
 ## 最近更新
 
-- 2026-06-03 query-update：新建 coverage 主题页。回答用户「什么是覆盖率 / 有什么用 / 旧项目怎么引入」三轮问答，沉淀覆盖率概念、四类指标、v8 vs istanbul provider、`--coverage` 启用、reporter 与默认值、`thresholds` 阈值门禁，以及旧项目分步落地与「防倒退优先」的门禁策略。来源为官方覆盖率指南与配置页。暂无对应 `docs/NNN-xxx.md`，`internal-docs-map.md` 无需变更。
+- 2026-06-06 ingest：并入新建发布文档 `docs/017`（覆盖率底层原理：V8 原生 vs Istanbul 插桩）。在核心概念新增「底层原理：插桩 vs 原生（机制速览）」小节——Istanbul 插桩路线（AST 注入 + `__coverage__`）vs V8 原生路线（复用 invocation counter，best-effort/precise 两模式），并补历史与精度三点（2019 年解除「精确计数需关优化」限制、Istanbul ~2012 起源与 istanbuljs 生态、Vitest v3.2.0 起 AST 重映射使精度与 Istanbul 一致），深化细节指向 `docs/017`。frontmatter `updated`→2026-06-06、sources 加 docs/017；关联文档新增 docs/017；证据状态加 2026-06-06 已验证行。`internal-docs-map.md` 新增 Coverage primary→017。
+- 2026-06-03 query-update：新建 coverage 主题页。回答用户「什么是覆盖率 / 有什么用 / 旧项目怎么引入」三轮问答，沉淀覆盖率概念、四类指标、v8 vs istanbul provider、`--coverage` 启用、reporter 与默认值、`thresholds` 阈值门禁，以及旧项目分步落地与「防倒退优先」的门禁策略。来源为官方覆盖率指南与配置页。
 
 ## 关联文档
 
-- 暂无（尚无对应 `docs/NNN-xxx.md` 发布文档）
+- [017-coverage-internals-v8-vs-istanbul.md](../../docs/017-coverage-internals-v8-vs-istanbul.md)（覆盖率底层原理：V8 原生覆盖 vs Istanbul 插桩的机制、历史与选型）
 
 ## 来源
 
 - https://cn.vitest.dev/guide/coverage（覆盖率指南：provider、安装、启用、reporter）
 - https://cn.vitest.dev/config/coverage（覆盖率配置：thresholds、include/exclude、默认值）
+- [017-coverage-internals-v8-vs-istanbul.md](../../docs/017-coverage-internals-v8-vs-istanbul.md)（项目发布文档：底层机制原理、best-effort/precise、Istanbul 插桩、历史与选型，已对照 V8 官方博客/设计文档/Vitest 指南核对）

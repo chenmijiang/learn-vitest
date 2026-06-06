@@ -21,6 +21,7 @@ sources:
   - ../../docs/014-vitest-projects-config-and-extends.md
   - ../../docs/015-browser-mode-config-options.md
   - ../../docs/016-snapshot-types-and-update-workflow.md
+  - ../../docs/017-coverage-internals-v8-vs-istanbul.md
 ---
 
 # 项目文档映射
@@ -112,3 +113,9 @@ sources:
 ### secondary
 
 - [016-snapshot-types-and-update-workflow.md](../../docs/016-snapshot-types-and-update-workflow.md)
+
+## Coverage
+
+### primary
+
+- [017-coverage-internals-v8-vs-istanbul.md](../../docs/017-coverage-internals-v8-vs-istanbul.md)

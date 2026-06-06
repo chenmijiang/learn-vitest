@@ -34,7 +34,7 @@ sources:
 - [[Typing|topics/typing.md]] - `vi.mocked` 类型层语义与 deep/partial 取舍。`updated: 2026-04-14` `sources: 3`
 - [[Modules|topics/modules.md]] - 动态导入稳定性与模块副作用时机。`updated: 2026-04-14` `sources: 4`
 - [[Snapshots|topics/snapshots.md]] - 快照适用边界、审查流程与自定义序列化器心智模型，以及文本 vs 图像快照类型全谱（5 个文本 API + `toMatchScreenshot`）与生成/更新（`-u`、watch `u`）/清除 obsolete/CI 默认不写快照的工作流。`updated: 2026-06-06` `sources: 6`
-- [[Coverage|topics/coverage.md]] - 覆盖率概念与四类指标（lines/statements/branches/functions）、v8 vs istanbul provider、`--coverage` 启用、reporter 与默认值、`thresholds` 阈值门禁，以及旧项目分步引入与「防倒退优先」的门禁策略。`updated: 2026-06-03` `sources: 2`
+- [[Coverage|topics/coverage.md]] - 覆盖率概念与四类指标（lines/statements/branches/functions）、v8 vs istanbul provider、`--coverage` 启用、reporter 与默认值、`thresholds` 阈值门禁，旧项目分步引入与「防倒退优先」门禁策略，以及底层原理（Istanbul 插桩 vs V8 原生、best-effort/precise、2019 年解除关优化限制、v3.2.0 起 AST 重映射精度对齐、Istanbul 历史与选型）。`updated: 2026-06-06` `sources: 3`
 
 ## 来源
 
