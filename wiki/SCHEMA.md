@@ -66,6 +66,8 @@ Required fields: `title`, `created`, `updated`, `type`, `tags`, `sources`.
 - **browser**: 浏览器模式与组件测试
 - **migration**: 从 Jest 等框架迁移
 - **troubleshooting**: 常见问题与调试
+- **methodology**: 测试工程化方法论（测试策略、好测试标准、价值与指标、ROI 取舍）
+- **ai**: AI 辅助测试（用 AI 生成测试、约束与验证门禁）
 - **beginner**: 适合初学者优先阅读
 - **advanced**: 进阶或特定场景内容
 

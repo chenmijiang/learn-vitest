@@ -1,7 +1,7 @@
 ---
 title: Wiki Log
 created: 2026-04-14
-updated: 2026-06-06
+updated: 2026-06-07
 type: summary
 tags: []
 sources:
@@ -12,6 +12,27 @@ sources:
 # Wiki Log
 
 > 维护规则见 [[SCHEMA]]；主题导航见 [[index]]；文档映射以 [[sources/internal-docs-map]] 为准。
+
+## 2026-06-07
+
+- `ingest`
+  - changed:
+    - `docs/018-engineering-testing-methodology-and-ai.md`（新建，由 conversation-summary 生成）
+    - `wiki/SCHEMA.md`（tag taxonomy 新增 `methodology`、`ai`）
+    - `wiki/topics/testing-methodology.md`（新建 topic 页）
+    - `wiki/sources/internal-docs-map.md`（frontmatter 加 018；相关页面加 [[topics/testing-methodology]]；新增「Testing Methodology」节 primary→018；`updated`→2026-06-07）
+    - `wiki/index.md`（主题导航新增 Testing Methodology 条目；`updated`→2026-06-07）
+    - `wiki/log.md`
+  - source:
+    - ../../docs/018-engineering-testing-methodology-and-ai.md
+    - https://cn.vitest.dev/guide/learn/writing-tests-with-ai.html
+    - https://cn.vitest.dev/guide/coverage.html
+    - https://vitest.dev/config/coverage
+    - https://cn.vitest.dev/guide/cli.html
+    - https://vitest.dev/config/pool
+    - https://stryker-mutator.io/docs/stryker-js/vitest-runner/
+  - note: 并入新建发布文档 `docs/018`（工程化测试方法论：从「为什么测」到「怎么落地」含 AI 辅助），源自 `/grill-me` 连续多轮拷问——确立 L0 价值层（主轴=变更信心/防回归、北极星=漏到线上的 bug 数、护栏=flaky≈0、ROI=边际收益递减+阶段感知）、L1 策略层（被测单元=对外公共 API、形状=前端奖杯·后端金字塔、风险驱动+不测清单）、L2 战术层（mock 只在 IO 边界、用例=等价类+边界值+错误路径、覆盖率不卡绝对值改卡不下降`autoUpdate`+变更行+变异测试）、L3 运营层（分层反馈、`--changed`/`--related`/`--shard`/`pool`默认`forks`），及 AI 横切层（事实源角色分离：实现=上下文/规格=断言源；验证门禁自动化为主、人只审意图；载体=`AGENTS.md`）。无现成 topic 可干净吸收（现有均按功能切分），按避免碎片化原则新建单一 topic [[testing-methodology]]，AI 层作为其中一节而非另拆页；交叉链 [[coverage]]/[[mocking]]/[[execution-model]]。Vitest 具体机制 16/16 经官方文档/源码核实（reviewer 子代理复核）；分层框架与金字塔/奖杯/DORA 等通用测试理论标注为经验总结层。SCHEMA tag taxonomy 先补 `methodology`、`ai` 再使用，符合「新标签先登记」规则。
+  - quality-gate: 已写 log；map「Testing Methodology」primary→018 与 topic 页关联文档一致；index 条目带摘要/更新时间/来源数量（`sources: 6`）；新建页含 8 个必备小节（含证据状态/最近更新）+ ≥2 条 wikilinks；链接有效；来源官方优先（cn.vitest.dev/vitest.dev/stryker-mutator.io）。
 
 ## 2026-06-06
 

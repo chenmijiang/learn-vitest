@@ -1,7 +1,7 @@
 ---
 title: Internal Docs Map
 created: 2026-04-14
-updated: 2026-06-04
+updated: 2026-06-07
 type: source
 tags: []
 sources:
@@ -22,6 +22,7 @@ sources:
   - ../../docs/015-browser-mode-config-options.md
   - ../../docs/016-snapshot-types-and-update-workflow.md
   - ../../docs/017-coverage-internals-v8-vs-istanbul.md
+  - ../../docs/018-engineering-testing-methodology-and-ai.md
 ---
 
 # 项目文档映射
@@ -33,6 +34,7 @@ sources:
 - [[topics/environment]]
 - [[topics/projects]]
 - [[topics/browser-mode]]
+- [[topics/testing-methodology]]
 
 ## Assertions
 
@@ -119,3 +121,9 @@ sources:
 ### primary
 
 - [017-coverage-internals-v8-vs-istanbul.md](../../docs/017-coverage-internals-v8-vs-istanbul.md)
+
+## Testing Methodology
+
+### primary
+
+- [018-engineering-testing-methodology-and-ai.md](../../docs/018-engineering-testing-methodology-and-ai.md)
