@@ -155,11 +155,11 @@
       链接：https://cn.vitest.dev/guide/projects
 - [x] 理解如何在一个仓库中同时跑 node 测试和 browser 测试
       链接：https://cn.vitest.dev/guide/projects
-- [ ] 学会使用 `vitest related --run`
+- [x] 学会使用 `vitest related --run`
       链接：https://cn.vitest.dev/guide/cli
-- [ ] 学会使用 `--shard` 做分片执行
+- [x] 学会使用 `--shard` 做分片执行
       链接：https://cn.vitest.dev/guide/cli
-- [ ] 了解报告器和输出格式
+- [x] 了解报告器和输出格式
       链接：https://cn.vitest.dev/guide/reporters
 - [ ] 了解性能优化思路
       链接：https://cn.vitest.dev/guide/improving-performance
