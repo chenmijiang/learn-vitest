@@ -1,7 +1,7 @@
 ---
 title: Wiki Log
 created: 2026-04-14
-updated: 2026-06-07
+updated: 2026-06-09
 type: summary
 tags: []
 sources:
@@ -15,6 +15,16 @@ sources:
 
 ## 2026-06-09
 
+- `query-update`
+  - trigger: 问答「jsdom 测试环境下如何做 DOM 断言、为什么会用到 `@testing-library/jest-dom`」，产出 wiki 未覆盖的可复用结论（assertions 页只讲 expect/Chai/assert，缺 DOM 断言匹配器）
+  - changed:
+    - `wiki/topics/assertions.md`：新增核心概念「DOM 断言：`@testing-library/jest-dom` 的定位」——厘清 `jsdom`（环境）vs `jest-dom`（断言扩展）撞脸、环境无关（不绑定 Jest）、`setupFiles` 里 `import '@testing-library/jest-dom/vitest'` 的纯副作用注册、matcher 列表、`jsdom→RTL 查询→expect+jest-dom` 断言链路、与 Browser Mode `expect.element`（异步重试）的对比；常见误区 +3 条；相关主题 +[[environment]]/[[component-testing]]；证据状态补已验证项；最近更新 +1 条；来源与 frontmatter sources +`github.com/testing-library/jest-dom`；frontmatter `updated`→2026-06-09
+    - `wiki/index.md`：Assertions 条目摘要补 jest-dom（环境无关匹配器/接入/撞脸误区/vs expect.element），`sources: 5`→`6`，`updated`→2026-06-09
+    - `wiki/log.md`
+  - source:
+    - https://github.com/testing-library/jest-dom （一级生态官方仓库：环境无关定位、`/vitest` 入口、matcher 列表）
+    - https://vite.dev/config/shared-options.html#resolve-dedupe （问答前序：`resolve.dedupe` 语义，未触发写回，仅记录）
+    - 项目实证：`saas.admin` `client/__tests__/setup.ts` + `client/package.json`
 - `query-update`
   - trigger: 问答「`@stryker-mutator/vitest-runner` 是什么、解决什么问题」，产出 wiki 仅一句提及、尚未展开的可复用结论
   - changed:

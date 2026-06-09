@@ -22,7 +22,7 @@ sources:
 
 ## 主题导航
 
-- [[Assertions|topics/assertions.md]] - 断言表达、Chai/Jest 断言关系与失败信息设计。`updated: 2026-04-15` `sources: 5`
+- [[Assertions|topics/assertions.md]] - 断言表达、Chai/Jest 断言关系与失败信息设计，以及 DOM 断言扩展 `@testing-library/jest-dom`（环境无关匹配器、`setupFiles` 接入、jsdom vs jest-dom 撞脸误区、与 Browser Mode `expect.element` 异步重试的对比）。`updated: 2026-06-09` `sources: 6`
 - [[Execution Model|topics/execution-model.md]] - 顺序/并发执行模型与本地 `expect` 使用边界。`updated: 2026-04-15` `sources: 6`
 - [[Hooks|topics/hooks.md]] - setup/cleanup 生命周期、`aroundEach` 包裹契约，以及配置层 `setupFiles` / `globalSetup` 与文件内 hooks 的三层 setup 边界。`updated: 2026-05-26` `sources: 6`
 - [[Environment|topics/environment.md]] - `node/jsdom/happy-dom` 选择、Browser Mode 区分、`environmentOptions` 入口、`test.env` / `define` 边界，Browser Mode 下的 React 组件测试库选型（及为什么方法论选 testing-library 而非 Enzyme），以及"什么走 jsdom、什么走 Browser Mode"的保真度光谱决策清单。`updated: 2026-06-04` `sources: 14`
