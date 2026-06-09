@@ -16,6 +16,19 @@ sources:
 ## 2026-06-09
 
 - `query-update`
+  - trigger: 连续多轮问答「Stryker 配置 `mutate` 与 `testFiles` 区别 / `coverageAnalysis:"perTest"` 作用」，产出 wiki 未覆盖的可复用配置结论（testing-methodology 已有变异测试概念与输出解读，但缺关键配置项说明）
+  - changed:
+    - `wiki/topics/testing-methodology.md`：新增核心概念小节「StrykerJS 关键配置项（`mutate`/`testFiles`/`coverageAnalysis`）」——`mutate`（选被变异生产源文件、默认排除 spec/test/`__tests__`、支持 glob+`!`+行列范围）、`testFiles`（限定执行的测试文件、默认 `[]`、模块级自检用途、常与 mutate 成对）、`coverageAnalysis` 三策略（`off` 全跑 / `all` 整体覆盖免跑无覆盖者 / `perTest` 逐测试建「行↔测试」表只跑相关测试）及 `perTest` 前提（测试独立）与 runner 边界（jest/vitest 支持、command 仅 off、vitest-runner 强制 perTest），辨析 vs `ignorePatterns`/`testRunner`；证据状态 +「2026-06-09 配置项」已验证段（含 Schema 描述文案「off(default)」与机器默认 `perTest` 不一致、以后者为准）；最近更新 +1 条；来源 +Schema 文件；frontmatter `updated` 维持 2026-06-09
+    - `wiki/index.md`：Testing Methodology 条目摘要补「StrykerJS 关键配置项」（`sources` 维持 8，新增来源为权威 Schema 文件、未增在线 URL 计数）
+    - `wiki/log.md`
+  - source:
+    - 项目内 `@stryker-mutator/core/schema/stryker-schema.json`（权威 JSON Schema：`mutate`/`testFiles`/`coverageAnalysis` 字段描述与 `default` 字段，`node -e` 逐字核对）
+    - https://stryker-mutator.io/docs/stryker-js/configuration/（一级在线对应文档）
+  - evidence: `mutate` 默认 glob 排除 spec/test/`__tests__`、支持行列范围；`testFiles` 默认 `[]`、限定执行测试；`coverageAnalysis` 三取值语义、Schema `default:"perTest"`（描述文案「off(default)」过时）——均经 Schema 逐字核实；`perTest` 工作原理（DryRun 建「行↔测试」映射、反查只跑相关测试）属对官方描述的展开解释
+  - map: 无变更（未新增 `docs/NNN-xxx.md`，文档关系不变；新增来源为官方 Schema/文档）
+  - quality-gate: 已写 log；map 与 topic 关联文档一致（未变）；index 条目带摘要/更新时间/来源数量；链接有效；来源官方优先（StrykerJS 权威 Schema 一级 + 官方在线文档）；topic 页含证据状态/最近更新
+
+- `query-update`
   - trigger: 问答「学习变异测试时看不懂 StrykerJS 命令行输出——各状态/分数/测试列表符号/`[Survived]` 块的 `Tests ran:` 含义/为什么按测试名 grep 不到」，产出 wiki 未覆盖的可复用结论（testing-methodology 已有变异测试概念小节，但缺「怎么读输出」）
   - changed:
     - `wiki/topics/testing-methodology.md`：新增核心概念小节「读懂 StrykerJS 的命令行（clear-text）输出」——八种变异体状态与 Detected/Undetected/Covered/Valid 分组、两种变异分数公式（`detected/valid`、`detected/covered`）、测试列表 `✓`(killed)/`~`(covered)/`✘` 符号、`[Survived]` 块结构（mutator+位置+diff+`Tests ran:`）、`Tests ran:` 在 `coverageAnalysis:"perTest"` 下「只跑覆盖被变异行的测试」的含义、测试名 = `describe`+`it` 拼接导致动态 `describe` 名整句 grep 不到的坑、弱断言致大量存活的实战落地；证据状态 +「2026-06-09 新增小节」已验证段；最近更新 +1 条；来源 +3（mutant-states/configuration/clear-text-reporter.ts 源码）；frontmatter sources +2、`updated`→2026-06-09

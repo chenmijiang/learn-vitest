@@ -71,6 +71,19 @@ sources:
 - **测试名找不到的坑**：报告里的测试名 = `describe` 名 + 空格 + `it` 名 拼接（Jest 约定）。若 `describe` 用动态变量（如 `describe(Foo.name, ...)`），源码里并不存在该字面量，按整句 grep 会搜不到——应只搜 `it` 那半句来定位。
 - **实战落地**：弱断言（如只写 `expect(navigateStub).toHaveBeenCalled()`）会让 `StringLiteral`/`ArrayDeclaration` 等大量变异体存活；补强为断言「调用参数 / 渲染结果」即可把它们从 survived 变成 killed。`html` reporter 生成的可视化报告（默认 `reports/mutation/mutation.html`）逐行高亮存活变异体，比读控制台直观。
 
+### StrykerJS 关键配置项（`mutate` / `testFiles` / `coverageAnalysis`）
+
+三者作用在变异测试的不同环节，常被混淆；以下按 `@stryker-mutator/core` 的 JSON Schema 逐字核实（runner 无关）。
+
+- **`mutate` —— 选「被变异的源文件」**（被考核对象）。指定哪些**生产代码**文件会被植入变异体；Schema 明确「绝不要包含测试文件」。默认智能猜测 `{src,lib}/**` 下源码并自动排除 `*.spec`/`*.test`/`__tests__`。支持 glob 与 `!` 取反，另支持**行/列范围**只变异某段：`"src/app.js:1-11"`、`"src/app.js:5:4-6:4"`（范围语法不能与 glob 写在同一条）。
+- **`testFiles` —— 选「执行哪些测试」**（用来杀变异体的武器）。默认 `[]`（不限制，交给 runner 跑全部相关测试）。设定后只跑这些测试文件，支持 glob。官方典型用途：把测试锁定到某模块自己的 spec，**验证该模块的专属单测能否独立杀光它的变异体**，避免变异体被不相关的集成测试顺手杀掉而误判单测质量。常与 `mutate` 成对用做模块级自检：`mutate:["src/utils.ts"] + testFiles:["test/utils.spec.ts"]`。
+- **`coverageAnalysis` —— 选「每个变异体跑哪些测试」的策略**（性能旋钮）。当前 Schema 默认 `perTest`（旧描述文案写的「`off`(default)」已过时，以 Schema `default` 字段为准）：
+  - `off`：每个变异体都跑**整套**测试，最慢，无前提。
+  - `all`：干跑时统计「整套测试**整体**覆盖了哪些代码」→ 无任何测试覆盖的变异体直接判 `No coverage`（免跑）；但被覆盖的仍跑整套。
+  - `perTest`（默认/最快）：干跑时**逐条测试**记录「该测试碰过哪些行」，建一张「行 ↔ 覆盖它的测试」表；变异某行时**反查表、只跑碰过该行的那几个测试**，跳过不相关的。这也是 `[Survived]` 块 `Tests ran:` 能精确列名的原因。
+- **`perTest` 的前提与边界**：测试须**相互独立**——若依赖执行顺序/共享可变状态，单独挑测试跑会失真，应退回 `all`/`off`。能否用还取决于 runner：`jest`/`vitest` 支持；`command` runner 实际只能 `off`；`@stryker-mutator/vitest-runner` 会**忽略**该配置、强制 `perTest`。
+- **辨析**：`mutate`（变异哪些已入沙箱的源文件）≠ `ignorePatterns`（哪些文件根本不复制进沙箱，更早一步）；`testFiles`（再筛一层测试范围）≠ `testRunner`（用哪个框架跑测试）。
+
 ### 分层反馈（L3 落地钩子）
 
 - 内循环：`vitest --changed [commit]`、`vitest related <files> --run`（lint-staged）。
@@ -109,11 +122,17 @@ sources:
 - clear-text 测试列表符号 `✓`(killed) / `~`(covered) / `✘`——经 Stryker 源码 `packages/core/src/reporters/clear-text-reporter.ts` 核实。
 - `coverageAnalysis: "perTest"` 下仅跑覆盖被变异行的测试——经官方配置文档核实；测试名 = `describe`+`it` 拼接、动态 `describe` 名 grep 不到——属 Jest 通用约定/实证（robo-coasters-example）。
 
+`已验证`（2026-06-09，新增「StrykerJS 关键配置项」小节）：
+
+- `mutate`（选被变异源文件、默认排除 spec/test/`__tests__`、支持行列范围）、`testFiles`（限定执行的测试文件、默认 `[]`）、`coverageAnalysis`（`off`/`all`/`perTest` 三策略，Schema `default` 字段为 `perTest`）——均经项目内 `@stryker-mutator/core/schema/stryker-schema.json` 字段描述与默认值逐字核实。
+- 注：Schema 中 `coverageAnalysis` 的描述文案仍写「`off`(default)」，与机器可读的 `default: "perTest"` 不一致，以后者为准。
+
 ## 最近更新
 
 - 2026-06-07 `ingest` docs/018：新建本主题页，沉淀五层方法论（价值/策略/战术/运营/AI）、mock 线与抗重构、覆盖率防倒退+变异测试、分层反馈钩子、AI 事实源角色分离与自动护栏。
 - 2026-06-09 `query-update`：把「变异测试」从一句提及扩成独立小节——解释变异测试解决什么（杀死/存活/变异分数）、`@stryker-mutator/vitest-runner` 作为 Stryker↔Vitest 桥的角色、配置项与限制（仅 `threads:true`、不支持 Browser Mode、强制 `perTest`）。
 - 2026-06-09 `query-update`：新增「读懂 StrykerJS 的命令行输出」小节——八种变异体状态与 Detected/Undetected 分组、两种变异分数公式、clear-text 测试列表 `✓`/`~`/`✘` 符号、`[Survived]` 块结构与 `Tests ran:` 在 `perTest` 下的含义、测试名拼接（`describe`+`it`）导致整句 grep 不到的坑。
+- 2026-06-09 `query-update`：新增「StrykerJS 关键配置项」小节——`mutate`（被变异源文件/行列范围）、`testFiles`（限定执行的测试/模块级自检）、`coverageAnalysis`（`off`/`all`/`perTest` 三策略与 `perTest` 工作原理、前提与 runner 边界），并辨析 vs `ignorePatterns` / `testRunner`。
 
 ## 关联文档
 
@@ -129,6 +148,7 @@ sources:
 - [StrykerJS Mutant states and metrics](https://stryker-mutator.io/docs/mutation-testing-elements/mutant-states-and-metrics/)（二级，八种状态/指标分组/两种变异分数公式）
 - [StrykerJS Configuration · coverageAnalysis](https://stryker-mutator.io/docs/stryker-js/configuration/#coverageanalysis-string)（二级，`perTest` 仅跑覆盖被变异行的测试）
 - StrykerJS 源码 `packages/core/src/reporters/clear-text-reporter.ts`（二级，`✓`/`~`/`✘` 符号语义）
+- StrykerJS Schema `@stryker-mutator/core/schema/stryker-schema.json`（二级，`mutate`/`testFiles`/`coverageAnalysis` 字段描述与默认值的权威来源）
 - [018-engineering-testing-methodology-and-ai.md](../../docs/018-engineering-testing-methodology-and-ai.md)（三级，本主题发布文档）
 - 测试金字塔（Mike Cohn）/ 奖杯（Kent C. Dodds）/ 黑白盒分层（Martin Fowler）/ DORA 四指标（《Accelerate》）——通用测试理论，经验总结层
 
