@@ -16,6 +16,17 @@ sources:
 ## 2026-06-09
 
 - `query-update`
+  - trigger: 问答「`setupFiles` 与 `globalSetup` 的用途、执行区别、顺序，结合 hook 分析」，产出 wiki 未覆盖的可复用结论（hooks 页三层 setup 已有，但缺 globalSetup 触发条件、watch 时机、worker 区分、isolation 陷阱等细节）
+  - changed:
+    - `wiki/topics/hooks.md`：在「`setupFiles` 与 `globalSetup`」小节补充——globalSetup 仅在「至少一个测试入队」时执行 setup；setupFiles 可用 `process.env.VITEST_POOL_ID` 区分并发 worker；新增「watch 模式时机差异」（修改 setupFiles 触发全量重跑、watch 下 globalSetup teardown 改在进程退出前、`onTestsRerun` 重跑钩子）与「isolation 关闭陷阱」（模块缓存但 setupFiles 仍每文件重跑、需 `globalThis` 标志位守卫一次性重负载）两小节；证据状态补已验证项；最近更新 +1 条；frontmatter `updated`→2026-06-09
+    - `wiki/index.md`：Hooks 条目摘要补 globalSetup 触发条件/watch 时机/`VITEST_POOL_ID`/isolation 陷阱，`updated`→2026-06-09（`sources` 维持 6，均为已有官方一级来源）
+    - `wiki/log.md`
+  - source:
+    - https://cn.vitest.dev/config/setupfiles （一级来源，经本地 `~/github/vitest/docs/config/setupfiles.md` 核对）
+    - https://cn.vitest.dev/config/globalsetup （一级来源，经本地 `~/github/vitest/docs/config/globalsetup.md` 核对：触发条件、watch teardown、`onTestsRerun`、provide/inject）
+  - map: 无变更（未新增 `docs/NNN-xxx.md`，关系不变）
+
+- `query-update`
   - trigger: 问答「jsdom 测试环境下如何做 DOM 断言、为什么会用到 `@testing-library/jest-dom`」，产出 wiki 未覆盖的可复用结论（assertions 页只讲 expect/Chai/assert，缺 DOM 断言匹配器）
   - changed:
     - `wiki/topics/assertions.md`：新增核心概念「DOM 断言：`@testing-library/jest-dom` 的定位」——厘清 `jsdom`（环境）vs `jest-dom`（断言扩展）撞脸、环境无关（不绑定 Jest）、`setupFiles` 里 `import '@testing-library/jest-dom/vitest'` 的纯副作用注册、matcher 列表、`jsdom→RTL 查询→expect+jest-dom` 断言链路、与 Browser Mode `expect.element`（异步重试）的对比；常见误区 +3 条；相关主题 +[[environment]]/[[component-testing]]；证据状态补已验证项；最近更新 +1 条；来源与 frontmatter sources +`github.com/testing-library/jest-dom`；frontmatter `updated`→2026-06-09

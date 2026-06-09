@@ -1,7 +1,7 @@
 ---
 title: Hooks
 created: 2026-04-14
-updated: 2026-05-26
+updated: 2026-06-09
 type: topic
 tags: ["lifecycle", "config", "beginner"]
 sources:
@@ -49,11 +49,20 @@ Hooks 负责测试前后的准备与清理；理解执行顺序和包裹式 hook
 
 Vitest 的 setup 实际分三层，作用域和执行频率完全不同：
 
-- `test.globalSetup`：在创建任何测试 worker 之前，在**主进程内仅执行一次**；返回的函数作为 teardown，会在所有测试文件结束后执行。多个 `globalSetup` 的 `setup` 按声明顺序执行，`teardown` 以相反顺序执行。它不在测试 worker 里，所以不能直接注册 vitest 的 hooks；跨进程传值要通过参数里的 `project.provide()` + 测试侧从 `vitest` 导入的 `inject()`。适合一次性资源：启动测试数据库、拉起容器、生成共享 token。
-- `test.setupFiles`：在**每个测试文件之前、与测试同一个 worker 进程**中执行；它的所有 `export` 都会被 Vitest 忽略，只有副作用有效（注入 matcher、修改全局对象、注册顶层 `afterEach` 等）。默认测试文件并行执行，可通过 `sequence.setupFiles` 调整。适合跨文件复用的注入：`@testing-library/jest-dom` matcher、`cleanup()`、全局 mock。
+- `test.globalSetup`：在创建任何测试 worker 之前，在**主进程内仅执行一次**，且**仅当至少有一个测试入队（at least one test queued）时**才执行 setup；返回的函数作为 teardown，会在所有测试文件结束后执行。多个 `globalSetup` 的 `setup` 按声明顺序执行，`teardown` 以相反顺序执行。它不在测试 worker 里，所以不能直接注册 vitest 的 hooks；跨进程传值要通过参数里的 `project.provide()` + 测试侧从 `vitest` 导入的 `inject()`。适合一次性资源：启动测试数据库、拉起容器、生成共享 token。
+- `test.setupFiles`：在**每个测试文件之前、与测试同一个 worker 进程**中执行；它的所有 `export` 都会被 Vitest 忽略，只有副作用有效（注入 matcher、修改全局对象、注册顶层 `afterEach` 等）。默认测试文件并行执行，可通过 `sequence.setupFiles` 调整。适合跨文件复用的注入：`@testing-library/jest-dom` matcher、`cleanup()`、全局 mock。可用 `process.env.VITEST_POOL_ID`（整数样字符串）区分并发 worker，把后台重负载分摊到不同 worker。
 - 文件内 hooks（`beforeAll` / `beforeEach` / `aroundEach` 等）：只影响当前文件 / 当前 suite。一次性、单文件的初始化优先放这里，而不是升级到 `setupFiles`。
 
 选择顺序：能放文件内 hook 的不要放 `setupFiles`；能放 `setupFiles` 的不要放 `globalSetup`。
+
+#### watch 模式下的时机差异
+
+- 修改 `setupFiles` 会**自动触发全部测试重跑**。
+- watch 模式下 `globalSetup` 的 teardown 改为**进程退出前才调用**（而非每次重跑后）；如需在每次重跑前重置资源，用 `project.onTestsRerun(async () => { ... })`（注意不能解构出 `onTestsRerun`，它依赖 `project` 上下文）。
+
+#### isolation 关闭时的 setupFiles 陷阱
+
+关闭 [`isolation`](https://cn.vitest.dev/config/isolate) 后，被 `import` 的模块会被缓存，但 **`setupFiles` 本身仍在每个测试文件前再次执行**，且访问的是同一个全局对象。需要用全局标志位避免重复初始化（官方示例用 `globalThis.setupInitialized` 守卫一次性的重负载初始化，而 `afterEach(cleanup)` 等需要每文件生效的 hook 照常注册）。
 
 #### setup 文件组织建议
 
@@ -75,12 +84,13 @@ Vitest 的 setup 实际分三层，作用域和执行频率完全不同：
 
 ## 证据状态
 
-- 已验证：`beforeEach/afterEach` 与 `aroundEach` 的基本契约来自官方 hooks/lifecycle 文档与项目实证文档；`setupFiles` 在每个测试文件前于同一 worker 进程执行、导出被忽略、可调 `sequence.setupFiles`，以及 `globalSetup` 在主进程仅执行一次、`setup/teardown` 按顺序/反序、通过 `project.provide()` + `inject()` 传值，均对照官方 `config/setupfiles` 与 `config/globalsetup` 段核对。
+- 已验证：`beforeEach/afterEach` 与 `aroundEach` 的基本契约来自官方 hooks/lifecycle 文档与项目实证文档；`setupFiles` 在每个测试文件前于同一 worker 进程执行、导出被忽略、可调 `sequence.setupFiles`、可用 `VITEST_POOL_ID` 区分 worker、isolation 关闭时仍每文件重跑（需全局标志位守卫），以及 `globalSetup` 在主进程仅执行一次（且仅在至少一个测试入队时）、`setup/teardown` 按顺序/反序、watch 下 teardown 改在进程退出前调用、`onTestsRerun` 处理重跑、通过 `project.provide()` + `inject()` 传值，均对照官方 `config/setupfiles` 与 `config/globalsetup` 段（经本地 `~/github/vitest` 源码核对）。
 - 待验证：跨版本在细节时序上的实现变化需以当前版本官方文档为准。
 - 冲突中：无。
 
 ## 最近更新
 
+- 2026-06-09 query-update：补充 `globalSetup` 仅在「至少一个测试入队」时执行、watch 模式下 teardown 改在进程退出前调用与 `onTestsRerun` 重跑钩子；`setupFiles` 的 `VITEST_POOL_ID` worker 区分与 isolation 关闭时的重复初始化陷阱（`globalThis` 标志位守卫）；新增「watch 模式时机差异」「isolation 关闭陷阱」两小节。
 - 2026-05-26 query-update：新增配置层 `setupFiles` 与 `globalSetup` 与文件内 hooks 的三层划分、setup 文件组织建议，以及对应的典型误区；来源补入官方 `config/setupfiles` 与 `config/globalsetup`。
 - 2026-04-14 backfill：补充 `runTest()` 必须调用这一 aroundEach 核心契约，并将其与 execution-model 页面互链。
 
