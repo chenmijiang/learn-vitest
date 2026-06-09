@@ -13,6 +13,22 @@ sources:
 
 > 维护规则见 [[SCHEMA]]；主题导航见 [[index]]；文档映射以 [[sources/internal-docs-map]] 为准。
 
+## 2026-06-09
+
+- `query-update`
+  - trigger: 问答「`@stryker-mutator/vitest-runner` 是什么、解决什么问题」，产出 wiki 仅一句提及、尚未展开的可复用结论
+  - changed:
+    - `wiki/topics/testing-methodology.md`：把覆盖率小节里对「变异测试」的一句提及扩成独立小节「变异测试与 `@stryker-mutator/vitest-runner`」——变异测试解决什么（植入变异体/杀死/存活/变异分数）、runner 作为 Stryker↔Vitest 桥的角色（不自带 Vitest、7.0 起支持）、配置项（`vitest.configFile`/`vitest.dir` v7.1+/`vitest.related` 默认 true）、限制（仅 `threads:true`、不支持 Browser Mode、`coverageAnalysis` 强制 `perTest`，并点明本项目 Browser Mode 组件测试当前无法直接用该 runner）；证据状态 +「2026-06-09 已验证」段；最近更新 +1 条；frontmatter `updated`→2026-06-09
+    - `wiki/index.md`：Testing Methodology 条目摘要补变异测试与 runner（桥/配置/限制），`updated`→2026-06-09（`sources: 6` 不变，stryker-mutator.io 已在该页来源中）；index frontmatter `updated`→2026-06-09
+    - `wiki/log.md`
+  - source:
+    - https://stryker-mutator.io/docs/stryker-js/vitest-runner/（一级 StrykerJS 官方）
+    - https://stryker-mutator.io/blog/announcing-stryker-js-7/（7.0 起支持 Vitest）
+    - https://www.npmjs.com/package/@stryker-mutator/vitest-runner
+  - evidence: runner=Stryker↔Vitest 桥、需自带 Vitest、配置项 `configFile`/`dir`(v7.1+)/`related`(默认 true)、限制仅 `threads:true`+不支持 Browser Mode+强制 `perTest`，均经官方文档（WebFetch 两次）核实；杀死/存活/变异分数标注为变异测试通用术语（runner 文档未逐字定义），属经验/标准知识层
+  - map: 无新增 `docs/NNN`，文档关系未变，`internal-docs-map.md` 不动（来源为官方，且 stryker 来源原已随 docs/018 列入本 topic）
+  - quality-gate: 已写 log；map 与 topic 关联文档一致（未变）；index 条目带摘要/更新时间/来源数量；链接有效；来源官方优先（stryker-mutator.io 一级）
+
 ## 2026-06-07
 
 - `ingest`

@@ -1,7 +1,7 @@
 ---
 title: Testing Methodology
 created: 2026-06-07
-updated: 2026-06-07
+updated: 2026-06-09
 type: topic
 tags: ["methodology", "ai", "advanced"]
 sources:
@@ -47,6 +47,13 @@ sources:
 - 看 `branches` 优先于 `lines`；四指标 `lines/functions/branches/statements`。
 - 覆盖率能 100% 而测试啥都没抓到——真正的有效性裁判是**变异测试**（StrykerJS `@stryker-mutator/vitest-runner`）。
 
+### 变异测试与 `@stryker-mutator/vitest-runner`
+
+- **变异测试解决什么**：覆盖率只回答「代码有没有被执行」，不回答「测试有没有效」。变异测试由 StrykerJS 往源码植入微小 bug（变异体，如 `+`→`-`、`>`→`>=`、删行），每植入一个就跑一遍测试套件——有测试因此失败=变异体被「杀死」（说明该处断言有效），测试仍全绿=变异体「存活」（暴露断言缺失）。最终的**变异分数**（killed / total）才是测试有效性的客观量化（杀死/存活/分数为变异测试通用术语，非 runner 文档定义）。
+- **runner 的角色**：`@stryker-mutator/vitest-runner` 是 StrykerJS 与 Vitest 之间的「桥」——Stryker 负责生成变异体与统计，Vitest 负责真正跑你已有的测试。它**不自带 Vitest**，需项目自行安装；StrykerJS 7.0 起官方支持。已用 Vitest 的项目可直接复用现有测试做有效性评估。
+- **配置（写在 `stryker.config.json`）**：`vitest.configFile`（指定 Vitest 配置文件）、`vitest.dir`（对应 `--dir`，v7.1+）、`vitest.related`（默认 `true`，只跑与被变异文件相关的测试以提速）。
+- **限制与强制项**：仅支持 `threads: true`（不支持关线程的单进程模式）；**不支持 Browser Mode**；`coverageAnalysis` 被忽略，runner 始终用 `perTest`（性能最优）。→ 故本项目这类 Browser Mode 组件测试当前**无法**直接用该 runner 做变异测试。
+
 ### 分层反馈（L3 落地钩子）
 
 - 内循环：`vitest --changed [commit]`、`vitest related <files> --run`（lint-staged）。
@@ -72,11 +79,17 @@ sources:
 `已验证`（2026-06-07）：
 
 - Vitest 具体机制（`coverage.thresholds.autoUpdate`/glob/`perFile`/四指标、`--changed`/`--related`/`--shard`/`vitest run`、`pool` 默认 `forks`、官方《Writing Tests with AI》各反模式与 `restoreMocks`/`AGENTS.md`、StrykerJS 支持 vitest）均经官方文档/源码核实，16/16 正确。
+
+`已验证`（2026-06-09，对照 StrykerJS 官方 Vitest runner 文档）：
+
+- `@stryker-mutator/vitest-runner` 为 StrykerJS↔Vitest 桥接、需自带 Vitest、7.0 起支持；配置项 `vitest.configFile`/`vitest.dir`（v7.1+）/`vitest.related`（默认 `true`）；限制：仅 `threads:true`、不支持 Browser Mode、`coverageAnalysis` 强制 `perTest`——均经官方文档核实。
+- 变异体「杀死/存活/变异分数」为变异测试**通用术语**（runner 文档未逐字定义），属经验/标准知识层。
 - 分层决策框架（L0–L3 + AI 层）及测试金字塔/奖杯、DORA、风险驱动等为**经验性归纳**（基于业界通用测试理论），属经验总结层，已在 `docs/018` 显式标注。
 
 ## 最近更新
 
 - 2026-06-07 `ingest` docs/018：新建本主题页，沉淀五层方法论（价值/策略/战术/运营/AI）、mock 线与抗重构、覆盖率防倒退+变异测试、分层反馈钩子、AI 事实源角色分离与自动护栏。
+- 2026-06-09 `query-update`：把「变异测试」从一句提及扩成独立小节——解释变异测试解决什么（杀死/存活/变异分数）、`@stryker-mutator/vitest-runner` 作为 Stryker↔Vitest 桥的角色、配置项与限制（仅 `threads:true`、不支持 Browser Mode、强制 `perTest`）。
 
 ## 关联文档
 
