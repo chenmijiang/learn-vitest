@@ -16,6 +16,20 @@ sources:
 ## 2026-06-09
 
 - `query-update`
+  - trigger: 问答「学习变异测试时看不懂 StrykerJS 命令行输出——各状态/分数/测试列表符号/`[Survived]` 块的 `Tests ran:` 含义/为什么按测试名 grep 不到」，产出 wiki 未覆盖的可复用结论（testing-methodology 已有变异测试概念小节，但缺「怎么读输出」）
+  - changed:
+    - `wiki/topics/testing-methodology.md`：新增核心概念小节「读懂 StrykerJS 的命令行（clear-text）输出」——八种变异体状态与 Detected/Undetected/Covered/Valid 分组、两种变异分数公式（`detected/valid`、`detected/covered`）、测试列表 `✓`(killed)/`~`(covered)/`✘` 符号、`[Survived]` 块结构（mutator+位置+diff+`Tests ran:`）、`Tests ran:` 在 `coverageAnalysis:"perTest"` 下「只跑覆盖被变异行的测试」的含义、测试名 = `describe`+`it` 拼接导致动态 `describe` 名整句 grep 不到的坑、弱断言致大量存活的实战落地；证据状态 +「2026-06-09 新增小节」已验证段；最近更新 +1 条；来源 +3（mutant-states/configuration/clear-text-reporter.ts 源码）；frontmatter sources +2、`updated`→2026-06-09
+    - `wiki/index.md`：Testing Methodology 条目摘要补「读懂 StrykerJS 命令行输出」，`sources: 6`→`8`，`updated`→2026-06-09
+    - `wiki/log.md`
+  - source:
+    - https://stryker-mutator.io/docs/mutation-testing-elements/mutant-states-and-metrics/（一级 StrykerJS 官方：八种状态/指标分组/两种变异分数公式，WebFetch 核实）
+    - https://stryker-mutator.io/docs/stryker-js/configuration/#coverageanalysis-string（一级：`perTest` 仅跑覆盖被变异行的测试）
+    - StrykerJS 源码 `packages/core/src/reporters/clear-text-reporter.ts`（二级：`✓`/`~`/`✘` 符号语义，`reportTests` 方法核实）
+    - 项目实证：`robo-coasters-example`（jest-runner）`test/components/choose-ride.component.spec.js` 弱断言致 StringLiteral/ArrayDeclaration 存活
+  - map: 无变更（未新增 `docs/NNN-xxx.md`，文档关系不变；新增来源为官方/源码）
+  - quality-gate: 已写 log；map 与 topic 关联文档一致（未变）；index 条目带摘要/更新时间/来源数量；链接有效；来源官方优先（stryker-mutator.io 一级 + 官方源码二级）；topic 页含证据状态/最近更新
+
+- `query-update`
   - trigger: 问答「`setupFiles` 与 `globalSetup` 的用途、执行区别、顺序，结合 hook 分析」，产出 wiki 未覆盖的可复用结论（hooks 页三层 setup 已有，但缺 globalSetup 触发条件、watch 时机、worker 区分、isolation 陷阱等细节）
   - changed:
     - `wiki/topics/hooks.md`：在「`setupFiles` 与 `globalSetup`」小节补充——globalSetup 仅在「至少一个测试入队」时执行 setup；setupFiles 可用 `process.env.VITEST_POOL_ID` 区分并发 worker；新增「watch 模式时机差异」（修改 setupFiles 触发全量重跑、watch 下 globalSetup teardown 改在进程退出前、`onTestsRerun` 重跑钩子）与「isolation 关闭陷阱」（模块缓存但 setupFiles 仍每文件重跑、需 `globalThis` 标志位守卫一次性重负载）两小节；证据状态补已验证项；最近更新 +1 条；frontmatter `updated`→2026-06-09

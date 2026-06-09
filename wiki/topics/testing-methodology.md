@@ -11,6 +11,8 @@ sources:
   - https://vitest.dev/config/coverage
   - https://vitest.dev/config/pool
   - https://stryker-mutator.io/docs/stryker-js/vitest-runner/
+  - https://stryker-mutator.io/docs/mutation-testing-elements/mutant-states-and-metrics/
+  - https://stryker-mutator.io/docs/stryker-js/configuration/
 ---
 
 # Testing Methodology（工程化测试方法论）
@@ -54,6 +56,21 @@ sources:
 - **配置（写在 `stryker.config.json`）**：`vitest.configFile`（指定 Vitest 配置文件）、`vitest.dir`（对应 `--dir`，v7.1+）、`vitest.related`（默认 `true`，只跑与被变异文件相关的测试以提速）。
 - **限制与强制项**：仅支持 `threads: true`（不支持关线程的单进程模式）；**不支持 Browser Mode**；`coverageAnalysis` 被忽略，runner 始终用 `perTest`（性能最优）。→ 故本项目这类 Browser Mode 组件测试当前**无法**直接用该 runner 做变异测试。
 
+### 读懂 StrykerJS 的命令行（clear-text）输出
+
+适用任意 runner（jest/vitest 等）；下面术语与符号均按官方文档与 Stryker 源码核实。
+
+- **八种变异体状态与分类**：
+  - `Killed`（至少一个测试失败）、`Timeout`（超时/死循环）→ 合为 **Detected（已检测，好）**。
+  - `Survived`（所有测试都通过）、`No coverage`（无测试覆盖）→ 合为 **Undetected（漏网）**——这才是要补的测试缺口。
+  - `Runtime error` / `Compile error` → **Invalid（无效，不计分）**；`Ignored`（被配置忽略）；`Pending`（尚未运行，临时态）。
+- **指标与分数公式**：`Detected=killed+timeout`；`Undetected=survived+no coverage`；`Covered=detected+survived`；`Valid=detected+undetected`。**变异分数 = detected / valid × 100%**；另有「基于覆盖代码的分数 = detected / covered × 100%」（排除根本没覆盖到的部分）。
+- **测试列表的符号**（clear-text reporter，每个测试一行）：`✓`(绿) `(killed N)` = 该测试杀死 N 个变异体；`~`(蓝) `(covered N)` = 覆盖到变异体所在代码却一个没杀（**断言偏弱的信号**）；`✘`(红) = 没覆盖任何变异体。
+- **`[Survived]` 块怎么读**：结构 = 变异类型(mutator，如 `StringLiteral`/`ArrayDeclaration`/`ArithmeticOperator`) + `文件:行:列` + diff（`-`原始 / `+`改坏后）+ `Tests ran:` 列表。每个存活块都是一处「该补的断言」。
+- **`Tests ran:` 的含义**（最易误解）：在 `coverageAnalysis: "perTest"` 下，Stryker 只执行「覆盖被改那一行」的测试（性能优化），所以这里只列出**部分**测试名——含义是「这些已存在的真实测试被跑了却全部通过 → 变异体存活」，直接指向「去哪个已有测试补断言」。列表为空/无测试则属 `No coverage`，缺的是新用例而非断言。
+- **测试名找不到的坑**：报告里的测试名 = `describe` 名 + 空格 + `it` 名 拼接（Jest 约定）。若 `describe` 用动态变量（如 `describe(Foo.name, ...)`），源码里并不存在该字面量，按整句 grep 会搜不到——应只搜 `it` 那半句来定位。
+- **实战落地**：弱断言（如只写 `expect(navigateStub).toHaveBeenCalled()`）会让 `StringLiteral`/`ArrayDeclaration` 等大量变异体存活；补强为断言「调用参数 / 渲染结果」即可把它们从 survived 变成 killed。`html` reporter 生成的可视化报告（默认 `reports/mutation/mutation.html`）逐行高亮存活变异体，比读控制台直观。
+
 ### 分层反馈（L3 落地钩子）
 
 - 内循环：`vitest --changed [commit]`、`vitest related <files> --run`（lint-staged）。
@@ -86,10 +103,17 @@ sources:
 - 变异体「杀死/存活/变异分数」为变异测试**通用术语**（runner 文档未逐字定义），属经验/标准知识层。
 - 分层决策框架（L0–L3 + AI 层）及测试金字塔/奖杯、DORA、风险驱动等为**经验性归纳**（基于业界通用测试理论），属经验总结层，已在 `docs/018` 显式标注。
 
+`已验证`（2026-06-09，新增「读懂 StrykerJS 输出」小节）：
+
+- 八种变异体状态、Detected/Undetected/Covered/Valid 分组、两种变异分数公式（`detected/valid`、`detected/covered`）——经 StrykerJS 官方《Mutant states and metrics》核实。
+- clear-text 测试列表符号 `✓`(killed) / `~`(covered) / `✘`——经 Stryker 源码 `packages/core/src/reporters/clear-text-reporter.ts` 核实。
+- `coverageAnalysis: "perTest"` 下仅跑覆盖被变异行的测试——经官方配置文档核实；测试名 = `describe`+`it` 拼接、动态 `describe` 名 grep 不到——属 Jest 通用约定/实证（robo-coasters-example）。
+
 ## 最近更新
 
 - 2026-06-07 `ingest` docs/018：新建本主题页，沉淀五层方法论（价值/策略/战术/运营/AI）、mock 线与抗重构、覆盖率防倒退+变异测试、分层反馈钩子、AI 事实源角色分离与自动护栏。
 - 2026-06-09 `query-update`：把「变异测试」从一句提及扩成独立小节——解释变异测试解决什么（杀死/存活/变异分数）、`@stryker-mutator/vitest-runner` 作为 Stryker↔Vitest 桥的角色、配置项与限制（仅 `threads:true`、不支持 Browser Mode、强制 `perTest`）。
+- 2026-06-09 `query-update`：新增「读懂 StrykerJS 的命令行输出」小节——八种变异体状态与 Detected/Undetected 分组、两种变异分数公式、clear-text 测试列表 `✓`/`~`/`✘` 符号、`[Survived]` 块结构与 `Tests ran:` 在 `perTest` 下的含义、测试名拼接（`describe`+`it`）导致整句 grep 不到的坑。
 
 ## 关联文档
 
@@ -102,6 +126,9 @@ sources:
 - [Vitest config/coverage](https://vitest.dev/config/coverage)（一级，`thresholds.autoUpdate`/glob/`perFile`/四指标）
 - [Vitest config/pool](https://vitest.dev/config/pool)（一级，`pool` 取值与默认 `forks`）
 - [StrykerJS Vitest runner](https://stryker-mutator.io/docs/stryker-js/vitest-runner/)（二级，变异测试支持）
+- [StrykerJS Mutant states and metrics](https://stryker-mutator.io/docs/mutation-testing-elements/mutant-states-and-metrics/)（二级，八种状态/指标分组/两种变异分数公式）
+- [StrykerJS Configuration · coverageAnalysis](https://stryker-mutator.io/docs/stryker-js/configuration/#coverageanalysis-string)（二级，`perTest` 仅跑覆盖被变异行的测试）
+- StrykerJS 源码 `packages/core/src/reporters/clear-text-reporter.ts`（二级，`✓`/`~`/`✘` 符号语义）
 - [018-engineering-testing-methodology-and-ai.md](../../docs/018-engineering-testing-methodology-and-ai.md)（三级，本主题发布文档）
 - 测试金字塔（Mike Cohn）/ 奖杯（Kent C. Dodds）/ 黑白盒分层（Martin Fowler）/ DORA 四指标（《Accelerate》）——通用测试理论，经验总结层
 
