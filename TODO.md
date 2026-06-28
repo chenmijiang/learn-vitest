@@ -144,8 +144,8 @@
       链接：https://cn.vitest.dev/guide/coverage
 - [x] 学会查看 HTML 覆盖率报告
       链接：https://cn.vitest.dev/guide/coverage
-- [ ] 找出 3 个未覆盖或覆盖薄弱的模块
-- [ ] 补至少 1 个关键模块的缺失测试
+- [x] 找出 3 个未覆盖或覆盖薄弱的模块
+- [x] 补至少 1 个关键模块的缺失测试
 
 效果：能把测试从“有就行”推进到“知道覆盖了什么、缺了什么”。
 
@@ -165,14 +165,14 @@
       链接：https://cn.vitest.dev/guide/improving-performance
 - [ ] 了解性能分析方式
       链接：https://cn.vitest.dev/guide/profiling-test-performance
-- [ ] 尝试为当前项目写一个最小 `projects` 配置草案
-- [ ] 思考当前项目未来是否需要单元测试、组件测试、浏览器测试并存
+- [x] 尝试为当前项目写一个最小 `projects` 配置草案
+- [x] 思考当前项目未来是否需要单元测试、组件测试、浏览器测试并存
 
 效果：能在团队项目、CI、monorepo 或多策略测试场景中使用 Vitest。
 
 ## 阶段 8：调试与迁移
 
-- [ ] 阅读调试文档，掌握 VS Code 或浏览器调试方式
+- [x] 阅读调试文档，掌握 VS Code 或浏览器调试方式
       链接：https://cn.vitest.dev/guide/debugging
 - [ ] 学会使用 `--inspect` 或 `--inspect-brk`
       链接：https://cn.vitest.dev/guide/debugging
@@ -180,11 +180,11 @@
       链接：https://cn.vitest.dev/guide/debugging
 - [ ] 阅读常见错误，提前认识高频问题
       链接：https://cn.vitest.dev/guide/common-errors
-- [ ] 阅读迁移指南，理解与 Jest 的主要差异
-      链接：https://cn.vitest.dev/guide/migration
 - [ ] 理解全局变量、mock、hooks、环境变量等迁移差异
       链接：https://cn.vitest.dev/guide/migration
-- [ ] 如果你有 Jest 经验，尝试把 1 个旧测试思路翻译成 Vitest 写法
+- [ ] ~~阅读迁移指南，理解与 Jest 的主要差异
+      链接：https://cn.vitest.dev/guide/migration~~
+- [ ] ~~如果你有 Jest 经验，尝试把 1 个旧测试思路翻译成 Vitest 写法~~
 
 效果：出问题时能调试和定位，也能在迁移旧项目时少踩坑。
 
